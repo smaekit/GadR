@@ -5,6 +5,9 @@ import android.os.Bundle;
 
 public class MainActivity extends AppCompatActivity {
 
+    //Test commit /carl
+    private String testCommitString = "Commit";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
