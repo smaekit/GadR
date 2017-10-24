@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">GadR</string>
+    <string name="hello_carl">Hello Carl!</string>
 </resources>
