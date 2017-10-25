@@ -31,6 +31,7 @@ public class MainActivity extends AppCompatActivity {
 //        FacebookSdk.sdkInitialize(getApplicationContext());
 
         loginButton = (LoginButton) findViewById(R.id.login_button);
+        loginButton.setReadPermissions("email", "public_profile", "user_friends");
         callbackManager = CallbackManager.Factory.create();
         loginButton.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
             @Override
@@ -52,7 +53,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onError(FacebookException exception) {
                 // App code
-                Log.i("FB:", "Callback ERROR!");
+                Log.i("FB:", "Callback ERROR!" + exception.toString());
                 Toast.makeText(MainActivity.this, "Error", Toast.LENGTH_SHORT).show();
 
             }
