@@ -1,4 +1,9 @@
 <resources>
     <string name="app_name">GadR</string>
     <string name="hello_carl">Hello Carl!</string>
+
+    <string name="facebook_app_id">523008791393450</string>
+    <string name="fb_login_protocol_scheme">fb523008791393450</string>
+
+
 </resources>
