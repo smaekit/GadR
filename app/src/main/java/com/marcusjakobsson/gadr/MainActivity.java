@@ -59,6 +59,7 @@ public class MainActivity extends AppCompatActivity {
                 // App code
                 Log.i("FB:", "Callback success!");
                 Toast.makeText(MainActivity.this, "Success", Toast.LENGTH_SHORT).show();
+                Log.i("FB", loginResult.getAccessToken().getToken());
                 handleFacebookAccessToken(loginResult.getAccessToken());
             }
 
@@ -134,12 +135,12 @@ public class MainActivity extends AppCompatActivity {
         updateUI(null);
     }
 
+    //Here we send the user to next activity
     private void updateUI(FirebaseUser user) {
         //hideProgressDialog();
         if (user != null) {
             textView.setText(user.getDisplayName());
             //user.getUid()));
-
             //loginButton.setVisibility(View.GONE);
             //findViewById(R.id.button_facebook_signout).setVisibility(View.VISIBLE);
         } else {
