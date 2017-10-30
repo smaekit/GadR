@@ -81,6 +81,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        /*
         final FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference databaseRef = database.getReference();
 
@@ -95,7 +96,7 @@ public class MainActivity extends AppCompatActivity {
             public void onCancelled(DatabaseError databaseError) {
                 Log.w(TAG, "Failed to read value.", databaseError.toException());
             }
-        });
+        });*/
     }
 
     @Override
