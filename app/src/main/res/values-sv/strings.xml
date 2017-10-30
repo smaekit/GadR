@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">GadR</string>
+    <string name="hello_carl">Hej Carl!</string>
+    <string name="section_format">Hej världen från sektion: %1$d</string>
+    <string name="action_settings">Inställningar</string>
+    <string name="Tabbed_Menu_Map">Karta</string>
+    <string name="Tabbed_Menu_All">Alla event</string>
+    <string name="Tabbed_Menu_My">Mina event</string>
+    <string name="title_activity_tabbed_view">GadR</string>
+</resources>
