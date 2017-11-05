@@ -1,5 +1,6 @@
 package com.marcusjakobsson.gadr;
 
+import android.content.Intent;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
 import android.support.v7.app.AppCompatActivity;
@@ -8,6 +9,12 @@ import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.os.Bundle;
 import android.view.Menu;
+import android.view.View;
+
+import com.facebook.AccessToken;
+import com.facebook.CallbackManager;
+import com.facebook.login.LoginManager;
+import com.google.firebase.auth.FirebaseAuth;
 
 public class MenuTabbedView extends AppCompatActivity {
 
@@ -37,6 +44,16 @@ public class MenuTabbedView extends AppCompatActivity {
         //Firebase
         FirebaseConnection firebaseConnection = new FirebaseConnection();
 
+
+    }
+
+    void signOutButton(View view)
+    {
+        FirebaseAuth.getInstance().signOut();
+        LoginManager.getInstance().logOut();
+        Intent intent = new Intent(this, MainActivity.class);
+        startActivity(intent);
+        finish();
 
     }
 

@@ -32,7 +32,6 @@ import com.google.firebase.database.ValueEventListener;
 public class MainActivity extends AppCompatActivity {
 
     LoginButton loginButton;
-    TextView textView;
     CallbackManager callbackManager;
     private FirebaseAuth mAuth;
     private static final String TAG = "FacebookLogin";
@@ -46,7 +45,6 @@ public class MainActivity extends AppCompatActivity {
         // Initialize Firebase Auth
         mAuth = FirebaseAuth.getInstance();
 
-        textView = (TextView)findViewById(R.id.textView);
         loginButton = (LoginButton) findViewById(R.id.login_button);
         loginButton.setReadPermissions("email", "public_profile", "user_friends");
         callbackManager = CallbackManager.Factory.create();
@@ -155,30 +153,14 @@ public class MainActivity extends AppCompatActivity {
     private void updateUI(FirebaseUser user) {
         //hideProgressDialog();
         if (user != null) {
-            textView.setText(user.getDisplayName());
+            Intent intent = new Intent(this, MenuTabbedView.class);
+            startActivity(intent);
             //user.getUid()));
             //loginButton.setVisibility(View.GONE);
             //findViewById(R.id.button_facebook_signout).setVisibility(View.VISIBLE);
-        } else {
-
-            textView.setText(null);
-
-            //findViewById(R.id.button_facebook_login).setVisibility(View.VISIBLE);
-            //findViewById(R.id.button_facebook_signout).setVisibility(View.GONE);
         }
     }
-//    @Override
-//    public void onClick(View v) {
-//        int i = v.getId();
-//        if (i == R.id.button_facebook_signout) {
-//            signOut();
-//        }
-//    }
 
-    public void goToTabbedView(View view){
-        Intent intent = new Intent(this, MenuTabbedView.class);
-        startActivity(intent);
-    }
 
 }
 
