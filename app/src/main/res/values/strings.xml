@@ -10,6 +10,7 @@
     <string name="Tabbed_Menu_Map">Map</string>
     <string name="Tabbed_Menu_All">All events</string>
     <string name="Tabbed_Menu_My">My events</string>
+    <string name="title_activity_maps">Map</string>
 
 
 </resources>
