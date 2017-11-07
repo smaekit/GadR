@@ -7,5 +7,6 @@
     <string name="Tabbed_Menu_Map">Karta</string>
     <string name="Tabbed_Menu_All">Alla event</string>
     <string name="Tabbed_Menu_My">Mina event</string>
-    <string name="title_activity_tabbed_view">GadR</string>
+    <string name="title_activity_tabbed_view"></string>
+    <string name="logout">Logga ut</string>
 </resources>
