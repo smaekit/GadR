@@ -1,6 +1,11 @@
 package com.marcusjakobsson.gadr;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.os.AsyncTask;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
@@ -14,14 +19,24 @@ import android.support.v7.widget.Toolbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.facebook.AccessToken;
-import com.facebook.CallbackManager;
+import com.facebook.GraphRequest;
+import com.facebook.GraphResponse;
+import com.facebook.HttpMethod;
 import com.facebook.login.LoginManager;
 import com.google.firebase.auth.FirebaseAuth;
+
+import org.json.JSONObject;
+
+import java.io.InputStream;
+import java.lang.ref.WeakReference;
 
 public class MenuTabbedView extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
@@ -31,11 +46,11 @@ public class MenuTabbedView extends AppCompatActivity implements NavigationView.
 
     private ViewPager viewPager;
 
-
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_tabbed_view);
+
 
         sectionsPageAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
 
@@ -72,6 +87,51 @@ public class MenuTabbedView extends AppCompatActivity implements NavigationView.
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
+        getFacebookInfoFromUser();
+
+    }
+
+    public void getFacebookInfoFromUser()
+    {
+        Bundle params = new Bundle();
+        params.putString("fields", "id,name,picture.type(large)");    //Params what you want to get from the FB-user
+        new GraphRequest(AccessToken.getCurrentAccessToken(), "me", params, HttpMethod.GET,
+                new GraphRequest.Callback() {
+                    @Override
+                    public void onCompleted(GraphResponse response) {
+                        if (response != null) {
+                            try {
+
+                                //Todo update/create user in FIR-database
+
+                                JSONObject data = response.getJSONObject();
+                                Log.i("response", response.toString());
+                                if (data.has("picture"))
+                                {
+                                    String profilePicUrl = data.getJSONObject("picture").getJSONObject("data").getString("url");
+                                    Log.i("userPictureURl", profilePicUrl);
+
+                                    //Async task to set user Profileimage from url in drawer menu
+                                    new DownloadImageTask((ImageView)findViewById(R.id.userProfilePicture)).execute(profilePicUrl);
+                                }
+                                if (data.has("name"))
+                                {
+                                    String name = data.getString("name");
+                                    Log.i("Name", name);
+                                    //Async task to set user name in drawer menu
+                                    new DisplayUserNameTask((TextView)findViewById(R.id.userNameTextView)).execute(name);
+                                }
+                                if (data.has("id"))
+                                {
+                                    String id = data.getString("id");
+                                    Log.i("id", id);
+                                }
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    }
+                }).executeAsync();
     }
 
     void signOutButton(View view)
@@ -211,7 +271,7 @@ public class MenuTabbedView extends AppCompatActivity implements NavigationView.
 
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
-    public boolean onNavigationItemSelected(MenuItem item) {
+    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
@@ -237,4 +297,58 @@ public class MenuTabbedView extends AppCompatActivity implements NavigationView.
         return true;
     }
 
+    //Async task to set user Profileimage from url in drawer menu
+    private static class DownloadImageTask extends AsyncTask<String, Void, Bitmap> {
+
+        //private ImageView bmImage;
+        private WeakReference<ImageView> imageViewReference;
+
+        private DownloadImageTask(ImageView bmImage) {
+            imageViewReference = new WeakReference<>(bmImage);
+        }
+
+        protected Bitmap doInBackground(String... urls) {
+            String urldisplay = urls[0];
+            Bitmap bitmap = null;
+            try {
+                InputStream in = new java.net.URL(urldisplay).openStream();
+                bitmap = BitmapFactory.decodeStream(in);
+            } catch (Exception e) {
+                Log.e("Error", e.getMessage());
+                e.printStackTrace();
+            }
+            return bitmap;
+        }
+
+        protected void onPostExecute(Bitmap result) {
+            ImageView imageView = imageViewReference.get();
+            if(imageView == null) return;
+            imageView.setImageBitmap(result);
+        }
+    }
+
+
+    //Async task to set userName in drawer menu
+    private static class DisplayUserNameTask extends AsyncTask<String, Void, String> {
+
+        private WeakReference<TextView> textViewReference;
+
+        private DisplayUserNameTask(TextView name) {
+            textViewReference = new WeakReference<>(name);
+        }
+
+        protected String doInBackground(String... urls) {
+            String name = urls[0];
+            return name;
+        }
+
+        protected void onPostExecute(String result) {
+            TextView textView = textViewReference.get();
+            if(textView == null) return;
+            textView.setText(result);
+        }
+    }
 }
+
+
+
