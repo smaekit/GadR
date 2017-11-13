@@ -13,17 +13,25 @@ public class EventData {
     private String cretorID;
     private String title;
     private String description;
-    private Location location;
+//    private Location location;
     private Date date;
 
+    public EventData() {}
 
-    public EventData(String cretorID, String title, String description, Location location, Date date) {
+    public EventData(String cretorID, String title, String description, Date date) {
+        this.cretorID = cretorID;
+        this.title = title;
+        this.description = description;
+        this.date = date;
+    }
+
+    /*public EventData(String cretorID, String title, String description, Location location, Date date) {
         this.cretorID = cretorID;
         this.title = title;
         this.description = description;
         this.location = location;
         this.date = date;
-    }
+    }*/
 
     // Setters
     public void setCretorID(String cretorID) {
@@ -38,9 +46,9 @@ public class EventData {
         this.description = description;
     }
 
-    public void setLocation(Location location) {
+/*    public void setLocation(Location location) {
         this.location = location;
-    }
+    }*/
 
     public void setDate(Date date) {
         this.date = date;
@@ -59,9 +67,9 @@ public class EventData {
         return description;
     }
 
-    public Location getLocation() {
+/*    public Location getLocation() {
         return location;
-    }
+    }*/
 
     public Date getDate() {
         return date;

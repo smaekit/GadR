@@ -11,15 +11,17 @@ public class UserData {
     private String fbID;
     private String name;
     private int points;
-    private String imgURL_large;
-    private String imgURL_small;
+    private String imgurlLarge;
+    private String imgURLSmall;
 
-    public UserData(String fbID, String name, int points, String imgURL_large, String imgURL_small){
+    public UserData() {}
+
+    public UserData(String fbID, String name, int points, String imgurlLarge, String imgURLSmall){
         this.fbID = fbID;
         this.name = name;
         this.points = points;
-        this.imgURL_large = imgURL_large;
-        this.imgURL_small = imgURL_small;
+        this.imgurlLarge = imgurlLarge;
+        this.imgURLSmall = imgURLSmall;
     }
 
     //  Setters
@@ -35,13 +37,14 @@ public class UserData {
         this.points = points;
     }
 
-    public void setImgURL_large(String imgURL) {
-        this.imgURL_large = imgURL;
+    public void setImgurlLarge(String imgurlLarge) {
+        this.imgurlLarge = imgurlLarge;
     }
 
-    public void setImgURL_small(String imgURL) {
-        this.imgURL_small = imgURL;
+    public void setImgURLSmall(String imgURLSmall) {
+        this.imgURLSmall = imgURLSmall;
     }
+
 
 
     //  Getters
@@ -57,11 +60,11 @@ public class UserData {
         return points;
     }
 
-    public String getImgURL_large() {
-        return imgURL_large;
+    public String getImgurlLarge() {
+        return imgurlLarge;
     }
 
-    public String getImgURL_small() {
-        return imgURL_small;
+    public String getImgURLSmall() {
+        return imgURLSmall;
     }
 }

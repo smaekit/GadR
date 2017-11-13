@@ -10,13 +10,20 @@ public class StatusData {
 
     private String creatorID;
     private String status;
-    private Location location;
+//    private Location location;
 
+    public StatusData() {}
 
-    public StatusData(String creatorID, String status, Location location){
+/*    public StatusData(String creatorID, String status, Location location){
         this.creatorID = creatorID;
         this.status = status;
         this.location = location;
+    }*/
+
+
+    public StatusData(String creatorID, String status){
+        this.creatorID = creatorID;
+        this.status = status;
     }
 
 
@@ -29,9 +36,9 @@ public class StatusData {
         this.status = status;
     }
 
-    public void setLocation(Location location) {
+/*    public void setLocation(Location location) {
         this.location = location;
-    }
+    }*/
 
 
     //  Getters
@@ -43,7 +50,7 @@ public class StatusData {
         return status;
     }
 
-    public Location getLocation() {
+/*    public Location getLocation() {
         return location;
-    }
+    }*/
 }
