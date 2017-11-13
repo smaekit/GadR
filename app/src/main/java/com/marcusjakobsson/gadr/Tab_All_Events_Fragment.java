@@ -36,14 +36,7 @@ public class Tab_All_Events_Fragment extends Fragment {
 
         ListView listView = (ListView) view.findViewById(R.id.ListView_AllEvents);
 
-/*        ArrayAdapter<String> listViewAdapter = new ArrayAdapter<String>(
-                getActivity(),
-                android.R.layout.simple_list_item_1,
-                dummyData);*/
-
         ListAdapter listViewAdapter = new CustomListViewAdapter(getActivity(), dummyDataCustom);
-
-
         listView.setAdapter(listViewAdapter);
 
         return view;

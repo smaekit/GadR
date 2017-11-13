@@ -17,7 +17,7 @@ public class CustomListViewAdapter extends ArrayAdapter<CustomListViewItem>{
     public CustomListViewAdapter(Context context, CustomListViewItem[] listArr) {
         super(context, R.layout.custom_list_row, listArr);
     }
-    
+
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
 
