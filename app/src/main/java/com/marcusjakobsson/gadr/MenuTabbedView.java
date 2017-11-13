@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.location.Location;
 import android.os.AsyncTask;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -32,11 +33,20 @@ import com.facebook.GraphResponse;
 import com.facebook.HttpMethod;
 import com.facebook.login.LoginManager;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import org.json.JSONObject;
 
 import java.io.InputStream;
 import java.lang.ref.WeakReference;
+import java.net.URL;
+import java.util.Date;
+
+import static android.R.attr.name;
 
 public class MenuTabbedView extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
@@ -45,6 +55,8 @@ public class MenuTabbedView extends AppCompatActivity implements NavigationView.
     private SectionsPagerAdapter sectionsPageAdapter;
 
     private ViewPager viewPager;
+
+    private FirebaseConnection firebaseConnection;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -62,9 +74,7 @@ public class MenuTabbedView extends AppCompatActivity implements NavigationView.
 
 
         //Firebase
-        FirebaseConnection firebaseConnection = new FirebaseConnection();
-
-
+        firebaseConnection = new FirebaseConnection();
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.top_drawer_toolbar);
         setSupportActionBar(toolbar);
@@ -88,7 +98,6 @@ public class MenuTabbedView extends AppCompatActivity implements NavigationView.
         navigationView.setNavigationItemSelectedListener(this);
 
         getFacebookInfoFromUser();
-
     }
 
     public void getFacebookInfoFromUser()
