@@ -1,9 +1,5 @@
 package com.marcusjakobsson.gadr;
 
-import android.location.Location;
-
-import com.google.android.gms.maps.model.LatLng;
-
 import java.util.Date;
 
 /**

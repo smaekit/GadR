@@ -1,10 +1,6 @@
 package com.marcusjakobsson.gadr;
 
-import android.location.Location;
-
 import com.google.android.gms.maps.model.LatLng;
-
-import java.security.PublicKey;
 
 /**
  * Created by carlbratt on 2017-11-14.
@@ -13,10 +9,6 @@ import java.security.PublicKey;
 public class CustomLocation {
 
     private static final String TAG = "CustomLocation";
-
-    // Constants
-    public static String default_provider = "defaultProvider";
-
 
     private double latitude;
     private double longitude;
