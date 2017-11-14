@@ -10,28 +10,23 @@ import java.util.Date;
 
 public class EventData {
 
+    private static final String TAG = "EventData";
+
     private String cretorID;
     private String title;
     private String description;
-//    private Location location;
+    private CustomLocation customLocation;
     private Date date;
 
     public EventData() {}
 
-    public EventData(String cretorID, String title, String description, Date date) {
+    public EventData(String cretorID, String title, String description, CustomLocation customLocation, Date date) {
         this.cretorID = cretorID;
         this.title = title;
         this.description = description;
+        this.customLocation = customLocation;
         this.date = date;
     }
-
-    /*public EventData(String cretorID, String title, String description, Location location, Date date) {
-        this.cretorID = cretorID;
-        this.title = title;
-        this.description = description;
-        this.location = location;
-        this.date = date;
-    }*/
 
     // Setters
     public void setCretorID(String cretorID) {
@@ -46,9 +41,9 @@ public class EventData {
         this.description = description;
     }
 
-/*    public void setLocation(Location location) {
-        this.location = location;
-    }*/
+    public void setCustomLocation(CustomLocation customLocation) {
+        this.customLocation = customLocation;
+    }
 
     public void setDate(Date date) {
         this.date = date;
@@ -67,9 +62,9 @@ public class EventData {
         return description;
     }
 
-/*    public Location getLocation() {
-        return location;
-    }*/
+    public CustomLocation getCustomLocation() {
+        return customLocation;
+    }
 
     public Date getDate() {
         return date;

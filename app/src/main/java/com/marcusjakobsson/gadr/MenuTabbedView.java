@@ -32,6 +32,7 @@ import com.facebook.GraphRequest;
 import com.facebook.GraphResponse;
 import com.facebook.HttpMethod;
 import com.facebook.login.LoginManager;
+import com.google.android.gms.maps.model.LatLng;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -44,6 +45,7 @@ import org.json.JSONObject;
 import java.io.InputStream;
 import java.lang.ref.WeakReference;
 import java.net.URL;
+import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -130,6 +132,7 @@ public class MenuTabbedView extends AppCompatActivity implements NavigationView.
                     "creId" + Integer.toString(i),
                     "EventTitle" + Integer.toString(i),
                     "Bla bla bla desc " + Integer.toString(i),
+                    new CustomLocation(57.7824464, 14.176048900000069),
                     new Date())
             );
         }*/
@@ -145,10 +148,12 @@ public class MenuTabbedView extends AppCompatActivity implements NavigationView.
             }
         });*/
 
-/*       for (int i = 0; i< 5; i++) {
+       /*for (int i = 0; i< 5; i++) {
             fc.AddStatus(new StatusData(
                     "creID" +Integer.toString(i),
-                    "This is a cool status to have"
+                    "This is a cool status to have",
+                    new CustomLocation(57.7824464, 14.176048900000069),
+                    new Date()
             ));
         }*/
 
@@ -158,7 +163,7 @@ public class MenuTabbedView extends AppCompatActivity implements NavigationView.
             public void onSuccess(List<StatusData> result){
 
                 for (int i = 0; i < result.size(); i++) {
-                    Log.i(TAG, result.get(i).getStatus());
+                    Log.i(TAG, DateFormat.getDateTimeInstance().format(result.get(i).getDate()));
                 }
 
             }

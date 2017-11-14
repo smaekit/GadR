@@ -8,19 +8,21 @@ package com.marcusjakobsson.gadr;
 
 public class UserData {
 
+    private static final String TAG = "UserData";
+
     private String fbID;
     private String name;
     private int points;
-    private String imgurlLarge;
+    private String imgURLLarge;
     private String imgURLSmall;
 
     public UserData() {}
 
-    public UserData(String fbID, String name, int points, String imgurlLarge, String imgURLSmall){
+    public UserData(String fbID, String name, int points, String imgURLLarge, String imgURLSmall){
         this.fbID = fbID;
         this.name = name;
         this.points = points;
-        this.imgurlLarge = imgurlLarge;
+        this.imgURLLarge = imgURLLarge;
         this.imgURLSmall = imgURLSmall;
     }
 
@@ -37,8 +39,8 @@ public class UserData {
         this.points = points;
     }
 
-    public void setImgurlLarge(String imgurlLarge) {
-        this.imgurlLarge = imgurlLarge;
+    public void setImgurlLarge(String imgURLLarge) {
+        this.imgURLLarge = imgURLLarge;
     }
 
     public void setImgURLSmall(String imgURLSmall) {
@@ -60,8 +62,8 @@ public class UserData {
         return points;
     }
 
-    public String getImgurlLarge() {
-        return imgurlLarge;
+    public String getImgURLLarge() {
+        return imgURLLarge;
     }
 
     public String getImgURLSmall() {

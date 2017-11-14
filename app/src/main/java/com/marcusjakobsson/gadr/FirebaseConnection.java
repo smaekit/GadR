@@ -58,25 +58,9 @@ public class FirebaseConnection {
     public FirebaseConnection() {
         mDatabase = FirebaseDatabase.getInstance();
         mRef = mDatabase.getReference();
-
-        ValueEventListener valueEventListener = new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                Log.i(TAG, dataSnapshot.toString());
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-                // Getting Post failed, log a message
-                Log.w(TAG, "loadPost:onCancelled", databaseError.toException());
-                // ...
-            }
-        };
-
-        mRef.child(users_parent).addListenerForSingleValueEvent(valueEventListener);
     }
 
-
+//Users callback func
     public void getUsers(final UsersCallback callback) {
         DatabaseReference ref = mRef.child(users_parent);
 
@@ -136,26 +120,26 @@ public class FirebaseConnection {
 
 
 // Status callback func
-public void getStatus(final StatusCallback callback) {
-    DatabaseReference ref = mRef.child(status_parent);
+    public void getStatus(final StatusCallback callback) {
+        DatabaseReference ref = mRef.child(status_parent);
 
-    final List<StatusData> statusData = new ArrayList<>();
+        final List<StatusData> statusData = new ArrayList<>();
 
-    ValueEventListener valueEventListener = new ValueEventListener() {
-        @Override
-        public void onDataChange(DataSnapshot dataSnapshot) {
-            for (DataSnapshot ds: dataSnapshot.getChildren()) {
-                statusData.add(ds.getValue(StatusData.class));
+        ValueEventListener valueEventListener = new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for (DataSnapshot ds: dataSnapshot.getChildren()) {
+                    statusData.add(ds.getValue(StatusData.class));
+                }
+                callback.onSuccess(statusData);
             }
-            callback.onSuccess(statusData);
-        }
-        @Override
-        public void onCancelled(DatabaseError databaseError) {
-            Log.w(TAG, "getStatus:onCancelled", databaseError.toException());
-        }
-    };
-    ref.addListenerForSingleValueEvent(valueEventListener);
-}
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Log.w(TAG, "getStatus:onCancelled", databaseError.toException());
+            }
+        };
+        ref.addListenerForSingleValueEvent(valueEventListener);
+    }
 
 
 
@@ -170,7 +154,7 @@ public void getStatus(final StatusCallback callback) {
 
         ref.child(users_name).setValue(userData.getName());
         ref.child(users_points).setValue(userData.getPoints());
-        ref.child(users_imgURLLarge).setValue(userData.getImgurlLarge());
+        ref.child(users_imgURLLarge).setValue(userData.getImgURLLarge());
         ref.child(users_imgURLSmall).setValue(userData.getImgURLSmall());
     }
 

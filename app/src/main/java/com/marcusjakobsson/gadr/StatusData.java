@@ -2,33 +2,34 @@ package com.marcusjakobsson.gadr;
 
 import android.location.Location;
 
+import com.google.android.gms.maps.model.LatLng;
+
+import java.util.Date;
+
 /**
  * Created by carlbratt on 2017-11-13.
  */
 
 public class StatusData {
 
+    private static final String TAG = "StatusData";
+
     private String creatorID;
     private String status;
-//    private Location location;
+    private CustomLocation customLocation;
+    private Date date;
 
     public StatusData() {}
 
-/*    public StatusData(String creatorID, String status, Location location){
+    public StatusData(String creatorID, String status, CustomLocation customLocation, Date date){
         this.creatorID = creatorID;
         this.status = status;
-        this.location = location;
-    }*/
-
-
-    public StatusData(String creatorID, String status){
-        this.creatorID = creatorID;
-        this.status = status;
+        this.customLocation = customLocation;
+        this.date = date;
     }
 
-
     //  Setters
-    public void setFbID(String creatorID) {
+    public void setCreatorID(String creatorID) {
         this.creatorID = creatorID;
     }
 
@@ -36,13 +37,16 @@ public class StatusData {
         this.status = status;
     }
 
-/*    public void setLocation(Location location) {
-        this.location = location;
-    }*/
+    public void setCustomLocation(CustomLocation customLocation) {
+        this.customLocation = customLocation;
+    }
 
+    public void setDate(Date date) {
+        this.date = date;
+    }
 
     //  Getters
-    public String getFbID() {
+    public String getCreatorID() {
         return creatorID;
     }
 
@@ -50,7 +54,11 @@ public class StatusData {
         return status;
     }
 
-/*    public Location getLocation() {
-        return location;
-    }*/
+    public CustomLocation getCustomLocation() {
+        return customLocation;
+    }
+
+    public Date getDate() {
+        return date;
+    }
 }
