@@ -71,6 +71,7 @@ public class MenuTabbedView extends AppCompatActivity implements NavigationView.
         sectionsPageAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
 
         viewPager = (ViewPager) findViewById(R.id.container);
+        viewPager.setOffscreenPageLimit(3);  //How many screens before reload
         setupViewPager(viewPager);
 
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
