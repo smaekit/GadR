@@ -39,7 +39,7 @@ public class UserData {
         this.points = points;
     }
 
-    public void setImgurlLarge(String imgURLLarge) {
+    public void setImgURLLarge(String imgURLLarge) {
         this.imgURLLarge = imgURLLarge;
     }
 

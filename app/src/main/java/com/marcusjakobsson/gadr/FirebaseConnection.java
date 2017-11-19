@@ -151,12 +151,9 @@ public class FirebaseConnection {
 
     public void AddUser(UserData userData) {
         DatabaseReference ref = mRef.child(users_parent).child(userData.getFbID());
-
-        ref.child(users_name).setValue(userData.getName());
-        ref.child(users_points).setValue(userData.getPoints());
-        ref.child(users_imgURLLarge).setValue(userData.getImgURLLarge());
-        ref.child(users_imgURLSmall).setValue(userData.getImgURLSmall());
+        ref.setValue(userData);
     }
+
 
     public void AddStatus(StatusData statusData) {
         DatabaseReference ref = mRef.child(status_parent).push();
