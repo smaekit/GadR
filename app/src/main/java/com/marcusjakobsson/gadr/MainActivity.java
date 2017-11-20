@@ -135,17 +135,38 @@ public class MainActivity extends AppCompatActivity {
                         {
                             // Sign in success, update UI with the signed-in user's information
                             Log.d(TAG, "signInWithCredential:success");
-                            FirebaseUser user = mAuth.getCurrentUser();
-
-                            getFacebookInfoFromUser(new MyCallbackListener()
+                            final FirebaseUser user = mAuth.getCurrentUser();
+                            if (user != null)
                             {
-                                @Override
-                                public void callback(UserData userData) {
+                                //This func checks if user exists in database if it does no update is made
+                                //if not in database gets userInfo from FB and creates a new user
+                                fc.checkIfUserAlreadyExists(user, new FirebaseConnection.CurrentUserCallback() {
+                                    @Override
+                                    public void onSuccess(Boolean result) {
+                                        if(result)
+                                        {
+                                            updateUI(user);
+                                        }
+                                        else
+                                        {
+                                            getFacebookInfoFromUser(new MyCallbackListener()
+                                            {
+                                                @Override
+                                                public void callback(UserData userData) {
 
-                                    fc.AddUser(userData);   //Adding a user to the Firebase Database
-                                }
-                            });
-                            updateUI(user);
+                                                    userData.setFbID(user.getUid());
+                                                    fc.AddUser(userData);   //Adding a user to the Firebase Database
+                                                }
+                                            });
+                                            updateUI(user);
+                                        }
+                                    }
+                                });
+                            }
+
+
+
+
                         } else {
                             // If sign in fails, display a message to the user.
                             Log.w(TAG, "signInWithCredential:failure", task.getException());
@@ -188,7 +209,7 @@ public class MainActivity extends AppCompatActivity {
         final UserData user = new UserData();
         Bundle params = new Bundle();
         Bundle params2 = new Bundle();
-        params.putString("fields", "id,name,picture.type(large)");    //Params what you want to get from the FB-user
+        params.putString("fields", "name,picture.type(large)");    //Params what you want to get from the FB-user
         params2.putString("fields", "picture");                      //Graph request for the small profilepicture
 
         //Start GraphRequestBatch
@@ -208,7 +229,6 @@ public class MainActivity extends AppCompatActivity {
                             Log.i("response", response.toString());
                             String profilePicUrl = "";
                             String name = "";
-                            String id = "";
 
                             profilePicUrl = data.getJSONObject("picture").getJSONObject("data").getString("url");
                             Log.i("LargeUserPictureURl", profilePicUrl);
@@ -218,9 +238,6 @@ public class MainActivity extends AppCompatActivity {
                             Log.i("Name", name);
                             user.setName(name);
 
-                            id = data.getString("id");
-                            Log.i("id", id);
-                            user.setFbID(id);
 
 
                         } catch (Exception e) {

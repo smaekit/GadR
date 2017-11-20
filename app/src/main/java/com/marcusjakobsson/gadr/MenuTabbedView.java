@@ -34,6 +34,7 @@ import com.facebook.HttpMethod;
 import com.facebook.login.LoginManager;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -78,8 +79,6 @@ public class MenuTabbedView extends AppCompatActivity implements NavigationView.
         tabLayout.setupWithViewPager(viewPager);
 
 
-        //Firebase
-        firebaseConnection = new FirebaseConnection();
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.top_drawer_toolbar);
         setSupportActionBar(toolbar);
@@ -102,8 +101,8 @@ public class MenuTabbedView extends AppCompatActivity implements NavigationView.
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        getFacebookInfoFromUser();
 
+        //Firebase
         FirebaseConnection fc = new FirebaseConnection();
 
 
@@ -115,16 +114,14 @@ public class MenuTabbedView extends AppCompatActivity implements NavigationView.
                     "SmallURL" + Integer.toString(i)));
         }*/
 
-/*        fc.getUsers(new FirebaseConnection.UsersCallback(){
+       fc.getUsers(new FirebaseConnection.UsersCallback(){
             @Override
             public void onSuccess(List<UserData> result){
 
-                for (int i = 0; i < result.size(); i++) {
-                    Log.i(TAG, result.get(i).getName());
-                }
+                setupCurrentUser(result);
 
             }
-        });*/
+        });
 
 
 
@@ -174,47 +171,30 @@ public class MenuTabbedView extends AppCompatActivity implements NavigationView.
 
     }
 
-    public void getFacebookInfoFromUser()
+
+    //Checks if the current user is in the database then updates the drawerMenu profile picture and name
+    private void setupCurrentUser(List<UserData> result)
     {
-        Bundle params = new Bundle();
-        params.putString("fields", "id,name,picture.type(large)");    //Params what you want to get from the FB-user
-        new GraphRequest(AccessToken.getCurrentAccessToken(), "me", params, HttpMethod.GET,
-                new GraphRequest.Callback() {
-                    @Override
-                    public void onCompleted(GraphResponse response) {
-                        if (response != null) {
-                            try {
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        if (user != null)
+        {
+            for (int i = 0; i < result.size(); i++) {
+                Log.i(TAG,"searching");
+                Log.i(TAG,result.get(i).getFbID());
+                Log.i(TAG,user.getUid());
+                if (result.get(i).getFbID().equals(user.getUid()) )
+                {
+                    Log.i(TAG,"found the right user lets get his picture");
+                    String profilePicUrl = result.get(i).getImgURLLarge();
+                    String name = result.get(i).getName();
 
-                                //Todo update/create user in FIR-database
+                    new DownloadImageTask((ImageView)findViewById(R.id.userProfilePicture)).execute(profilePicUrl);
+                    TextView textView = (TextView)findViewById(R.id.userNameTextView);
+                    textView.setText(name);
+                }
+            }
+        }
 
-                                JSONObject data = response.getJSONObject();
-                                Log.i("response", response.toString());
-                                if (data.has("picture"))
-                                {
-                                    String profilePicUrl = data.getJSONObject("picture").getJSONObject("data").getString("url");
-                                    Log.i("userPictureURl", profilePicUrl);
-
-                                    //Async task to set user Profileimage from url in drawer menu
-                                    new DownloadImageTask((ImageView)findViewById(R.id.userProfilePicture)).execute(profilePicUrl);
-                                }
-                                if (data.has("name"))
-                                {
-                                    String name = data.getString("name");
-                                    Log.i("Name", name);
-                                    //Async task to set user name in drawer menu
-                                    new DisplayUserNameTask((TextView)findViewById(R.id.userNameTextView)).execute(name);
-                                }
-                                if (data.has("id"))
-                                {
-                                    String id = data.getString("id");
-                                    Log.i("id", id);
-                                }
-                            } catch (Exception e) {
-                                e.printStackTrace();
-                            }
-                        }
-                    }
-                }).executeAsync();
     }
 
     void signOutButton(View view)
@@ -410,27 +390,6 @@ public class MenuTabbedView extends AppCompatActivity implements NavigationView.
         }
     }
 
-
-    //Async task to set userName in drawer menu
-    private static class DisplayUserNameTask extends AsyncTask<String, Void, String> {
-
-        private WeakReference<TextView> textViewReference;
-
-        private DisplayUserNameTask(TextView name) {
-            textViewReference = new WeakReference<>(name);
-        }
-
-        protected String doInBackground(String... urls) {
-            String name = urls[0];
-            return name;
-        }
-
-        protected void onPostExecute(String result) {
-            TextView textView = textViewReference.get();
-            if(textView == null) return;
-            textView.setText(result);
-        }
-    }
 }
 
 

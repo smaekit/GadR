@@ -1,7 +1,11 @@
 package com.marcusjakobsson.gadr;
 
 import android.util.Log;
+import android.widget.ImageView;
+import android.widget.TextView;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -41,6 +45,10 @@ public class FirebaseConnection {
         void onSuccess(List<UserData> result);
     }
 
+    public interface CurrentUserCallback{
+        void onSuccess(Boolean result);
+    }
+
     public interface EventsCallback{
         void onSuccess(List<EventData> result);
     }
@@ -58,6 +66,41 @@ public class FirebaseConnection {
     public FirebaseConnection() {
         mDatabase = FirebaseDatabase.getInstance();
         mRef = mDatabase.getReference();
+    }
+
+    public void checkIfUserAlreadyExists(final FirebaseUser user, final CurrentUserCallback callback) {
+        DatabaseReference ref = mRef.child(users_parent);
+
+        final List<UserData> userData = new ArrayList<>();
+
+        ValueEventListener valueEventListener = new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for (DataSnapshot ds: dataSnapshot.getChildren()) {
+                    userData.add(ds.getValue(UserData.class));
+                }
+
+                for (int i = 0; i < userData.size(); i++) {
+
+                    if (userData.get(i).getFbID().equals(user.getUid()) )
+                    {
+                        Log.i(TAG,"User found in database");
+                        callback.onSuccess(true);
+                        return;
+                    }
+                }
+                Log.i(TAG,"No user was found in database");
+                callback.onSuccess(false);
+
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Log.w(TAG, "getUsers:onCancelled", databaseError.toException());
+            }
+        };
+        ref.addListenerForSingleValueEvent(valueEventListener);
     }
 
 //Users callback func

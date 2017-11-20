@@ -69,4 +69,15 @@ public class UserData {
     public String getImgURLSmall() {
         return imgURLSmall;
     }
+
+    @Override
+    public String toString() {
+        return "UserData{" +
+                "fbID='" + fbID + '\'' +
+                ", name='" + name + '\'' +
+                ", points=" + points +
+                ", imgURLLarge='" + imgURLLarge + '\'' +
+                ", imgURLSmall='" + imgURLSmall + '\'' +
+                '}';
+    }
 }
