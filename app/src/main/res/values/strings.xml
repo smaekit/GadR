@@ -16,6 +16,8 @@
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="logout">Logout</string>
+    <string name="enter_address_city_or_post_code">Enter Address, City or Post Code</string>
+    <string name="searchicon">search icon</string>
 
 
 </resources>
