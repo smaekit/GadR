@@ -19,10 +19,18 @@ import android.widget.EditText;
 import android.widget.TimePicker;
 
 import com.facebook.AccessToken;
+import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
+import com.google.android.gms.common.GooglePlayServicesRepairableException;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Locale;
+
+import com.google.android.gms.common.api.Status;
+import com.google.android.gms.location.places.*;
+import com.google.android.gms.location.places.ui.PlaceAutocomplete;
+import com.google.android.gms.location.places.ui.PlaceAutocompleteFragment;
+import com.google.android.gms.location.places.ui.PlaceSelectionListener;
 
 public class AddEventActivity extends AppCompatActivity {
 
@@ -31,17 +39,22 @@ public class AddEventActivity extends AppCompatActivity {
     public static final int REQUEST_CODE_DidAddEvent = 1;
     public static final String IntentExtra_DidAddEvent = "didAddEvent";
 
+    public static final int PLACE_AUTOCOMPLETE_REQUEST_CODE = 5;
+
     EditText title_EditText;
     EditText description_EditText;
     EditText date_EditText;
     EditText startTime_EditText;
     EditText endTime_EditText;
+    EditText location_EditText;
 
     Calendar calendar;
     Calendar endCalendar;
     DatePickerDialog.OnDateSetListener dateListener;
     TimePickerDialog.OnTimeSetListener startTimeListener;
     TimePickerDialog.OnTimeSetListener endTimeListener;
+
+    CustomLocation customLocation = new CustomLocation();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,6 +66,7 @@ public class AddEventActivity extends AppCompatActivity {
         date_EditText = (EditText) findViewById(R.id.EditText_Date);
         startTime_EditText = (EditText) findViewById(R.id.EditText_StartTime);
         endTime_EditText = (EditText) findViewById(R.id.EditText_EndTime);
+        location_EditText = (EditText) findViewById(R.id.EditText_Location);
 
 
         calendar = Calendar.getInstance();
@@ -145,10 +159,30 @@ public class AddEventActivity extends AppCompatActivity {
                         endCalendar.get(Calendar.HOUR),
                         endCalendar.get(Calendar.MINUTE),
                         true).show();
+
             }
         });
 
 
+        location_EditText.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                openGooglePlaceSearch();
+            }
+        });
+    }
+
+    private void openGooglePlaceSearch() {
+        try {
+            Intent intent =
+                    new PlaceAutocomplete.IntentBuilder(PlaceAutocomplete.MODE_OVERLAY)
+                            .build(this);
+            startActivityForResult(intent, PLACE_AUTOCOMPLETE_REQUEST_CODE);
+        } catch (GooglePlayServicesRepairableException e) {
+            // TODO: Handle the error.
+        } catch (GooglePlayServicesNotAvailableException e) {
+            // TODO: Handle the error.
+        }
     }
 
 
@@ -191,7 +225,7 @@ public class AddEventActivity extends AppCompatActivity {
                     AccessToken.USER_ID_KEY,
                     title_EditText.getText().toString(),
                     description_EditText.getText().toString(),
-                    new CustomLocation(),               //Todo: get location
+                    customLocation,
                     date_EditText.getText().toString(),
                     startTime_EditText.getText().toString(),
                     endTime_EditText.getText().toString()
@@ -223,16 +257,45 @@ public class AddEventActivity extends AppCompatActivity {
 
         if (fieldIsEmpty(endTime_EditText)) { fieldsOK = false; }
 
+        if (fieldIsEmpty(location_EditText)) { fieldsOK = false; }
+
+        //Compare times.
+        timesAreInvalid(startTime_EditText, endTime_EditText);
 
         return fieldsOK;
     }
 
+    private boolean timesAreInvalid(EditText time1, EditText time2) {
+        int comp = time1.getText().toString().compareTo(time2.getText().toString());
+
+        if (comp < 0) {
+            //T1 is smaller
+            return false;
+        }
+        else if (comp > 0) {
+            //T1 is larger
+            highlightInvalidEditText(time1);
+            highlightInvalidEditText(time2);
+            return true;
+        }
+        else {
+            //T1 is equal to t2
+            highlightInvalidEditText(time1);
+            highlightInvalidEditText(time2);
+            return true;
+        }
+    }
+
     private boolean fieldIsEmpty(EditText editText) {
         if (TextUtils.isEmpty(editText.getText().toString())) {
-            editText.getBackground().setColorFilter(Color.RED, PorterDuff.Mode.DARKEN);
+            //highlightInvalidEditText(editText);
             return true;
         }
         return false;
+    }
+
+    private void highlightInvalidEditText(EditText editText) {
+        editText.getBackground().setColorFilter(Color.RED, PorterDuff.Mode.DARKEN);
     }
 
     private void hideKeyboard(){
@@ -240,6 +303,28 @@ public class AddEventActivity extends AppCompatActivity {
         if (view != null) {
             InputMethodManager inputMethodManager = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
             inputMethodManager.hideSoftInputFromWindow(view.getWindowToken(), 0);
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == PLACE_AUTOCOMPLETE_REQUEST_CODE) {
+            if (resultCode == RESULT_OK) {
+                Place place = PlaceAutocomplete.getPlace(this, data);
+                Log.i(TAG, "Place: " + place.getName());
+                Log.i(TAG, place.getLatLng().toString() + " " + place.getAddress());
+
+                location_EditText.setText(place.getAddress());
+                customLocation.setValues(place.getLatLng().latitude, place.getLatLng().longitude);
+
+            } else if (resultCode == PlaceAutocomplete.RESULT_ERROR) {
+                Status status = PlaceAutocomplete.getStatus(this, data);
+                // TODO: Handle the error.
+                Log.i(TAG, status.getStatusMessage());
+
+            } else if (resultCode == RESULT_CANCELED) {
+                // The user canceled the operation.
+            }
         }
     }
 }

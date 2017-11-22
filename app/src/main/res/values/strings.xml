@@ -21,6 +21,7 @@
     <string name="AddEvent_Date">Date</string>
     <string name="AddEvent_StartTime">Start time</string>
     <string name="AddEvent_EndTime">End Time</string>
+    <string name="AddEvent_Location">Location</string>
 
 
 </resources>

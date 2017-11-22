@@ -65,7 +65,13 @@
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/google_maps_key" />
 
-        <activity android:name=".AddEventActivity"></activity>
+
+
+        <activity android:name=".AddEventActivity">
+            <meta-data
+                android:name="com.google.android.geo.API_KEY"
+                android:value="AIzaSyAAooAsvOn5b62O8kmQ1qF1bstEB08Wlog" />
+        </activity>
     </application>
 
 </manifest>

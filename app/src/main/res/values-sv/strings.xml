@@ -14,4 +14,5 @@
     <string name="AddEvent_Date">Datum</string>
     <string name="AddEvent_StartTime">Starttid</string>
     <string name="AddEvent_EndTime">Sluttid</string>
+    <string name="AddEvent_Location">Plats</string>
 </resources>
