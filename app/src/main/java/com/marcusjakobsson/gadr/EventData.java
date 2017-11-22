@@ -26,6 +26,7 @@ public class EventData {
         this.description = description;
         this.customLocation = customLocation;
         this.date = date;
+
     }
 
     // Setters
@@ -68,5 +69,17 @@ public class EventData {
 
     public Date getDate() {
         return date;
+    }
+
+
+    @Override
+    public String toString() {
+        return "EventData{" +
+                "cretorID='" + cretorID + '\'' +
+                ", title='" + title + '\'' +
+                ", description='" + description + '\'' +
+                ", customLocation=" + customLocation +
+                ", dateListener=" + date +
+                '}';
     }
 }

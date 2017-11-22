@@ -63,6 +63,8 @@ public class MenuTabbedView extends AppCompatActivity implements NavigationView.
 
     private FirebaseConnection firebaseConnection;
 
+
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -87,10 +89,16 @@ public class MenuTabbedView extends AppCompatActivity implements NavigationView.
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+//                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+  //                      .setAction("Action", null).show();
+                Intent intent = new Intent(getApplicationContext(), AddEventActivity.class);
+                startActivityForResult(intent, AddEventActivity.REQUEST_CODE_DidAddEvent);
             }
         });
+
+
+
+
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -169,6 +177,19 @@ public class MenuTabbedView extends AppCompatActivity implements NavigationView.
 
 
 
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (resultCode == RESULT_OK) {
+            if (requestCode == AddEventActivity.REQUEST_CODE_DidAddEvent) {
+                Boolean b = data.getBooleanExtra(AddEventActivity.IntentExtra_DidAddEvent, false);
+                if (b) { Log.i(TAG, "True"); }
+                else { Log.i(TAG, "False"); }
+            }
+        }
     }
 
 

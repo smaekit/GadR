@@ -41,4 +41,6 @@ public class Tab_All_Events_Fragment extends Fragment {
 
         return view;
     }
+
+
 }

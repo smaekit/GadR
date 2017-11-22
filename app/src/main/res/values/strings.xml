@@ -16,6 +16,10 @@
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="logout">Logout</string>
+    <string name="AddEvent_title">Title</string>
+    <string name="AddEvent_Time">Time</string>
+    <string name="AddEvent_Description">Description</string>
+    <string name="AddEvent_Date">Date</string>
 
 
 </resources>

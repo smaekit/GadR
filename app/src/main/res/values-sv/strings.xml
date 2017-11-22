@@ -9,4 +9,8 @@
     <string name="Tabbed_Menu_My">Mina event</string>
     <string name="title_activity_tabbed_view"></string>
     <string name="logout">Logga ut</string>
+    <string name="AddEvent_title">Titel</string>
+    <string name="AddEvent_Time">Tid</string>
+    <string name="AddEvent_Description">Beskrivning</string>
+    <string name="AddEvent_Date">Datum</string>
 </resources>
