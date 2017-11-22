@@ -16,17 +16,23 @@ public class EventData {
     private String title;
     private String description;
     private CustomLocation customLocation;
-    private Date date;
+    //private Date date;
+
+    private String date;
+    private String startTime;
+    private String endTime;
 
     public EventData() {}
 
-    public EventData(String cretorID, String title, String description, CustomLocation customLocation, Date date) {
+    public EventData(String cretorID, String title, String description, CustomLocation customLocation, String date, String startTime, String endTime) {
         this.cretorID = cretorID;
         this.title = title;
         this.description = description;
         this.customLocation = customLocation;
-        this.date = date;
 
+        this.date = date;
+        this.startTime = startTime;
+        this.endTime = endTime;
     }
 
     // Setters
@@ -42,13 +48,13 @@ public class EventData {
         this.description = description;
     }
 
-    public void setCustomLocation(CustomLocation customLocation) {
-        this.customLocation = customLocation;
-    }
+    public void setCustomLocation(CustomLocation customLocation) { this.customLocation = customLocation; }
 
-    public void setDate(Date date) {
-        this.date = date;
-    }
+    public void setDate(String date) { this.date = date; }
+
+    public void setStartTime(String startTime) { this.startTime = startTime; }
+
+    public void setEndTime(String endTime) { this.endTime = endTime; }
 
     //  Getters
     public String getCretorID() {
@@ -67,10 +73,13 @@ public class EventData {
         return customLocation;
     }
 
-    public Date getDate() {
+    public String getDate() {
         return date;
     }
 
+    public String getStartTime() { return startTime; }
+
+    public String getEndTime() { return endTime; }
 
     @Override
     public String toString() {
@@ -79,7 +88,9 @@ public class EventData {
                 ", title='" + title + '\'' +
                 ", description='" + description + '\'' +
                 ", customLocation=" + customLocation +
-                ", dateListener=" + date +
+                ", date='" + date + '\'' +
+                ", startTime='" + startTime + '\'' +
+                ", endTime='" + endTime + '\'' +
                 '}';
     }
 }

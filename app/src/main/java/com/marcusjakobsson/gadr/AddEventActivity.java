@@ -4,25 +4,29 @@ import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.PorterDuff;
+import android.graphics.drawable.Drawable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.TimePicker;
 
+import com.facebook.AccessToken;
+
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.Locale;
-
-import com.facebook.AccessToken;
 
 public class AddEventActivity extends AppCompatActivity {
 
-    private static final String TAG = "MenuTabbedView";
+    private static final String TAG = "AddEventActivity";
 
     public static final int REQUEST_CODE_DidAddEvent = 1;
     public static final String IntentExtra_DidAddEvent = "didAddEvent";
@@ -30,11 +34,14 @@ public class AddEventActivity extends AppCompatActivity {
     EditText title_EditText;
     EditText description_EditText;
     EditText date_EditText;
-    EditText time_EditText;
+    EditText startTime_EditText;
+    EditText endTime_EditText;
 
     Calendar calendar;
+    Calendar endCalendar;
     DatePickerDialog.OnDateSetListener dateListener;
-    TimePickerDialog.OnTimeSetListener timeListener;
+    TimePickerDialog.OnTimeSetListener startTimeListener;
+    TimePickerDialog.OnTimeSetListener endTimeListener;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,9 +51,18 @@ public class AddEventActivity extends AppCompatActivity {
         title_EditText = (EditText) findViewById(R.id.EditText_Title);
         description_EditText = (EditText) findViewById(R.id.EditText_Description);
         date_EditText = (EditText) findViewById(R.id.EditText_Date);
-        time_EditText = (EditText) findViewById(R.id.EditText_Time);
+        startTime_EditText = (EditText) findViewById(R.id.EditText_StartTime);
+        endTime_EditText = (EditText) findViewById(R.id.EditText_EndTime);
+
 
         calendar = Calendar.getInstance();
+        endCalendar = Calendar.getInstance();
+
+        setOnTouchListener(title_EditText);
+        setOnTouchListener(description_EditText);
+        setOnTouchListener(startTime_EditText);
+        setOnTouchListener(endTime_EditText);
+        setOnTouchListener(date_EditText);
 
         dateListener = new DatePickerDialog.OnDateSetListener() {
             @Override
@@ -77,36 +93,75 @@ public class AddEventActivity extends AppCompatActivity {
                         calendar.get(Calendar.DAY_OF_MONTH));
 
                 datePickerDialog.getDatePicker().setMinDate(System.currentTimeMillis() - 1000);
-
                 datePickerDialog.show();
             }
         });
 
-        timeListener = new TimePickerDialog.OnTimeSetListener() {
+        startTimeListener = new TimePickerDialog.OnTimeSetListener() {
             @Override
             public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
                 calendar.set(Calendar.HOUR, hourOfDay);
                 calendar.set(Calendar.MINUTE, minute);
 
-                updateTimeLabel();
+                updateStartTimeLabel();
             }
         };
 
 
-        time_EditText.setOnClickListener(new View.OnClickListener() {
+        startTime_EditText.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 hideKeyboard();
 
                 new TimePickerDialog(
                         AddEventActivity.this,
-                        timeListener,
+                        startTimeListener,
                         calendar.get(Calendar.HOUR),
                         calendar.get(Calendar.MINUTE),
                         true).show();
             }
         });
+
+
+        endTimeListener = new TimePickerDialog.OnTimeSetListener() {
+            @Override
+            public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+                endCalendar.set(Calendar.HOUR, hourOfDay);
+                endCalendar.set(Calendar.MINUTE, minute);
+
+                updateEndTimeLabel();
+            }
+        };
+
+
+        endTime_EditText.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                hideKeyboard();
+
+                new TimePickerDialog(
+                        AddEventActivity.this,
+                        endTimeListener,
+                        endCalendar.get(Calendar.HOUR),
+                        endCalendar.get(Calendar.MINUTE),
+                        true).show();
+            }
+        });
+
+
     }
+
+
+    private void setOnTouchListener(final EditText editText) {
+        editText.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                editText.getBackground().clearColorFilter();
+                return false;
+            }
+        });
+    }
+
 
     private void updateDateLabel() {
         String customFormat = "dd/MM - yy";
@@ -115,11 +170,16 @@ public class AddEventActivity extends AppCompatActivity {
         date_EditText.setText(simpleDateFormat.format(calendar.getTime()));
     }
 
-    private void updateTimeLabel() {
+    private void updateStartTimeLabel() {
         String customFormat = "HH:mm";
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat(customFormat, Locale.US);
-        time_EditText.setText(simpleDateFormat.format(calendar.getTime()));
+        startTime_EditText.setText(simpleDateFormat.format(calendar.getTime()));
+    }
 
+    private void updateEndTimeLabel() {
+        String customFormat = "HH:mm";
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(customFormat, Locale.US);
+        endTime_EditText.setText(simpleDateFormat.format(endCalendar.getTime()));
     }
 
 
@@ -131,12 +191,16 @@ public class AddEventActivity extends AppCompatActivity {
                     AccessToken.USER_ID_KEY,
                     title_EditText.getText().toString(),
                     description_EditText.getText().toString(),
-                    new CustomLocation(), //Todo: get location
-                    new Date()          //TODO: set correct dateListener and time
+                    new CustomLocation(),               //Todo: get location
+                    date_EditText.getText().toString(),
+                    startTime_EditText.getText().toString(),
+                    endTime_EditText.getText().toString()
             );
 
-            FirebaseConnection firebaseConnection = new FirebaseConnection();
-            firebaseConnection.AddEvent(eventData);
+            /*FirebaseConnection firebaseConnection = new FirebaseConnection();
+            firebaseConnection.AddEvent(eventData);*/
+
+            Log.i(TAG,eventData.toString());
 
             Intent intent = new Intent();
             intent.putExtra(IntentExtra_DidAddEvent, true);
@@ -155,14 +219,17 @@ public class AddEventActivity extends AppCompatActivity {
 
         if (fieldIsEmpty(date_EditText)) { fieldsOK = false; }
 
-        if (fieldIsEmpty(time_EditText)) { fieldsOK = false; }
+        if (fieldIsEmpty(startTime_EditText)) { fieldsOK = false; }
+
+        if (fieldIsEmpty(endTime_EditText)) { fieldsOK = false; }
+
 
         return fieldsOK;
     }
 
     private boolean fieldIsEmpty(EditText editText) {
-        if (TextUtils.isEmpty(title_EditText.getText().toString())) {
-            editText.setHintTextColor(getResources().getColor(R.color.com_facebook_blue));
+        if (TextUtils.isEmpty(editText.getText().toString())) {
+            editText.getBackground().setColorFilter(Color.RED, PorterDuff.Mode.DARKEN);
             return true;
         }
         return false;
@@ -175,5 +242,4 @@ public class AddEventActivity extends AppCompatActivity {
             inputMethodManager.hideSoftInputFromWindow(view.getWindowToken(), 0);
         }
     }
-
 }
