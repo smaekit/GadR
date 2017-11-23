@@ -12,7 +12,10 @@ public class EventData {
 
     private static final String TAG = "EventData";
 
-    private String cretorID;
+    public static final String DATE_FORMAT_STRING = "dd/MM - yy";
+    public static final String TIME_FORMAT_STRING = "HH:mm";
+
+    private String creatorID;
     private String title;
     private String description;
     private CustomLocation customLocation;
@@ -24,8 +27,8 @@ public class EventData {
 
     public EventData() {}
 
-    public EventData(String cretorID, String title, String description, CustomLocation customLocation, String date, String startTime, String endTime) {
-        this.cretorID = cretorID;
+    public EventData(String creatorID, String title, String description, CustomLocation customLocation, String date, String startTime, String endTime) {
+        this.creatorID = creatorID;
         this.title = title;
         this.description = description;
         this.customLocation = customLocation;
@@ -36,8 +39,8 @@ public class EventData {
     }
 
     // Setters
-    public void setCretorID(String cretorID) {
-        this.cretorID = cretorID;
+    public void setCreatorID(String creatorID) {
+        this.creatorID = creatorID;
     }
 
     public void setTitle(String title) {
@@ -57,8 +60,8 @@ public class EventData {
     public void setEndTime(String endTime) { this.endTime = endTime; }
 
     //  Getters
-    public String getCretorID() {
-        return cretorID;
+    public String getCreatorID() {
+        return creatorID;
     }
 
     public String getTitle() {
@@ -84,7 +87,7 @@ public class EventData {
     @Override
     public String toString() {
         return "EventData{" +
-                "cretorID='" + cretorID + '\'' +
+                "creatorID='" + creatorID + '\'' +
                 ", title='" + title + '\'' +
                 ", description='" + description + '\'' +
                 ", customLocation=" + customLocation +

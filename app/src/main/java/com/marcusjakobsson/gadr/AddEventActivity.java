@@ -10,7 +10,10 @@ import android.graphics.drawable.Drawable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.text.format.DateUtils;
+import android.util.EventLogTags;
 import android.util.Log;
+import android.util.TimeUtils;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
@@ -106,7 +109,7 @@ public class AddEventActivity extends AppCompatActivity {
                         calendar.get(Calendar.MONTH),
                         calendar.get(Calendar.DAY_OF_MONTH));
 
-                datePickerDialog.getDatePicker().setMinDate(System.currentTimeMillis() - 1000);
+                datePickerDialog.getDatePicker().setMinDate(System.currentTimeMillis() - 1000); //Without -1000 the app crashes.
                 datePickerDialog.show();
             }
         });
@@ -114,7 +117,7 @@ public class AddEventActivity extends AppCompatActivity {
         startTimeListener = new TimePickerDialog.OnTimeSetListener() {
             @Override
             public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-                calendar.set(Calendar.HOUR, hourOfDay);
+                calendar.set(Calendar.HOUR_OF_DAY, hourOfDay);
                 calendar.set(Calendar.MINUTE, minute);
 
                 updateStartTimeLabel();
@@ -130,7 +133,7 @@ public class AddEventActivity extends AppCompatActivity {
                 new TimePickerDialog(
                         AddEventActivity.this,
                         startTimeListener,
-                        calendar.get(Calendar.HOUR),
+                        calendar.get(Calendar.HOUR_OF_DAY),
                         calendar.get(Calendar.MINUTE),
                         true).show();
             }
@@ -140,7 +143,7 @@ public class AddEventActivity extends AppCompatActivity {
         endTimeListener = new TimePickerDialog.OnTimeSetListener() {
             @Override
             public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-                endCalendar.set(Calendar.HOUR, hourOfDay);
+                endCalendar.set(Calendar.HOUR_OF_DAY, hourOfDay);
                 endCalendar.set(Calendar.MINUTE, minute);
 
                 updateEndTimeLabel();
@@ -156,7 +159,7 @@ public class AddEventActivity extends AppCompatActivity {
                 new TimePickerDialog(
                         AddEventActivity.this,
                         endTimeListener,
-                        endCalendar.get(Calendar.HOUR),
+                        endCalendar.get(Calendar.HOUR_OF_DAY),
                         endCalendar.get(Calendar.MINUTE),
                         true).show();
 
@@ -198,20 +201,19 @@ public class AddEventActivity extends AppCompatActivity {
 
 
     private void updateDateLabel() {
-        String customFormat = "dd/MM - yy";
+        String customFormat = EventData.DATE_FORMAT_STRING;
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat(customFormat, Locale.ENGLISH);
-
         date_EditText.setText(simpleDateFormat.format(calendar.getTime()));
     }
 
     private void updateStartTimeLabel() {
-        String customFormat = "HH:mm";
+        String customFormat = EventData.TIME_FORMAT_STRING;
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat(customFormat, Locale.US);
         startTime_EditText.setText(simpleDateFormat.format(calendar.getTime()));
     }
 
     private void updateEndTimeLabel() {
-        String customFormat = "HH:mm";
+        String customFormat = EventData.TIME_FORMAT_STRING;
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat(customFormat, Locale.US);
         endTime_EditText.setText(simpleDateFormat.format(endCalendar.getTime()));
     }
@@ -244,7 +246,16 @@ public class AddEventActivity extends AppCompatActivity {
     }
 
     private boolean fieldsAreValid() {
+        removeHighlightFromEditText(title_EditText);
+        removeHighlightFromEditText(description_EditText);
+        removeHighlightFromEditText(date_EditText);
+        removeHighlightFromEditText(startTime_EditText);
+        removeHighlightFromEditText(endTime_EditText);
+        removeHighlightFromEditText(location_EditText);
+
         //Check if input are empty or invalid.
+
+
         boolean fieldsOK = true;
 
         if (fieldIsEmpty(title_EditText)) { fieldsOK = false; }
@@ -259,14 +270,35 @@ public class AddEventActivity extends AppCompatActivity {
 
         if (fieldIsEmpty(location_EditText)) { fieldsOK = false; }
 
-        //Compare times.
-        timesAreInvalid(startTime_EditText, endTime_EditText);
+        // Starttime must be earlier than Endtime.
+        if (timesAreInvalid(startTime_EditText.getText().toString(), endTime_EditText.getText().toString())) {
+            highlightInvalidEditText(startTime_EditText);
+            highlightInvalidEditText(endTime_EditText);
+
+            fieldsOK = false;
+        }
+
+        if (dateConflictsWithTime()) {
+            highlightInvalidEditText(date_EditText);
+            highlightInvalidEditText(startTime_EditText);
+
+            fieldsOK = false;
+        }
+
 
         return fieldsOK;
     }
 
-    private boolean timesAreInvalid(EditText time1, EditText time2) {
-        int comp = time1.getText().toString().compareTo(time2.getText().toString());
+    private boolean fieldIsEmpty(EditText editText) {
+        if (TextUtils.isEmpty(editText.getText().toString())) {
+            highlightInvalidEditText(editText);
+            return true;
+        }
+        return false;
+    }
+
+    private boolean timesAreInvalid(String time1, String time2) {
+        int comp = time1.compareTo(time2);
 
         if (comp < 0) {
             //T1 is smaller
@@ -274,28 +306,34 @@ public class AddEventActivity extends AppCompatActivity {
         }
         else if (comp > 0) {
             //T1 is larger
-            highlightInvalidEditText(time1);
-            highlightInvalidEditText(time2);
             return true;
         }
         else {
             //T1 is equal to t2
-            highlightInvalidEditText(time1);
-            highlightInvalidEditText(time2);
             return true;
         }
     }
 
-    private boolean fieldIsEmpty(EditText editText) {
-        if (TextUtils.isEmpty(editText.getText().toString())) {
-            //highlightInvalidEditText(editText);
-            return true;
+    private boolean dateConflictsWithTime() {
+
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(EventData.TIME_FORMAT_STRING);
+
+        //TODO: check if timeStrings are not null
+        if (DateUtils.isToday(calendar.getTimeInMillis())) {
+            Log.i(TAG, "Is today!");
+            if (timesAreInvalid(simpleDateFormat.format(Calendar.getInstance().getTime()), startTime_EditText.getText().toString())) {
+                return true;
+            }
         }
         return false;
     }
 
     private void highlightInvalidEditText(EditText editText) {
         editText.getBackground().setColorFilter(Color.RED, PorterDuff.Mode.DARKEN);
+    }
+
+    private void removeHighlightFromEditText(EditText editText) {
+        editText.getBackground().clearColorFilter();
     }
 
     private void hideKeyboard(){
@@ -311,6 +349,7 @@ public class AddEventActivity extends AppCompatActivity {
         if (requestCode == PLACE_AUTOCOMPLETE_REQUEST_CODE) {
             if (resultCode == RESULT_OK) {
                 Place place = PlaceAutocomplete.getPlace(this, data);
+
                 Log.i(TAG, "Place: " + place.getName());
                 Log.i(TAG, place.getLatLng().toString() + " " + place.getAddress());
 
