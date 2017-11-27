@@ -22,6 +22,7 @@ import android.widget.EditText;
 import android.widget.TimePicker;
 
 import com.facebook.AccessToken;
+import com.facebook.Profile;
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
 import com.google.android.gms.common.GooglePlayServicesRepairableException;
 
@@ -224,7 +225,7 @@ public class AddEventActivity extends AppCompatActivity {
         if (fieldsAreValid()) {
             // Create Event-data and send to Firebase.
             EventData eventData = new EventData(
-                    AccessToken.USER_ID_KEY,
+                    Profile.getCurrentProfile().getId(),
                     title_EditText.getText().toString(),
                     description_EditText.getText().toString(),
                     customLocation,
@@ -233,8 +234,8 @@ public class AddEventActivity extends AppCompatActivity {
                     endTime_EditText.getText().toString()
             );
 
-            /*FirebaseConnection firebaseConnection = new FirebaseConnection();
-            firebaseConnection.AddEvent(eventData);*/
+            FirebaseConnection firebaseConnection = new FirebaseConnection();
+            firebaseConnection.AddEvent(eventData);
 
             Log.i(TAG,eventData.toString());
 
@@ -270,7 +271,7 @@ public class AddEventActivity extends AppCompatActivity {
 
         if (fieldIsEmpty(location_EditText)) { fieldsOK = false; }
 
-        // Starttime must be earlier than Endtime.
+        // Starttime must be earlier than endtime.
         if (timesAreInvalid(startTime_EditText.getText().toString(), endTime_EditText.getText().toString())) {
             highlightInvalidEditText(startTime_EditText);
             highlightInvalidEditText(endTime_EditText);
@@ -278,7 +279,8 @@ public class AddEventActivity extends AppCompatActivity {
             fieldsOK = false;
         }
 
-        if (dateConflictsWithTime()) {
+        // If event is today the starttime must be later than current time.
+        if (dateConflictsWithTime(startTime_EditText, calendar)) {
             highlightInvalidEditText(date_EditText);
             highlightInvalidEditText(startTime_EditText);
 
@@ -314,14 +316,14 @@ public class AddEventActivity extends AppCompatActivity {
         }
     }
 
-    private boolean dateConflictsWithTime() {
+    private boolean dateConflictsWithTime(EditText editText, Calendar cal) {
 
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat(EventData.TIME_FORMAT_STRING);
 
         //TODO: check if timeStrings are not null
-        if (DateUtils.isToday(calendar.getTimeInMillis())) {
+        if (DateUtils.isToday(cal.getTimeInMillis())) {
             Log.i(TAG, "Is today!");
-            if (timesAreInvalid(simpleDateFormat.format(Calendar.getInstance().getTime()), startTime_EditText.getText().toString())) {
+            if (timesAreInvalid(simpleDateFormat.format(Calendar.getInstance().getTime()), editText.getText().toString())) {
                 return true;
             }
         }
