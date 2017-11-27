@@ -105,6 +105,19 @@ public class FirebaseConnection {
 
 //Users callback func
     public void getUsers(final UsersCallback callback) {
+
+        //Call with:
+        /*
+        FirebaseConnection fc = new FirebaseConnection();
+
+        fc.getUsers(new FirebaseConnection.UsersCallback(){
+            @Override
+            public void onSuccess(String result){
+                //Do somthing with result
+            }
+        });
+         */
+
         DatabaseReference ref = mRef.child(users_parent);
 
         final List<UserData> userData = new ArrayList<>();
@@ -124,19 +137,6 @@ public class FirebaseConnection {
             }
         };
         ref.addListenerForSingleValueEvent(valueEventListener);
-
-
-        //Call with:
-        /*
-        FirebaseConnection fc = new FirebaseConnection();
-
-        fc.getUsers(new FirebaseConnection.UsersCallback(){
-            @Override
-            public void onSuccess(String result){
-                //Do somthing with result
-            }
-        });
-         */
     }
 
 //Event callback func
@@ -203,6 +203,7 @@ public class FirebaseConnection {
 
         ref.setValue(statusData);
     }
+
 
 
 }
