@@ -17,6 +17,9 @@ import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 /**
  * Created by carlbratt on 2017-10-30.
  */
@@ -25,6 +28,9 @@ public class Tab_Map_Fragment extends Fragment{
 
     MapView mMapView;
     private GoogleMap googleMap;
+
+    EventData[] allEventData;
+    EventData[] myEventData;
 
     @Nullable
     @Override
@@ -64,6 +70,38 @@ public class Tab_Map_Fragment extends Fragment{
 
 
         return rootView ;
+    }
+
+    public void reloadEventMarkers() {
+
+        googleMap.clear();
+
+        String today = new SimpleDateFormat(EventData.DATE_FORMAT_STRING).format(new Date());
+
+        allEventData = ((ThisApp) getActivity().getApplication()).getAllEvents();
+        myEventData = ((ThisApp) getActivity().getApplication()).getMyEvents();
+
+        if (allEventData != null) {
+            for (int i = 0; i < allEventData.length; i++) {
+                if (allEventData[i].getDate().equals(today))
+                googleMap.addMarker(new MarkerOptions().position(new LatLng(allEventData[i].getCustomLocation().getLatitude(), allEventData[i].getCustomLocation().getLongitude())).title(allEventData[i].getTitle()).snippet(allEventData[i].getStartTime() + " - " + allEventData[i].getEndTime()).icon(BitmapDescriptorFactory.fromResource(R.drawable.beer)));
+            }
+        }
+
+        if (myEventData != null) {
+            for (int i = 0; i < myEventData.length; i++) {
+                if (myEventData[i].getDate().equals(today))
+                    googleMap.addMarker(new MarkerOptions().position(new LatLng(myEventData[i].getCustomLocation().getLatitude(), myEventData[i].getCustomLocation().getLongitude())).title(myEventData[i].getTitle()).snippet(myEventData[i].getStartTime() + " - " + myEventData[i].getEndTime()).icon(BitmapDescriptorFactory.fromResource(R.drawable.beer)));
+            }
+        }
+
+
+        //TODO: remove
+        LatLng jth = new LatLng(57.7779500801111, 14.161934852600098);
+        LatLng jkpg = new LatLng(57.7824464, 14.176048900000069);
+        googleMap.addMarker(new MarkerOptions().position(jkpg).title("Makkan").snippet("Kodar Android").icon(BitmapDescriptorFactory.fromResource(R.drawable.person2))).showInfoWindow();
+        googleMap.addMarker(new MarkerOptions().position(jth).title("Beerpong i JTH").snippet("19.00 - 21.00").icon(BitmapDescriptorFactory.fromResource(R.drawable.beer)));
+
     }
 
     @Override

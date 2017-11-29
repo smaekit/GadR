@@ -142,7 +142,7 @@ public class MenuTabbedView extends AppCompatActivity implements NavigationView.
 
 
 
-
+        reloadEventData();
 
 
 
@@ -156,33 +156,7 @@ public class MenuTabbedView extends AppCompatActivity implements NavigationView.
             );
         }*/
 
-        fc.getEvents(new FirebaseConnection.EventsCallback(){
-            @Override
-            public void onSuccess(List<EventData> result){
-                List<EventData> allEventData = new ArrayList<EventData>();
-                List<EventData> myEventData = new ArrayList<EventData>();
 
-
-
-                for (int i = 0; i < result.size(); i++) {
-                    Log.i(TAG, "ID:          " + result.get(i).getCreatorID().equals(Profile.getCurrentProfile().getId()));
-
-
-
-                    if(result.get(i).getCreatorID().equals(Profile.getCurrentProfile().getId())) {
-                        myEventData.add(result.get(i));
-                    }
-                    else {
-                        allEventData.add(result.get(i));
-                    }
-                }
-
-                ((ThisApp) getApplication()).setAllEvents((EventData[]) allEventData.toArray(new EventData[allEventData.size()]));
-                ((ThisApp) getApplication()).setMyEvents((EventData[]) myEventData.toArray(new EventData[myEventData.size()]));
-
-                tabAllEventsFragment.reloadListData();
-            }
-        });
 
        /*for (int i = 0; i< 5; i++) {
             fc.AddStatus(new StatusData(
@@ -218,11 +192,47 @@ public class MenuTabbedView extends AppCompatActivity implements NavigationView.
                 Boolean b = data.getBooleanExtra(AddEventActivity.IntentExtra_DidAddEvent, false);
                 if (b) {
                     Log.i(TAG, "True");
-                    tabAllEventsFragment.reloadListData();
+                    reloadEventData();
                 }
                 else { Log.i(TAG, "False"); }
             }
         }
+    }
+
+    private void reloadEventData() {
+        (new FirebaseConnection()).getEvents(new FirebaseConnection.EventsCallback(){
+            @Override
+            public void onSuccess(List<EventData> result){
+                List<EventData> allEventData = new ArrayList<EventData>();
+                List<EventData> myEventData = new ArrayList<EventData>();
+
+
+
+                for (int i = 0; i < result.size(); i++) {
+                    Log.i(TAG, "ID:          " + result.get(i).getCreatorID().equals(Profile.getCurrentProfile().getId()));
+
+
+
+                    if(result.get(i).getCreatorID().equals(Profile.getCurrentProfile().getId())) {
+                        myEventData.add(result.get(i));
+                    }
+                    else {
+                        allEventData.add(result.get(i));
+                    }
+                }
+
+                ((ThisApp) getApplication()).setAllEvents((EventData[]) allEventData.toArray(new EventData[allEventData.size()]));
+                ((ThisApp) getApplication()).setMyEvents((EventData[]) myEventData.toArray(new EventData[myEventData.size()]));
+
+                reloadFragmentData();
+            }
+        });
+    }
+
+
+    private void reloadFragmentData() {
+        tabAllEventsFragment.reloadListData();
+        tabMapFragment.reloadEventMarkers();
     }
 
 
