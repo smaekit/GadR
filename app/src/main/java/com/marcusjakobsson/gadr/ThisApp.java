@@ -16,14 +16,28 @@ import android.app.Application;
 
 public class ThisApp extends Application {
 
-    private String testString = "TestVariable";
+    private static final String TAG = "ThisApp";
 
+    private EventData[] allEvents;
+    private EventData[] myEvents;
 
-    public String getTestString() {
-        return  testString;
+    public EventData[] getAllEvents() {
+        return allEvents;
     }
 
-    public void setTestString(String string) {
-        this.testString = string;
+    public EventData[] getMyEvents() {
+        return myEvents;
     }
+
+
+    public void setAllEvents(EventData[] allEvents) {
+        this.allEvents = allEvents;
+    }
+
+    public void setMyEvents(EventData[] myEvents) {
+        this.myEvents = myEvents;
+    }
+
+
+
 }

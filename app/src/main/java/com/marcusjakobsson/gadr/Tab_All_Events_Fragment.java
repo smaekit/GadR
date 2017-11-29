@@ -20,6 +20,12 @@ import java.util.List;
 
 public class Tab_All_Events_Fragment extends Fragment {
 
+    ListView listView;
+    ListAdapter listViewAdapter;
+
+    EventData[] allEventData;
+    CustomListViewItem[] listData;
+
     String[] dummyData = {"Andreas", "Bengt" , "Carl" , "David" , "Erik", "Andreas", "Bengt" , "Carl" , "David" , "Andreas", "Bengt" , "Carl" , "David" , "Andreas", "Bengt" , "Carl" , "David" , "Andreas", "Bengt" , "Carl" , "David" , "Andreas", "Bengt" , "Carl" , "David" };
 
 
@@ -28,19 +34,37 @@ public class Tab_All_Events_Fragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_tab_all_events,container,false);
 
-        CustomListViewItem[] dummyDataCustom = new CustomListViewItem[10];
+        listData = new CustomListViewItem[10];
 
-        for (int i = 0; i < dummyDataCustom.length; i++) {
-            dummyDataCustom[i] = new CustomListViewItem(dummyData[i], "00:00 - 01:00");
+        for (int i = 0; i < listData.length; i++) {
+            listData[i] = new CustomListViewItem(dummyData[i], "00:00 - 01:00");
         }
 
-        ListView listView = (ListView) view.findViewById(R.id.ListView_AllEvents);
+        listView = (ListView) view.findViewById(R.id.ListView_AllEvents);
 
-        ListAdapter listViewAdapter = new CustomListViewAdapter(getActivity(), dummyDataCustom);
+        listViewAdapter = new CustomListViewAdapter(getActivity(), listData);
         listView.setAdapter(listViewAdapter);
 
         return view;
     }
 
+
+    public void reloadListData() {
+        //TODO: Add reload animation.
+
+        EventData[] newAllEventData = ((ThisApp) getActivity().getApplication()).getAllEvents();
+
+        if (newAllEventData != null) {
+            listData = new CustomListViewItem[newAllEventData.length];
+            allEventData = newAllEventData;
+
+            for (int i = 0; i < listData.length; i++) {
+                listData[i] = new CustomListViewItem(allEventData[i].getTitle(), allEventData[i].getStartTime() + " - " + allEventData[i].getEndTime());
+            }
+
+            listViewAdapter = new CustomListViewAdapter(getActivity(), listData);
+            listView.setAdapter(listViewAdapter);
+        }
+    }
 
 }
