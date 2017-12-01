@@ -15,15 +15,25 @@ public class UserData {
     private int points;
     private String imgURLLarge;
     private String imgURLSmall;
+    private String status = "";
 
     public UserData() {}
 
-    public UserData(String fbID, String name, int points, String imgURLLarge, String imgURLSmall){
+    public UserData(String fbID, String name, int points, String imgURLLarge, String imgURLSmall, String status){
         this.fbID = fbID;
         this.name = name;
         this.points = points;
         this.imgURLLarge = imgURLLarge;
         this.imgURLSmall = imgURLSmall;
+        this.status = status;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
 
     //  Setters

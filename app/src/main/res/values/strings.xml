@@ -22,6 +22,12 @@
     <string name="AddEvent_StartTime">Start time</string>
     <string name="AddEvent_EndTime">End Time</string>
     <string name="AddEvent_Location">Location</string>
+    <string name="StatusHint">What are you doing?..</string>
+    <string name="userprofilepicture">userProfilePicture</string>
+    <string name="name_of_user">Name of user</string>
+    <string name="createLabel">Create</string>
+    <string name="eventlabel">Event</string>
+    <string name="statusLabel">Status</string>
 
 
 </resources>
