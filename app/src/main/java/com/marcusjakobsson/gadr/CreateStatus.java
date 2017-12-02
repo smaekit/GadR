@@ -38,8 +38,7 @@ public class CreateStatus extends AppCompatActivity {
     public void publish_button(View view)
     {
         FirebaseConnection firebaseConnection = new FirebaseConnection();
-
-        //firebaseConnection.AddEvent(eventData);
+        firebaseConnection.AddStatus(status_editText.getText().toString());
 
         Intent intent = new Intent();
         intent.putExtra(IntentExtra_DidAddStatus, true);

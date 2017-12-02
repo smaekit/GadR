@@ -30,6 +30,7 @@ public class FirebaseConnection {
     public static String users_points = "points";
     public static String users_imgURLLarge = "imgurlLarge";
     public static String users_imgURLSmall = "imgurlLarge";
+    public static String users_status = "status";
 
 
     //Event
@@ -58,14 +59,15 @@ public class FirebaseConnection {
     }
 
 
-
     private FirebaseDatabase mDatabase;
     private DatabaseReference mRef;
+    private FirebaseAuth mAuth;
 
 
     public FirebaseConnection() {
         mDatabase = FirebaseDatabase.getInstance();
         mRef = mDatabase.getReference();
+        mAuth = FirebaseAuth.getInstance();
     }
 
     public void checkIfUserAlreadyExists(final FirebaseUser user, final CurrentUserCallback callback) {
@@ -186,6 +188,7 @@ public class FirebaseConnection {
 
 
 
+
     public void AddEvent(EventData eventData) {
         DatabaseReference ref = mRef.child(event_parent).push();
 
@@ -198,10 +201,11 @@ public class FirebaseConnection {
     }
 
 
-    public void AddStatus(StatusData statusData) {
-        DatabaseReference ref = mRef.child(status_parent).push();
-
-        ref.setValue(statusData);
+    public void AddStatus(String status) {
+        FirebaseUser currentUser = mAuth.getCurrentUser();
+        Log.i("heajda",currentUser.getUid());
+        DatabaseReference ref = mRef.child(users_parent).child(currentUser.getUid()).child(users_status);
+        ref.setValue(status);
     }
 
 

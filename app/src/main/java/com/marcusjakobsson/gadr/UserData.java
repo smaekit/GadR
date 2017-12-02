@@ -16,16 +16,36 @@ public class UserData {
     private String imgURLLarge;
     private String imgURLSmall;
     private String status = "";
+    private double latitude;
+    private double longitude;
 
     public UserData() {}
 
-    public UserData(String fbID, String name, int points, String imgURLLarge, String imgURLSmall, String status){
+    public UserData(String fbID, String name, int points, String imgURLLarge, String imgURLSmall, String status, double latitude, double longitude){
         this.fbID = fbID;
         this.name = name;
         this.points = points;
         this.imgURLLarge = imgURLLarge;
         this.imgURLSmall = imgURLSmall;
         this.status = status;
+        this.latitude = latitude;
+        this.longitude = longitude;
+    }
+
+    public double getLatitude() {
+        return latitude;
+    }
+
+    public void setLatitude(double latitude) {
+        this.latitude = latitude;
+    }
+
+    public double getLongitude() {
+        return longitude;
+    }
+
+    public void setLongitude(double longitude) {
+        this.longitude = longitude;
     }
 
     public String getStatus() {
@@ -88,6 +108,9 @@ public class UserData {
                 ", points=" + points +
                 ", imgURLLarge='" + imgURLLarge + '\'' +
                 ", imgURLSmall='" + imgURLSmall + '\'' +
+                ", status='" + status + '\'' +
+                ", latitude=" + latitude +
+                ", longitude=" + longitude +
                 '}';
     }
 }
