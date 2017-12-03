@@ -1,10 +1,15 @@
 package com.marcusjakobsson.gadr;
 
+import android.*;
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.os.AsyncTask;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -12,6 +17,8 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -69,6 +76,7 @@ public class MenuTabbedView extends AppCompatActivity implements NavigationView.
 
 
 
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -87,6 +95,7 @@ public class MenuTabbedView extends AppCompatActivity implements NavigationView.
 
 
 
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.top_drawer_toolbar);
         setSupportActionBar(toolbar);
 
@@ -95,14 +104,11 @@ public class MenuTabbedView extends AppCompatActivity implements NavigationView.
             @Override
             public void onClick(View view) {
 //                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-  //                      .setAction("Action", null).show();
+                //                      .setAction("Action", null).show();
                 Intent intent = new Intent(getApplicationContext(), AddEventActivity.class);
                 startActivityForResult(intent, AddEventActivity.REQUEST_CODE_DidAddEvent);
             }
         });
-
-
-
 
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -127,9 +133,9 @@ public class MenuTabbedView extends AppCompatActivity implements NavigationView.
                     "SmallURL" + Integer.toString(i)));
         }*/
 
-       fc.getUsers(new FirebaseConnection.UsersCallback(){
+        fc.getUsers(new FirebaseConnection.UsersCallback() {
             @Override
-            public void onSuccess(List<UserData> result){
+            public void onSuccess(List<UserData> result) {
 
                 setupCurrentUser(result);
 
@@ -181,8 +187,6 @@ public class MenuTabbedView extends AppCompatActivity implements NavigationView.
         });*/
 
 
-
-
     }
 
     @Override
@@ -192,16 +196,23 @@ public class MenuTabbedView extends AppCompatActivity implements NavigationView.
         if (resultCode == RESULT_OK) {
             if (requestCode == AddEventActivity.REQUEST_CODE_DidAddEvent) {
                 Boolean b = data.getBooleanExtra(AddEventActivity.IntentExtra_DidAddEvent, false);
-                if (b) { Log.i(TAG, "True"); }
-                else { Log.i(TAG, "False"); }
+                if (b) {
+                    Log.i(TAG, "True");
+                } else {
+                    Log.i(TAG, "False");
+                }
             } else if (requestCode == CreateStatus.REQUEST_CODE_DidAddStatus) {
                 Boolean b = data.getBooleanExtra(CreateStatus.IntentExtra_DidAddStatus, false);
-                if (b) { Log.i(TAG, "True"); }
-                else { Log.i(TAG, "False"); }
+                if (b) {
+                    Log.i(TAG, "True");
+                } else {
+                    Log.i(TAG, "False");
+                }
             }
 
         }
     }
+
 
 
     //Checks if the current user is in the database then updates the drawerMenu profile picture and name

@@ -208,6 +208,11 @@ public class FirebaseConnection {
         ref.setValue(status);
     }
 
+    public String getCurrentUserId()
+    {
+        FirebaseUser currentUser = mAuth.getCurrentUser();
+        return currentUser.getUid();
+    }
 
 
 }
