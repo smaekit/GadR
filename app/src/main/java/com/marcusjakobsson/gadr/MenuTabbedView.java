@@ -404,6 +404,7 @@ public class MenuTabbedView extends AppCompatActivity implements NavigationView.
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
+            reloadEventData();
             return true;
         }
 
