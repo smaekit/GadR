@@ -16,6 +16,7 @@ public class CreateStatus extends AppCompatActivity {
 
     public static final int REQUEST_CODE_DidAddStatus = 2;
     public static final String IntentExtra_DidAddStatus = "didAddStatus";
+    public static final String IntentExtra_UserStatus = "userStatus";
 
     EditText status_editText;
     Button publishStatusBtn;
@@ -41,10 +42,12 @@ public class CreateStatus extends AppCompatActivity {
     public void publish_button(View view)
     {
         FirebaseConnection firebaseConnection = new FirebaseConnection();
-        firebaseConnection.AddStatus(status_editText.getText().toString());
+        String userStatus = status_editText.getText().toString();
+        firebaseConnection.AddStatus(userStatus);
 
         Intent intent = new Intent();
         intent.putExtra(IntentExtra_DidAddStatus, true);
+        intent.putExtra(IntentExtra_UserStatus, userStatus);
         setResult(RESULT_OK, intent);
         finish();
     }

@@ -71,6 +71,8 @@ public class MenuTabbedView extends AppCompatActivity implements NavigationView.
 
     private FirebaseConnection firebaseConnection;
 
+    TextView userStatus_TextView;
+
 
     //Fragments
     Tab_Map_Fragment tabMapFragment = new Tab_Map_Fragment();
@@ -82,6 +84,7 @@ public class MenuTabbedView extends AppCompatActivity implements NavigationView.
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_tabbed_view);
+
 
 
         sectionsPageAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
@@ -209,6 +212,9 @@ public class MenuTabbedView extends AppCompatActivity implements NavigationView.
                 Boolean b = data.getBooleanExtra(CreateStatus.IntentExtra_DidAddStatus, false);
                 if (b) {
                     Log.i(TAG, "True");
+                    String status = data.getStringExtra(CreateStatus.IntentExtra_UserStatus);
+                    userStatus_TextView = (TextView)findViewById(R.id.userStatus_TextView);
+                    userStatus_TextView.setText(status);
                     reloadEventData();
                 }
                 else { Log.i(TAG, "False"); }

@@ -30,12 +30,12 @@
         android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
 
     <TextView
-        android:id="@+id/status_EditText"
+        android:id="@+id/userStatus_TextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:maxLines="1"
+        android:hint="@string/StatusHint"
         android:maxLength="35"
-        android:textSize="12sp"
-        android:hint="@string/StatusHint" />
+        android:maxLines="1"
+        android:textSize="12sp" />
 
 </LinearLayout>
