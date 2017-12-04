@@ -222,6 +222,13 @@ public class FirebaseConnection {
         ref.setValue(longitude);
     }
 
+    public void UpdateUserShareLocation(Boolean isSharingLocation)
+    {
+        FirebaseUser currentUser = mAuth.getCurrentUser();
+        DatabaseReference ref = mRef.child(users_parent).child(currentUser.getUid()).child(users_shareLocation);
+        ref.setValue(isSharingLocation);
+    }
+
 }
 
 

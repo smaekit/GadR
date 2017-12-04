@@ -434,15 +434,19 @@ public class MenuTabbedView extends AppCompatActivity implements NavigationView.
         if (id == R.id.nav_camera) {
             Intent intent = new Intent(getApplicationContext(), CreateStatus.class);
             startActivityForResult(intent, CreateStatus.REQUEST_CODE_DidAddStatus);
-        } else if (id == R.id.nav_gallery) {
+        } else if (id == R.id.nav_shareLocation) {
             if(item.getTitle() == getString(R.string.shareLocationOffTitle))
             {
+                FirebaseConnection firebaseConnection2 = new FirebaseConnection();
+                firebaseConnection2.UpdateUserShareLocation(false);
                 item.setIcon(R.drawable.ic_location_on);
                 item.setTitle(R.string.shareLocationOnTitle);
                 Toast.makeText(getApplicationContext(), R.string.shareLocationOffText, Toast.LENGTH_SHORT).show();
             }
             else
             {
+                FirebaseConnection firebaseConnection2 = new FirebaseConnection();
+                firebaseConnection2.UpdateUserShareLocation(true);
                 item.setIcon(R.drawable.ic_action_name);
                 item.setTitle(R.string.shareLocationOffTitle);
                 Toast.makeText(getApplicationContext(), R.string.shareLocationOnText, Toast.LENGTH_SHORT).show();
