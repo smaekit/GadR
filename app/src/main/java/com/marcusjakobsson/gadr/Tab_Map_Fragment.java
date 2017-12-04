@@ -3,9 +3,12 @@ package com.marcusjakobsson.gadr;
 import android.content.Context;
 import android.content.pm.PackageManager;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -28,7 +31,12 @@ import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -51,6 +59,8 @@ public class Tab_Map_Fragment extends Fragment {
     LocationListener locationListener;
 
     LatLng loc;
+    List<Bitmap> icon = new ArrayList<>();
+
 
 
     @Nullable
@@ -92,8 +102,12 @@ public class Tab_Map_Fragment extends Fragment {
                         userData = result;
 
                         for (UserData user : result) {
-                            LatLng latLng = new LatLng(user.getLatitude(), user.getLongitude());
-                            googleMap.addMarker(new MarkerOptions().position(latLng).title(user.getName()).snippet(user.getStatus()).icon(BitmapDescriptorFactory.fromResource(R.drawable.person2))).showInfoWindow();
+
+                            GetBitmapFromURLAsync getBitmapFromURLAsync = new GetBitmapFromURLAsync();
+                            getBitmapFromURLAsync.execute(user.getImgURLSmall());
+
+                            //LatLng latLng = new LatLng(user.getLatitude(), user.getLongitude());
+                            //googleMap.addMarker(new MarkerOptions().position(latLng).title(user.getName()).snippet(user.getStatus()).icon(BitmapDescriptorFactory.fromResource(R.drawable.person2))).showInfoWindow();
                         }
                         CameraPosition cameraPosition = new CameraPosition.Builder().target(jkpg).zoom(13).build();
                         googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
@@ -186,9 +200,15 @@ public class Tab_Map_Fragment extends Fragment {
             }
 
             if (userData != null) {
-                for (UserData user : userData) {
-                    LatLng latLng = new LatLng(user.getLatitude(), user.getLongitude());
-                    googleMap.addMarker(new MarkerOptions().position(latLng).title(user.getName()).snippet(user.getStatus()).icon(BitmapDescriptorFactory.fromResource(R.drawable.person2))).showInfoWindow();
+                //for (UserData user : userData) {
+                for (int i = 0; i < userData.size(); i++) {
+                    LatLng latLng = new LatLng(userData.get(i).getLatitude(), userData.get(i).getLongitude());
+                    if (icon != null && icon.size() > 0) {
+                        googleMap.addMarker(new MarkerOptions().position(latLng).title(userData.get(i).getName()).snippet(userData.get(i).getStatus()).icon(BitmapDescriptorFactory.fromBitmap(icon.get(i)))).showInfoWindow();
+                    }
+                    else {
+                        googleMap.addMarker(new MarkerOptions().position(latLng).title(userData.get(i).getName()).snippet(userData.get(i).getStatus()).icon(BitmapDescriptorFactory.fromResource(R.drawable.person2))).showInfoWindow();
+                    }
                 }
             }
 
@@ -247,4 +267,36 @@ public class Tab_Map_Fragment extends Fragment {
 
         }
     }
-}
+
+    public static Bitmap getBitmapFromURL(String imgUrl) {
+        try {
+            URL url = new URL(imgUrl);
+            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+            connection.setDoInput(true);
+            connection.connect();
+            InputStream input = connection.getInputStream();
+            Bitmap myBitmap = BitmapFactory.decodeStream(input);
+            return myBitmap;
+        } catch (IOException e) {
+            // Log exception
+            return null;
+        }
+    }
+
+    /**     AsyncTAsk for Image Bitmap  */
+    private class GetBitmapFromURLAsync extends AsyncTask<String, Void, Bitmap> {
+        @Override
+        protected Bitmap doInBackground(String... params) {
+            return getBitmapFromURL(params[0]);
+        }
+
+        @Override
+        protected void onPostExecute(Bitmap bitmap) {
+            icon.add(bitmap);
+
+            if (userData.size() == icon.size())
+            {
+                reloadEventMarkers();
+            }
+        }
+    }}
