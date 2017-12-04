@@ -33,4 +33,6 @@ public class CustomListViewAdapter extends ArrayAdapter<CustomListViewItem>{
 
         return view;
     }
+
+
 }

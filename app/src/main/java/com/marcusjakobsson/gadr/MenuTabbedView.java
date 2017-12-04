@@ -35,6 +35,7 @@ import com.facebook.AccessToken;
 import com.facebook.GraphRequest;
 import com.facebook.GraphResponse;
 import com.facebook.HttpMethod;
+import com.facebook.Profile;
 import com.facebook.login.LoginManager;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.firebase.auth.FirebaseAuth;
@@ -67,6 +68,11 @@ public class MenuTabbedView extends AppCompatActivity implements NavigationView.
 
     private FirebaseConnection firebaseConnection;
 
+
+    //Fragments
+    Tab_Map_Fragment tabMapFragment = new Tab_Map_Fragment();
+    Tab_All_Events_Fragment tabAllEventsFragment = new Tab_All_Events_Fragment();
+    Tab_My_Events_Fragment tabMyEventsFragment = new Tab_My_Events_Fragment();
 
 
     @Override
@@ -127,14 +133,22 @@ public class MenuTabbedView extends AppCompatActivity implements NavigationView.
                     "SmallURL" + Integer.toString(i)));
         }*/
 
+
+
+
        fc.getUsers(new FirebaseConnection.UsersCallback(){
             @Override
             public void onSuccess(List<UserData> result){
 
                 setupCurrentUser(result);
+                reloadEventData();
 
             }
         });
+
+
+
+
 
 
 
@@ -148,16 +162,7 @@ public class MenuTabbedView extends AppCompatActivity implements NavigationView.
             );
         }*/
 
-/*        fc.getEvents(new FirebaseConnection.EventsCallback(){
-            @Override
-            public void onSuccess(List<EventData> result){
 
-                for (int i = 0; i < result.size(); i++) {
-                    Log.i(TAG, result.get(i).getTitle());
-                }
-
-            }
-        });*/
 
        /*for (int i = 0; i< 5; i++) {
             fc.AddStatus(new StatusData(
@@ -192,7 +197,10 @@ public class MenuTabbedView extends AppCompatActivity implements NavigationView.
         if (resultCode == RESULT_OK) {
             if (requestCode == AddEventActivity.REQUEST_CODE_DidAddEvent) {
                 Boolean b = data.getBooleanExtra(AddEventActivity.IntentExtra_DidAddEvent, false);
-                if (b) { Log.i(TAG, "True"); }
+                if (b) {
+                    Log.i(TAG, "True");
+                    reloadEventData();
+                }
                 else { Log.i(TAG, "False"); }
             } else if (requestCode == CreateStatus.REQUEST_CODE_DidAddStatus) {
                 Boolean b = data.getBooleanExtra(CreateStatus.IntentExtra_DidAddStatus, false);
@@ -201,6 +209,42 @@ public class MenuTabbedView extends AppCompatActivity implements NavigationView.
             }
 
         }
+    }
+
+    private void reloadEventData() {
+        (new FirebaseConnection()).getEvents(new FirebaseConnection.EventsCallback(){
+            @Override
+            public void onSuccess(List<EventData> result){
+                List<EventData> allEventData = new ArrayList<EventData>();
+                List<EventData> myEventData = new ArrayList<EventData>();
+
+
+
+                for (int i = 0; i < result.size(); i++) {
+                    Log.i(TAG, "ID:          " + result.get(i).getCreatorID().equals(Profile.getCurrentProfile().getId()));
+
+
+
+                    if(result.get(i).getCreatorID().equals(Profile.getCurrentProfile().getId())) {
+                        myEventData.add(result.get(i));
+                    }
+                    else {
+                        allEventData.add(result.get(i));
+                    }
+                }
+
+                ((ThisApp) getApplication()).setAllEvents((EventData[]) allEventData.toArray(new EventData[allEventData.size()]));
+                ((ThisApp) getApplication()).setMyEvents((EventData[]) myEventData.toArray(new EventData[myEventData.size()]));
+
+                reloadFragmentData();
+            }
+        });
+    }
+
+
+    private void reloadFragmentData() {
+        tabAllEventsFragment.reloadListData();
+        tabMapFragment.reloadEventMarkers();
     }
 
 
@@ -243,9 +287,9 @@ public class MenuTabbedView extends AppCompatActivity implements NavigationView.
 
     private void setupViewPager(ViewPager viewPager) {
         SectionsPagerAdapter adapter = new SectionsPagerAdapter(getSupportFragmentManager());
-        adapter.addFragment(new Tab_Map_Fragment(), getResources().getString(R.string.Tabbed_Menu_Map));
-        adapter.addFragment(new Tab_All_Events_Fragment(), getResources().getString(R.string.Tabbed_Menu_All));
-        adapter.addFragment(new Tab_My_Events_Fragment(), getResources().getString(R.string.Tabbed_Menu_My));
+        adapter.addFragment(tabMapFragment, getResources().getString(R.string.Tabbed_Menu_Map));
+        adapter.addFragment(tabAllEventsFragment, getResources().getString(R.string.Tabbed_Menu_All));
+        adapter.addFragment(tabMyEventsFragment, getResources().getString(R.string.Tabbed_Menu_My));
         viewPager.setAdapter(adapter);
     }
 
