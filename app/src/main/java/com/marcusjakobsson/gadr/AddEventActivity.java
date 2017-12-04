@@ -219,6 +219,13 @@ public class AddEventActivity extends AppCompatActivity {
         endTime_EditText.setText(simpleDateFormat.format(endCalendar.getTime()));
     }
 
+    public void cancel_button(View view)
+    {
+        Intent intent = new Intent();
+        intent.putExtra(IntentExtra_DidAddEvent, false);
+        setResult(RESULT_OK, intent);
+        finish();
+    }
 
     //TODO: change to listener
     public void addEvent(View v) {
@@ -288,6 +295,7 @@ public class AddEventActivity extends AppCompatActivity {
         }
 
 
+        hideKeyboard();
         return fieldsOK;
     }
 

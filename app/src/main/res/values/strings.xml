@@ -36,6 +36,7 @@
     <string name="status_Tip">With a status you can share what you are doing. It is visible for 24 hours. Whenever you want you can update the status and the old will disappear</string>
     <string name="cancelText">Cancel</string>
     <string name="publishText">Publish</string>
+    <string name="create_eventLabel">Create Event</string>
 
 
 </resources>

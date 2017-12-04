@@ -16,6 +16,7 @@
     <string name="AddEvent_EndTime">Sluttid</string>
     <string name="AddEvent_Location">Plats</string>
     <string name="name_of_user">Namn på användare</string>
+    <string name="create_eventLabel">Skapa event</string>
     <string name="createLabel">Skapa</string>
     <string name="eventlabel">Event</string>
     <string name="statusLabel">Status</string>
