@@ -81,35 +81,8 @@ public class Tab_Map_Fragment extends Fragment {
                 // For showing a move to my location button
                 //googleMap.setMyLocationEnabled(true);
 
-                FirebaseConnection firebaseConnection = new FirebaseConnection();
+                reloadUserData();
 
-
-                FirebaseConnection.UsersCallback usersCallback = new FirebaseConnection.UsersCallback() {
-                    @Override
-                    public void onSuccess(List<UserData> result) {
-                        LatLng jkpg = new LatLng(57.7824464, 14.176048900000069);
-
-                        userData = result;
-
-                        for (UserData user : result) {
-                            LatLng latLng = new LatLng(user.getLatitude(), user.getLongitude());
-                            googleMap.addMarker(new MarkerOptions().position(latLng).title(user.getName()).snippet(user.getStatus()).icon(BitmapDescriptorFactory.fromResource(R.drawable.person2))).showInfoWindow();
-                        }
-                        CameraPosition cameraPosition = new CameraPosition.Builder().target(jkpg).zoom(13).build();
-                        googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
-                        if (ContextCompat.checkSelfPermission(getContext(), android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                            //Ask for permisson
-                            ActivityCompat.requestPermissions(getActivity(), new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION}, 1);
-                        }
-                        else
-                        {
-                            if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
-                                locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 5000, 0, locationListener);
-                            }
-                        }
-                    }
-                };
-                firebaseConnection.getUsers(usersCallback);
 
 
                 // For dropping a marker at a point on the Map
@@ -131,12 +104,15 @@ public class Tab_Map_Fragment extends Fragment {
             @Override
             public void onLocationChanged(Location location) {
                 loc = new LatLng(location.getLatitude(), location.getLongitude());
-                Log.i("users location", "HEF FITTOROOROROROOR");
-                Toast.makeText(getContext(), location.toString(), Toast.LENGTH_SHORT).show();
                 locationManager.removeUpdates(locationListener);
                 FirebaseConnection firebaseConnection = new FirebaseConnection();
                 firebaseConnection.UpdateUserLocation(location.getLatitude(),location.getLongitude());
 
+                if (googleMap != null) {
+                    CameraPosition cameraPosition = new CameraPosition.Builder().target(loc).zoom(17).build();
+                    googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+                }
+                reloadEventMarkers();
 
             }
 
@@ -202,6 +178,45 @@ public class Tab_Map_Fragment extends Fragment {
     }
 
 
+    public void reloadUserData() {
+        FirebaseConnection firebaseConnection = new FirebaseConnection();
+
+
+        FirebaseConnection.UsersCallback usersCallback = new FirebaseConnection.UsersCallback() {
+            @Override
+            public void onSuccess(List<UserData> result) {
+                userData = result;
+
+/*                for (UserData user : result) {
+                    LatLng latLng = new LatLng(user.getLatitude(), user.getLongitude());
+                    googleMap.addMarker(new MarkerOptions().position(latLng).title(user.getName()).snippet(user.getStatus()).icon(BitmapDescriptorFactory.fromResource(R.drawable.person2))).showInfoWindow();
+                }*/
+                if (loc != null){
+                    CameraPosition cameraPosition = new CameraPosition.Builder().target(loc).zoom(17).build();
+                    googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+                }
+
+                if (ContextCompat.checkSelfPermission(getContext(), android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                    //Ask for permisson
+                    ActivityCompat.requestPermissions(getActivity(), new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION}, 1);
+                }
+                else
+                {
+                    if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+                        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 3000, 0, locationListener);
+                    }
+                    if(locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {
+                        locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 3000, 0, locationListener);
+                    }
+                }
+
+                reloadEventMarkers();
+            }
+        };
+        firebaseConnection.getUsers(usersCallback);
+    }
+
+
     @Override
     public void onResume() {
         super.onResume();
@@ -242,7 +257,8 @@ public class Tab_Map_Fragment extends Fragment {
                 // for ActivityCompat#requestPermissions for more details.
                 return;
             }
-            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 5000, 0, locationListener);
+            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 3000, 0, locationListener);
+            locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 3000, 0, locationListener);
 
 
         }

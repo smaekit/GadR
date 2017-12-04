@@ -204,7 +204,10 @@ public class MenuTabbedView extends AppCompatActivity implements NavigationView.
                 else { Log.i(TAG, "False"); }
             } else if (requestCode == CreateStatus.REQUEST_CODE_DidAddStatus) {
                 Boolean b = data.getBooleanExtra(CreateStatus.IntentExtra_DidAddStatus, false);
-                if (b) { Log.i(TAG, "True"); }
+                if (b) {
+                    Log.i(TAG, "True");
+                    reloadEventData();
+                }
                 else { Log.i(TAG, "False"); }
             }
 
@@ -243,8 +246,10 @@ public class MenuTabbedView extends AppCompatActivity implements NavigationView.
 
 
     private void reloadFragmentData() {
+
         tabAllEventsFragment.reloadListData();
-        tabMapFragment.reloadEventMarkers();
+        tabMapFragment.reloadUserData();
+//        tabMapFragment.reloadEventMarkers();
     }
 
 
