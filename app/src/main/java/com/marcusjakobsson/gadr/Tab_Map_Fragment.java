@@ -15,6 +15,8 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
+import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -177,6 +179,8 @@ public class Tab_Map_Fragment extends Fragment {
                 for (int i = 0; i < userData.size(); i++) {
                     LatLng latLng = new LatLng(userData.get(i).getLatitude(), userData.get(i).getLongitude());
                     if (icon != null && icon.size() > 0) {
+                        RoundedBitmapDrawable drawable = RoundedBitmapDrawableFactory.create(getResources(),icon.get(i));
+                        drawable.setCircular(true);
                         googleMap.addMarker(new MarkerOptions().position(latLng).title(userData.get(i).getName()).snippet(userData.get(i).getStatus()).icon(BitmapDescriptorFactory.fromBitmap(icon.get(i)))).showInfoWindow();
                     }
                     else {

@@ -2,6 +2,7 @@ package com.marcusjakobsson.gadr;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.location.Location;
@@ -12,6 +13,8 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
+import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
+import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -470,9 +473,13 @@ public class MenuTabbedView extends AppCompatActivity implements NavigationView.
         }
 
         protected void onPostExecute(Bitmap result) {
+
             ImageView imageView = imageViewReference.get();
-            if(imageView == null) return;
-            imageView.setImageBitmap(result);
+            if(imageView == null){return;}
+
+            RoundedBitmapDrawable drawable = RoundedBitmapDrawableFactory.create( imageView.getResources(),result);
+            drawable.setCircular(true);
+            imageView.setImageDrawable(drawable);
         }
     }
 
