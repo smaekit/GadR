@@ -212,7 +212,7 @@ public class MainActivity extends AppCompatActivity {
         Bundle params = new Bundle();
         Bundle params2 = new Bundle();
         params.putString("fields", "name,picture.type(large)");    //Params what you want to get from the FB-user
-        params2.putString("fields", "picture");                      //Graph request for the small profilepicture
+        params2.putString("fields", "picture.type(normal)");                      //Graph request for the small profilepicture
 
         //Start GraphRequestBatch
         GraphRequestBatch batch = new GraphRequestBatch(
