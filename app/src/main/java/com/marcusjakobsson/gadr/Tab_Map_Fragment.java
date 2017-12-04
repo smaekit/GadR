@@ -5,6 +5,8 @@ import android.content.pm.PackageManager;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
+import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -29,6 +31,7 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
@@ -62,7 +65,7 @@ public class Tab_Map_Fragment extends Fragment {
     LocationListener locationListener;
 
     LatLng loc;
-    List<Bitmap> icon = new ArrayList<>();
+    List<RoundedBitmapDrawable> icon = new ArrayList<>();
 
 
 
@@ -199,9 +202,9 @@ public class Tab_Map_Fragment extends Fragment {
                 for (int i = 0; i < userData.size(); i++) {
                     LatLng latLng = new LatLng(userData.get(i).getLatitude(), userData.get(i).getLongitude());
                     if (icon != null && icon.size() > 0) {
-                        RoundedBitmapDrawable drawable = RoundedBitmapDrawableFactory.create(getResources(),icon.get(i));
-                        drawable.setCircular(true);
-                        googleMap.addMarker(new MarkerOptions().position(latLng).title(userData.get(i).getName()).snippet(userData.get(i).getStatus()).icon(BitmapDescriptorFactory.fromBitmap(icon.get(i)))).showInfoWindow();
+                        Drawable circleDrawable = icon.get(i);
+                        BitmapDescriptor markerIcon = getMarkerIconFromDrawable(circleDrawable);
+                        googleMap.addMarker(new MarkerOptions().position(latLng).title(userData.get(i).getName()).snippet(userData.get(i).getStatus()).icon(markerIcon)).showInfoWindow();
                     }
                     else {
                         googleMap.addMarker(new MarkerOptions().position(latLng).title(userData.get(i).getName()).snippet(userData.get(i).getStatus()).icon(BitmapDescriptorFactory.fromResource(R.drawable.person2))).showInfoWindow();
@@ -218,6 +221,14 @@ public class Tab_Map_Fragment extends Fragment {
         }
     }
 
+    private BitmapDescriptor getMarkerIconFromDrawable(Drawable drawable) {
+        Canvas canvas = new Canvas();
+        Bitmap bitmap = Bitmap.createBitmap(drawable.getIntrinsicWidth(), drawable.getIntrinsicHeight(), Bitmap.Config.ARGB_8888);
+        canvas.setBitmap(bitmap);
+        drawable.setBounds(0, 0, drawable.getIntrinsicWidth(), drawable.getIntrinsicHeight());
+        drawable.draw(canvas);
+        return BitmapDescriptorFactory.fromBitmap(bitmap);
+    }
 
     public void reloadUserData() {
         FirebaseConnection firebaseConnection = new FirebaseConnection();
@@ -329,7 +340,9 @@ public class Tab_Map_Fragment extends Fragment {
 
         @Override
         protected void onPostExecute(Bitmap bitmap) {
-            icon.add(bitmap);
+            RoundedBitmapDrawable drawable = RoundedBitmapDrawableFactory.create( getResources(),bitmap);
+            drawable.setCircular(true);
+            icon.add(drawable);
 
             if (userData.size() == icon.size())
             {
