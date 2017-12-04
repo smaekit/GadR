@@ -22,7 +22,7 @@
     <string name="AddEvent_StartTime">Start time</string>
     <string name="AddEvent_EndTime">End Time</string>
     <string name="AddEvent_Location">Location</string>
-    <string name="StatusHint">What are you doing?..</string>
+    <string name="StatusHint">What are you up to?..</string>
     <string name="userprofilepicture">userProfilePicture</string>
     <string name="name_of_user">Name of user</string>
     <string name="createLabel">Create</string>
@@ -33,6 +33,9 @@
     <string name="shareLocationOffTitle">Share Location OFF</string>
     <string name="shareLocationOnTitle">Share Location ON</string>
     <string name="share_location_off">Share Location OFF</string>
+    <string name="status_Tip">With a status you can share what you are doing. It is visible for 24 hours. Whenever you want you can update the status and the old will disappear</string>
+    <string name="cancelText">Cancel</string>
+    <string name="publishText">Publish</string>
 
 
 </resources>

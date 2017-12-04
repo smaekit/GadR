@@ -15,4 +15,20 @@
     <string name="AddEvent_StartTime">Starttid</string>
     <string name="AddEvent_EndTime">Sluttid</string>
     <string name="AddEvent_Location">Plats</string>
+    <string name="name_of_user">Namn på användare</string>
+    <string name="createLabel">Skapa</string>
+    <string name="eventlabel">Event</string>
+    <string name="statusLabel">Status</string>
+    <string name="shareLocationOnText">Du delar nu din position</string>
+    <string name="shareLocationOffText">Du delar nu inte längre din position</string>
+    <string name="shareLocationOffTitle">Dela position AV</string>
+    <string name="shareLocationOnTitle">Dela position PÅ</string>
+    <string name="share_location_off">Dela position AV</string>
+    <string name="status_Tip">"Med en status kan du dela vad du gör med andra. Den syns i 24 timmar. Närsomhelst kan du uppdatera din status och den gamla kommer att försvinna "</string>
+    <string name="cancelText">Avbryt</string>
+    <string name="publishText">Publicera</string>
+    <string name="navigation_drawer_close">Stäng hamburgermenyn</string>
+    <string name="navigation_drawer_open">Öppna  hamburgermenyn</string>
+    <string name="userprofilepicture">Användarens profilbild</string>
+    <string name="StatusHint">Vad har du för dig?..</string>
 </resources>
