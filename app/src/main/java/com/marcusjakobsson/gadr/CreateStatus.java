@@ -32,7 +32,10 @@ public class CreateStatus extends AppCompatActivity {
 
     public void cancel_button(View view)
     {
-
+        Intent intent = new Intent();
+        intent.putExtra(IntentExtra_DidAddStatus, false);
+        setResult(RESULT_OK, intent);
+        finish();
     }
 
     public void publish_button(View view)
