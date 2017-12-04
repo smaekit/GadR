@@ -10,6 +10,7 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Looper;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
@@ -83,31 +84,6 @@ public class Tab_Map_Fragment extends Fragment {
             e.printStackTrace();
         }
 
-        mMapView.getMapAsync(new OnMapReadyCallback() {
-            @Override
-            public void onMapReady(GoogleMap mMap) {
-                googleMap = mMap;
-
-                // For showing a move to my location button
-                //googleMap.setMyLocationEnabled(true);
-
-                reloadUserData();
-
-
-
-
-                // For dropping a marker at a point on the Map
-//                LatLng jth = new LatLng(57.7779500801111, 14.161934852600098);
-//                LatLng jkpg = new LatLng(57.7824464, 14.176048900000069);
-//                googleMap.addMarker(new MarkerOptions().position(jkpg).title("Makkan").snippet("Kodar Android").icon(BitmapDescriptorFactory.fromResource(R.drawable.person2))).showInfoWindow();
-//                googleMap.addMarker(new MarkerOptions().position(jth).title("Beerpong i JTH").snippet("19.00 - 21.00").icon(BitmapDescriptorFactory.fromResource(R.drawable.beer)));
-//
-//                // For zooming automatically to the location of the marker
-//                CameraPosition cameraPosition = new CameraPosition.Builder().target(jkpg).zoom(13).build();
-//                googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
-            }
-        });
-
 
         locationManager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
 
@@ -118,6 +94,8 @@ public class Tab_Map_Fragment extends Fragment {
                 locationManager.removeUpdates(locationListener);
                 FirebaseConnection firebaseConnection = new FirebaseConnection();
                 firebaseConnection.UpdateUserLocation(location.getLatitude(),location.getLongitude());
+
+                reloadUserData();
 
                 if (googleMap != null) {
                     CameraPosition cameraPosition = new CameraPosition.Builder().target(loc).zoom(17).build();
@@ -142,6 +120,48 @@ public class Tab_Map_Fragment extends Fragment {
 
             }
         };
+
+        //Todo: make funciton
+        if (ContextCompat.checkSelfPermission(getContext(), android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            //Ask for permisson
+            ActivityCompat.requestPermissions(getActivity(), new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION}, 1);
+        }
+        if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 3000, 0, locationListener);
+        }
+        if(locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {
+            locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 3000, 0, locationListener);
+        }
+
+        mMapView.getMapAsync(new OnMapReadyCallback() {
+            @Override
+            public void onMapReady(GoogleMap mMap) {
+                googleMap = mMap;
+
+                // For showing a move to my location button
+                //googleMap.setMyLocationEnabled(true);
+
+
+
+                reloadUserData();
+
+
+
+
+                // For dropping a marker at a point on the Map
+//                LatLng jth = new LatLng(57.7779500801111, 14.161934852600098);
+//                LatLng jkpg = new LatLng(57.7824464, 14.176048900000069);
+//                googleMap.addMarker(new MarkerOptions().position(jkpg).title("Makkan").snippet("Kodar Android").icon(BitmapDescriptorFactory.fromResource(R.drawable.person2))).showInfoWindow();
+//                googleMap.addMarker(new MarkerOptions().position(jth).title("Beerpong i JTH").snippet("19.00 - 21.00").icon(BitmapDescriptorFactory.fromResource(R.drawable.beer)));
+//
+//                // For zooming automatically to the location of the marker
+//                CameraPosition cameraPosition = new CameraPosition.Builder().target(jkpg).zoom(13).build();
+//                googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+            }
+        });
+
+
+
 
 
 
@@ -204,6 +224,18 @@ public class Tab_Map_Fragment extends Fragment {
             public void onSuccess(List<UserData> result) {
                 userData = result;
 
+                if (ContextCompat.checkSelfPermission(getContext(), android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                    //Ask for permisson
+                    ActivityCompat.requestPermissions(getActivity(), new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION}, 1);
+                }
+
+                if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+                    locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 3000, 0, locationListener);
+                }
+                if(locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {
+                    locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 3000, 0, locationListener);
+                }
+
                 for (UserData user : result) {
                 //    LatLng latLng = new LatLng(user.getLatitude(), user.getLongitude());
                 //    googleMap.addMarker(new MarkerOptions().position(latLng).title(user.getName()).snippet(user.getStatus()).icon(BitmapDescriptorFactory.fromResource(R.drawable.person2))).showInfoWindow();
@@ -213,20 +245,6 @@ public class Tab_Map_Fragment extends Fragment {
                 if (loc != null){
                     CameraPosition cameraPosition = new CameraPosition.Builder().target(loc).zoom(17).build();
                     googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
-                }
-
-                if (ContextCompat.checkSelfPermission(getContext(), android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                    //Ask for permisson
-                    ActivityCompat.requestPermissions(getActivity(), new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION}, 1);
-                }
-                else
-                {
-                    if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
-                        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 3000, 0, locationListener);
-                    }
-                    if(locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {
-                        locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 3000, 0, locationListener);
-                    }
                 }
 
                 reloadEventMarkers();
