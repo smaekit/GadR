@@ -28,6 +28,11 @@
     <string name="createLabel">Create</string>
     <string name="eventlabel">Event</string>
     <string name="statusLabel">Status</string>
+    <string name="shareLocationOnText">You are now sharing your location</string>
+    <string name="shareLocationOffText">You are no longer sharing your location</string>
+    <string name="shareLocationOffTitle">Share Location OFF</string>
+    <string name="shareLocationOnTitle">Share Location ON</string>
+    <string name="share_location_off">Share Location OFF</string>
 
 
 </resources>

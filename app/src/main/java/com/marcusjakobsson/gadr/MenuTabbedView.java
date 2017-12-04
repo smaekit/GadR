@@ -435,17 +435,17 @@ public class MenuTabbedView extends AppCompatActivity implements NavigationView.
             Intent intent = new Intent(getApplicationContext(), CreateStatus.class);
             startActivityForResult(intent, CreateStatus.REQUEST_CODE_DidAddStatus);
         } else if (id == R.id.nav_gallery) {
-            if(item.getTitle() == "Share Location ON")
+            if(item.getTitle() == getString(R.string.shareLocationOffTitle))
             {
-                item.setIcon(R.drawable.ic_action_name);
-                item.setTitle("Share Location OFF");
-                Toast.makeText(getApplicationContext(), "You are no longer sharing your location", Toast.LENGTH_SHORT).show();
+                item.setIcon(R.drawable.ic_location_on);
+                item.setTitle(R.string.shareLocationOnTitle);
+                Toast.makeText(getApplicationContext(), R.string.shareLocationOffText, Toast.LENGTH_SHORT).show();
             }
             else
             {
-                item.setIcon(R.drawable.ic_location_on);
-                item.setTitle("Share Location ON");
-                Toast.makeText(getApplicationContext(), "You are now sharing location", Toast.LENGTH_SHORT).show();
+                item.setIcon(R.drawable.ic_action_name);
+                item.setTitle(R.string.shareLocationOffTitle);
+                Toast.makeText(getApplicationContext(), R.string.shareLocationOnText, Toast.LENGTH_SHORT).show();
             }
 
 
