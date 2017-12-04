@@ -97,6 +97,7 @@ public class Tab_Map_Fragment extends Fragment {
             public void onLocationChanged(Location location) {
                 loc = new LatLng(location.getLatitude(), location.getLongitude());
                 locationManager.removeUpdates(locationListener);
+
                 FirebaseConnection firebaseConnection = new FirebaseConnection();
                 firebaseConnection.UpdateUserLocation(location.getLatitude(),location.getLongitude());
 
@@ -211,13 +212,6 @@ public class Tab_Map_Fragment extends Fragment {
                     }
                 }
             }
-
-
-            //TODO: remove
-            LatLng jth = new LatLng(57.7779500801111, 14.161934852600098);
-            LatLng jkpg = new LatLng(57.7824464, 14.176048900000069);
-            googleMap.addMarker(new MarkerOptions().position(jkpg).title("Makkan").snippet("Kodar Android").icon(BitmapDescriptorFactory.fromResource(R.drawable.person2))).showInfoWindow();
-            googleMap.addMarker(new MarkerOptions().position(jth).title("Beerpong i JTH").snippet("19.00 - 21.00").icon(BitmapDescriptorFactory.fromResource(R.drawable.beer)));
         }
     }
 
@@ -238,7 +232,7 @@ public class Tab_Map_Fragment extends Fragment {
             @Override
             public void onSuccess(List<UserData> result) {
                 userData = result;
-
+/*
                 if (ContextCompat.checkSelfPermission(getContext(), android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
                     //Ask for permisson
                     ActivityCompat.requestPermissions(getActivity(), new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION}, 1);
@@ -249,7 +243,7 @@ public class Tab_Map_Fragment extends Fragment {
                 }
                 if(locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {
                     locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 3000, 0, locationListener);
-                }
+                }*/
 
                 for (UserData user : result) {
                 //    LatLng latLng = new LatLng(user.getLatitude(), user.getLongitude());
@@ -257,10 +251,10 @@ public class Tab_Map_Fragment extends Fragment {
                     GetBitmapFromURLAsync getBitmapFromURLAsync = new GetBitmapFromURLAsync();
                     getBitmapFromURLAsync.execute(user.getImgURLSmall());
                 }
-                if (loc != null){
+/*                if (loc != null){
                     CameraPosition cameraPosition = new CameraPosition.Builder().target(loc).zoom(17).build();
                     googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
-                }
+                }*/
 
                 reloadEventMarkers();
             }
