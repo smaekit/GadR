@@ -18,10 +18,11 @@ public class UserData {
     private String status = "";
     private double latitude;
     private double longitude;
+    private boolean shareLocation = true;
 
     public UserData() {}
 
-    public UserData(String fbID, String name, int points, String imgURLLarge, String imgURLSmall, String status, double latitude, double longitude){
+    public UserData(String fbID, String name, int points, String imgURLLarge, String imgURLSmall, String status, double latitude, double longitude, boolean shareLocation){
         this.fbID = fbID;
         this.name = name;
         this.points = points;
@@ -30,27 +31,19 @@ public class UserData {
         this.status = status;
         this.latitude = latitude;
         this.longitude = longitude;
+        this.shareLocation = shareLocation;
     }
 
-    public double getLatitude() {
-        return latitude;
-    }
 
     public void setLatitude(double latitude) {
         this.latitude = latitude;
     }
 
-    public double getLongitude() {
-        return longitude;
-    }
 
     public void setLongitude(double longitude) {
         this.longitude = longitude;
     }
 
-    public String getStatus() {
-        return status;
-    }
 
     public void setStatus(String status) {
         this.status = status;
@@ -77,6 +70,7 @@ public class UserData {
         this.imgURLSmall = imgURLSmall;
     }
 
+    public void setShareLocation(Boolean shareLocation) {this.shareLocation = shareLocation; }
 
 
     //  Getters
@@ -92,6 +86,10 @@ public class UserData {
         return points;
     }
 
+    public String getStatus() {
+        return status;
+    }
+
     public String getImgURLLarge() {
         return imgURLLarge;
     }
@@ -99,6 +97,16 @@ public class UserData {
     public String getImgURLSmall() {
         return imgURLSmall;
     }
+
+    public double getLatitude() {
+        return latitude;
+    }
+
+    public double getLongitude() {
+        return longitude;
+    }
+
+    public boolean getShareLocation() { return shareLocation; }
 
     @Override
     public String toString() {

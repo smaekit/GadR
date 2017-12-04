@@ -34,6 +34,7 @@ public class FirebaseConnection {
     public static String users_status = "status";
     public static String users_latitude = "latitude";
     public static String users_longitude = "longitude";
+    public static String users_shareLocation = "shareLocation";
 
 
     //Event

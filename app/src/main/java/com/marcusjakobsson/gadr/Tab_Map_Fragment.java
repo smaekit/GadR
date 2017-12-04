@@ -201,14 +201,15 @@ public class Tab_Map_Fragment extends Fragment {
             if (userData != null) {
                 //for (UserData user : userData) {
                 for (int i = 0; i < userData.size(); i++) {
-                    LatLng latLng = new LatLng(userData.get(i).getLatitude(), userData.get(i).getLongitude());
-                    if (icon != null && icon.size() > 0) {
-                        Drawable circleDrawable = icon.get(i);
-                        BitmapDescriptor markerIcon = getMarkerIconFromDrawable(circleDrawable);
-                        googleMap.addMarker(new MarkerOptions().position(latLng).title(userData.get(i).getName()).snippet(userData.get(i).getStatus()).icon(markerIcon)).showInfoWindow();
-                    }
-                    else {
-                        googleMap.addMarker(new MarkerOptions().position(latLng).title(userData.get(i).getName()).snippet(userData.get(i).getStatus()).icon(BitmapDescriptorFactory.fromResource(R.drawable.person2))).showInfoWindow();
+                    if (userData.get(i).getShareLocation()) {
+                        LatLng latLng = new LatLng(userData.get(i).getLatitude(), userData.get(i).getLongitude());
+                        if (icon != null && icon.size() > 0) {
+                            Drawable circleDrawable = icon.get(i);
+                            BitmapDescriptor markerIcon = getMarkerIconFromDrawable(circleDrawable);
+                            googleMap.addMarker(new MarkerOptions().position(latLng).title(userData.get(i).getName()).snippet(userData.get(i).getStatus()).icon(markerIcon)).showInfoWindow();
+                        } else {
+                            googleMap.addMarker(new MarkerOptions().position(latLng).title(userData.get(i).getName()).snippet(userData.get(i).getStatus()).icon(BitmapDescriptorFactory.fromResource(R.drawable.person2))).showInfoWindow();
+                        }
                     }
                 }
             }
