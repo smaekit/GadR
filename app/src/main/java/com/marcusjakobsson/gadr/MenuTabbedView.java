@@ -21,11 +21,15 @@ import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.facebook.AccessToken;
 import com.facebook.GraphRequest;
@@ -85,6 +89,7 @@ public class MenuTabbedView extends AppCompatActivity implements NavigationView.
 
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(viewPager);
+
 
 
 
@@ -182,6 +187,7 @@ public class MenuTabbedView extends AppCompatActivity implements NavigationView.
 
 
 
+
     }
 
     @Override
@@ -196,7 +202,12 @@ public class MenuTabbedView extends AppCompatActivity implements NavigationView.
                     reloadEventData();
                 }
                 else { Log.i(TAG, "False"); }
+            } else if (requestCode == CreateStatus.REQUEST_CODE_DidAddStatus) {
+                Boolean b = data.getBooleanExtra(CreateStatus.IntentExtra_DidAddStatus, false);
+                if (b) { Log.i(TAG, "True"); }
+                else { Log.i(TAG, "False"); }
             }
+
         }
     }
 
@@ -389,6 +400,8 @@ public class MenuTabbedView extends AppCompatActivity implements NavigationView.
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
+
+
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
             return true;
@@ -404,10 +417,12 @@ public class MenuTabbedView extends AppCompatActivity implements NavigationView.
         int id = item.getItemId();
 
         if (id == R.id.nav_camera) {
-            // Handle the camera action
+            Intent intent = new Intent(getApplicationContext(), CreateStatus.class);
+            startActivityForResult(intent, CreateStatus.REQUEST_CODE_DidAddStatus);
         } else if (id == R.id.nav_gallery) {
 
         } else if (id == R.id.nav_slideshow) {
+
 
         } else if (id == R.id.nav_manage) {
 

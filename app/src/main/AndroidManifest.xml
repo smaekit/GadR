@@ -69,13 +69,15 @@
             android:value="@string/google_maps_key" />
 
 
-
-        <activity android:name=".AddEventActivity"
+      <activity android:name=".AddEventActivity"
             android:screenOrientation="portrait">
             <meta-data
                 android:name="com.google.android.geo.API_KEY"
                 android:value="AIzaSyAAooAsvOn5b62O8kmQ1qF1bstEB08Wlog" />
         </activity>
+        <activity
+            android:name=".CreateStatus"
+            android:theme="@style/AppTheme.NoActionBar" />
     </application>
 
 </manifest>
