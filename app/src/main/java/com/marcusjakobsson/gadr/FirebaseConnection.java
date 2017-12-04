@@ -4,6 +4,7 @@ import android.util.Log;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.google.android.gms.maps.model.LatLng;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -31,6 +32,8 @@ public class FirebaseConnection {
     public static String users_imgURLLarge = "imgurlLarge";
     public static String users_imgURLSmall = "imgurlLarge";
     public static String users_status = "status";
+    public static String users_latitude = "latitude";
+    public static String users_longitude = "longitude";
 
 
     //Event
@@ -209,6 +212,14 @@ public class FirebaseConnection {
     }
 
 
+    public void UpdateUserLocation(double latitude, double longitude)
+    {
+        FirebaseUser currentUser = mAuth.getCurrentUser();
+        DatabaseReference ref = mRef.child(users_parent).child(currentUser.getUid()).child(users_latitude);
+        ref.setValue(latitude);
+        ref = mRef.child(users_parent).child(currentUser.getUid()).child(users_longitude);
+        ref.setValue(longitude);
+    }
 
 }
 
