@@ -136,13 +136,14 @@ public class MenuTabbedView extends AppCompatActivity implements NavigationView.
             public void onSuccess(List<UserData> result){
 
                 setupCurrentUser(result);
+                reloadEventData();
 
             }
         });
 
 
 
-        reloadEventData();
+
 
 
 
