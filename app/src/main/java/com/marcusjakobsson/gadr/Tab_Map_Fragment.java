@@ -204,10 +204,12 @@ public class Tab_Map_Fragment extends Fragment {
             public void onSuccess(List<UserData> result) {
                 userData = result;
 
-/*                for (UserData user : result) {
-                    LatLng latLng = new LatLng(user.getLatitude(), user.getLongitude());
-                    googleMap.addMarker(new MarkerOptions().position(latLng).title(user.getName()).snippet(user.getStatus()).icon(BitmapDescriptorFactory.fromResource(R.drawable.person2))).showInfoWindow();
-                }*/
+                for (UserData user : result) {
+                //    LatLng latLng = new LatLng(user.getLatitude(), user.getLongitude());
+                //    googleMap.addMarker(new MarkerOptions().position(latLng).title(user.getName()).snippet(user.getStatus()).icon(BitmapDescriptorFactory.fromResource(R.drawable.person2))).showInfoWindow();
+                    GetBitmapFromURLAsync getBitmapFromURLAsync = new GetBitmapFromURLAsync();
+                    getBitmapFromURLAsync.execute(user.getImgURLSmall());
+                }
                 if (loc != null){
                     CameraPosition cameraPosition = new CameraPosition.Builder().target(loc).zoom(17).build();
                     googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
