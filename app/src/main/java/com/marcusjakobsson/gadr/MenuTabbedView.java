@@ -214,7 +214,7 @@ public class MenuTabbedView extends AppCompatActivity implements NavigationView.
                 firebaseConnection.UpdateUserLocation(location.getLatitude(),location.getLongitude());
                 reloadEventData();
 
-
+                Toast.makeText(getApplicationContext(), "Menutabbed view", Toast.LENGTH_LONG);
             }
 
             @Override
@@ -490,18 +490,18 @@ public class MenuTabbedView extends AppCompatActivity implements NavigationView.
             if(item.getTitle() == getString(R.string.shareLocationOffTitle))
             {
                 FirebaseConnection firebaseConnection2 = new FirebaseConnection();
-                firebaseConnection2.UpdateUserShareLocation(false);
+                firebaseConnection2.UpdateUserShareLocation(true);
                 item.setIcon(R.drawable.ic_location_on);
                 item.setTitle(R.string.shareLocationOnTitle);
-                Toast.makeText(getApplicationContext(), R.string.shareLocationOffText, Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), R.string.shareLocationOnText, Toast.LENGTH_SHORT).show();
             }
             else
             {
                 FirebaseConnection firebaseConnection2 = new FirebaseConnection();
-                firebaseConnection2.UpdateUserShareLocation(true);
+                firebaseConnection2.UpdateUserShareLocation(false);
                 item.setIcon(R.drawable.ic_action_name);
                 item.setTitle(R.string.shareLocationOffTitle);
-                Toast.makeText(getApplicationContext(), R.string.shareLocationOnText, Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), R.string.shareLocationOffText, Toast.LENGTH_SHORT).show();
             }
 
 

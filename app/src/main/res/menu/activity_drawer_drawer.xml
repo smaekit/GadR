@@ -10,8 +10,8 @@
             android:title="@string/statusLabel" />
         <item
             android:id="@+id/nav_shareLocation"
-            android:icon="@drawable/ic_action_name"
-            android:title="@string/shareLocationOffTitle" />
+            android:icon="@drawable/ic_location_on"
+            android:title="@string/shareLocationOnTitle" />
 
         <item
             android:id="@+id/nav_slideshow"

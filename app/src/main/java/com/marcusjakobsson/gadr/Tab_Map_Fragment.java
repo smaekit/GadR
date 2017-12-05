@@ -109,6 +109,8 @@ public class Tab_Map_Fragment extends Fragment {
                 }
                 reloadEventMarkers();
 
+                Toast.makeText(getContext(), "Map fragment", Toast.LENGTH_LONG);
+
             }
 
             @Override
