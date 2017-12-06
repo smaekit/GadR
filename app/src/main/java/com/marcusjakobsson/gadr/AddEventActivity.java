@@ -42,6 +42,9 @@ public class AddEventActivity extends AppCompatActivity {
 
     public static final int REQUEST_CODE_DidAddEvent = 1;
     public static final String IntentExtra_DidAddEvent = "didAddEvent";
+    public static final String IntentExtra_Lat = "latitude";
+    public static final String IntentExtra_Long = "longitude";
+    public static final String IntentExtra_DateIsToday = "dateIsToday";
 
     public static final int PLACE_AUTOCOMPLETE_REQUEST_CODE = 5;
 
@@ -57,6 +60,8 @@ public class AddEventActivity extends AppCompatActivity {
     DatePickerDialog.OnDateSetListener dateListener;
     TimePickerDialog.OnTimeSetListener startTimeListener;
     TimePickerDialog.OnTimeSetListener endTimeListener;
+
+    Boolean dateIsToday = false;
 
     CustomLocation customLocation = new CustomLocation();
 
@@ -248,6 +253,12 @@ public class AddEventActivity extends AppCompatActivity {
 
             Intent intent = new Intent();
             intent.putExtra(IntentExtra_DidAddEvent, true);
+
+            if (dateIsToday){
+                intent.putExtra(IntentExtra_DateIsToday, dateIsToday);
+                intent.putExtra(IntentExtra_Lat, customLocation.getLatitude());
+                intent.putExtra(IntentExtra_Long, customLocation.getLongitude());
+            }
             setResult(RESULT_OK, intent);
             finish();
         }
@@ -330,10 +341,14 @@ public class AddEventActivity extends AppCompatActivity {
 
         //TODO: check if timeStrings are not null
         if (DateUtils.isToday(cal.getTimeInMillis())) {
+            dateIsToday = true;
             Log.i(TAG, "Is today!");
             if (timesAreInvalid(simpleDateFormat.format(Calendar.getInstance().getTime()), editText.getText().toString())) {
                 return true;
             }
+        }
+        else {
+            dateIsToday = false;
         }
         return false;
     }

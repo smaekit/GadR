@@ -346,4 +346,10 @@ public class Tab_Map_Fragment extends Fragment {
                 reloadEventMarkers();
             }
         }
-    }}
+    }
+
+    public void ZoomMapTo(LatLng latLng) {
+        CameraPosition cameraPosition = new CameraPosition.Builder().target(latLng).zoom(17).build();
+        googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+    }
+}

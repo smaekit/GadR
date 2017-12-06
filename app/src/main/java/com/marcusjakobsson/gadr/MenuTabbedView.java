@@ -245,6 +245,11 @@ public class MenuTabbedView extends AppCompatActivity implements NavigationView.
                 if (b) {
                     Log.i(TAG, "True");
                     reloadEventData();
+
+                    //If today
+                    if(data.getBooleanExtra(AddEventActivity.IntentExtra_DateIsToday, false)) {
+                        tabMapFragment.ZoomMapTo(new LatLng(data.getDoubleExtra(AddEventActivity.IntentExtra_Lat, 0), data.getDoubleExtra(AddEventActivity.IntentExtra_Long, 0)));
+                    }
                 }
                 else { Log.i(TAG, "False"); }
             } else if (requestCode == CreateStatus.REQUEST_CODE_DidAddStatus) {
