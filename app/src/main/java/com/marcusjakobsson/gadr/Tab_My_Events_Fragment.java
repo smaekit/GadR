@@ -10,6 +10,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ListAdapter;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import com.facebook.AccessToken;
@@ -26,30 +28,51 @@ import java.util.Date;
 
 public class Tab_My_Events_Fragment extends Fragment {
 
+    ListView listView;
+    ListAdapter listViewAdapter;
+
+    EventData[] myEventData;
+    CustomListViewItem[] listData;
+
+    String[] dummyData = {"Andreas", "Bengt" , "Carl" , "David" , "Erik", "Andreas", "Bengt" , "Carl" , "David" , "Andreas", "Bengt" , "Carl" , "David" , "Andreas", "Bengt" , "Carl" , "David" , "Andreas", "Bengt" , "Carl" , "David" , "Andreas", "Bengt" , "Carl" , "David" };
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_tab_my_events,container,false);
 
-//        TextView tv = (TextView) view.findViewById(R.id.textView4);
+        listData = new CustomListViewItem[10];
 
+        for (int i = 0; i < listData.length; i++) {
+            listData[i] = new CustomListViewItem(dummyData[i], "00:00 - 01:00");
+        }
 
-        /*
-        // set
-        ((ThisApp) getActivity().getApplication()).setTestString("foo");
+        listView = (ListView) view.findViewById(R.id.ListView_MyEvents);
 
-        // get
-        String s = ((ThisApp) getActivity().getApplication()).getTestString();
-*/
-
-//        String currentDateTimeString = DateFormat.getDateTimeInstance().format(new Date());
-
-// textView is the TextView view that should display it
-//        tv.setText(currentDateTimeString);
-
-
-
+        listViewAdapter = new CustomListViewAdapter(getActivity(), listData);
+        listView.setAdapter(listViewAdapter);
 
         return view;
     }
+
+
+    public void reloadListData() {
+        //TODO: Add reload animation.
+
+        EventData[] newAllEventData = ((ThisApp) getActivity().getApplication()).getMyEvents();
+
+        if (newAllEventData != null) {
+            listData = new CustomListViewItem[newAllEventData.length];
+            myEventData = newAllEventData;
+
+            for (int i = 0; i < listData.length; i++) {
+                listData[i] = new CustomListViewItem(myEventData[i].getTitle(), myEventData[i].getStartTime() + " - " + myEventData[i].getEndTime());
+            }
+
+            listViewAdapter = new CustomListViewAdapter(getActivity(), listData);
+            listView.setAdapter(listViewAdapter);
+        }
+    }
+
+
 }

@@ -296,6 +296,7 @@ public class MenuTabbedView extends AppCompatActivity implements NavigationView.
     private void reloadFragmentData() {
 
         tabAllEventsFragment.reloadListData();
+        tabMyEventsFragment.reloadListData();
         tabMapFragment.reloadUserData();
 //        tabMapFragment.reloadEventMarkers();
     }
