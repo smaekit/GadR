@@ -196,7 +196,7 @@ public class MainActivity extends AppCompatActivity {
         //hideProgressDialog();
         if (user != null) {
 
-            Intent intent = new Intent(this, MenuTabbedView.class);
+            Intent intent = new Intent(this, DetailEventActivity.class);
             startActivity(intent);
             //user.getUid()));
             //loginButton.setVisibility(View.GONE);
