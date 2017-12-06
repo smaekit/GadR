@@ -214,7 +214,7 @@ public class MenuTabbedView extends AppCompatActivity implements NavigationView.
                 firebaseConnection.UpdateUserLocation(location.getLatitude(),location.getLongitude());
                 reloadEventData();
 
-                Toast.makeText(getApplicationContext(), "Menutabbed view", Toast.LENGTH_LONG);
+                Toast.makeText(getApplicationContext(), "Menutabbed view", Toast.LENGTH_LONG).show();
             }
 
             @Override
