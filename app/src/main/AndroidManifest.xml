@@ -28,7 +28,7 @@
             android:name="com.facebook.FacebookActivity"
             android:configChanges="keyboard|keyboardHidden|screenLayout|screenSize|orientation"
             android:label="@string/app_name"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
         <activity
             android:name="com.facebook.CustomTabActivity"
             android:exported="true"
@@ -54,8 +54,8 @@
         <activity
             android:name=".MenuTabbedView"
             android:label="@string/title_activity_tabbed_view"
-            android:theme="@style/AppTheme.NoActionBar"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar" />
         <!--
              The API key for Google Maps-based APIs is defined as a string resource.
              (See the file "res/values/google_maps_api.xml").
@@ -68,10 +68,10 @@
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/google_maps_key" />
 
-
-      <activity android:name=".AddEventActivity"
-          android:theme="@style/AppTheme.NoActionBar"
-          android:screenOrientation="portrait">
+        <activity
+            android:name=".AddEventActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar">
             <meta-data
                 android:name="com.google.android.geo.API_KEY"
                 android:value="AIzaSyAAooAsvOn5b62O8kmQ1qF1bstEB08Wlog" />
@@ -79,6 +79,10 @@
         <activity
             android:name=".CreateStatus"
             android:theme="@style/AppTheme.NoActionBar" />
+        <activity android:name=".DetailEventActivity"
+            android:theme="@style/AppTheme.NoActionBar">
+
+        </activity>
     </application>
 
 </manifest>
