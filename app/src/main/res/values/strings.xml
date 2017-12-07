@@ -37,6 +37,9 @@
     <string name="cancelText">Cancel</string>
     <string name="publishText">Publish</string>
     <string name="create_eventLabel">Create Event</string>
+    <string name="appwidget_text">EXAMPLE</string>
+    <string name="add_widget">Add widget</string>
+    <string name="change_your_status">Change your Status</string>
 
 
 </resources>

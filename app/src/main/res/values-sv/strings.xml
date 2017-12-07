@@ -32,4 +32,5 @@
     <string name="navigation_drawer_open">Öppna  hamburgermenyn</string>
     <string name="userprofilepicture">Användarens profilbild</string>
     <string name="StatusHint">Vad har du för dig?..</string>
+    <string name="change_your_status">Ändra din status</string>
 </resources>

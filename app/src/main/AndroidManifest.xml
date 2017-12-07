@@ -79,10 +79,19 @@
         <activity
             android:name=".CreateStatus"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".DetailEventActivity"
-            android:theme="@style/AppTheme.NoActionBar">
+        <activity
+            android:name=".DetailEventActivity"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
 
-        </activity>
+        <receiver android:name=".GadRWidget">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/gad_rwidget_info" />
+        </receiver>
     </application>
 
 </manifest>
