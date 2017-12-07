@@ -11,6 +11,7 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Looper;
 import android.support.annotation.NonNull;
@@ -67,12 +68,17 @@ public class Tab_Map_Fragment extends Fragment {
     LatLng loc;
     List<RoundedBitmapDrawable> icon = new ArrayList<>();
 
+    GetBitmapFromURLAsync getBitmapFromURLAsync;
+
 
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_tab_map, container, false);
+
+
+
 
 
         mMapView = (MapView) rootView.findViewById(R.id.mapView);
@@ -88,6 +94,8 @@ public class Tab_Map_Fragment extends Fragment {
         } catch (Exception e) {
             e.printStackTrace();
         }
+
+
 
 
         locationManager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
@@ -109,7 +117,7 @@ public class Tab_Map_Fragment extends Fragment {
                 }
                 reloadEventMarkers();
 
-                Toast.makeText(getContext(), "Map fragment", Toast.LENGTH_LONG);
+                Toast.makeText(getContext(), "Map fragment refreshing updates", Toast.LENGTH_SHORT).show();
 
             }
 
@@ -129,17 +137,31 @@ public class Tab_Map_Fragment extends Fragment {
             }
         };
 
-        //Todo: make funciton
-        if (ContextCompat.checkSelfPermission(getContext(), android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            //Ask for permisson
-            ActivityCompat.requestPermissions(getActivity(), new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION}, 1);
+
+        // If device is running SDK < 23
+        if (Build.VERSION.SDK_INT < 23)
+        {
+            //We can just request locationUpdates
+            //we also need to target min sdk version less then 23
+        }else
+        {
+            //Todo: make funciton
+            if (ContextCompat.checkSelfPermission(getContext(), android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                //Ask for permisson
+                ActivityCompat.requestPermissions(getActivity(), new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION}, 1);
+            }else
+            {
+                //If user already granted us permisson
+                if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+                    locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 3000, 0, locationListener);
+                }
+                if(locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {
+                    locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 3000, 0, locationListener);
+                }
+            }
+
         }
-        if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
-            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 3000, 0, locationListener);
-        }
-        if(locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {
-            locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 3000, 0, locationListener);
-        }
+
 
         mMapView.getMapAsync(new OnMapReadyCallback() {
             @Override
@@ -183,8 +205,14 @@ public class Tab_Map_Fragment extends Fragment {
 
             String today = new SimpleDateFormat(EventData.DATE_FORMAT_STRING).format(new Date());
 
-            allEventData = ((ThisApp) getActivity().getApplication()).getAllEvents();
-            myEventData = ((ThisApp) getActivity().getApplication()).getMyEvents();
+            try{
+                allEventData = ((ThisApp) getActivity().getApplication()).getAllEvents();
+                myEventData = ((ThisApp) getActivity().getApplication()).getMyEvents();
+            }catch (NullPointerException e)
+            {
+                e.printStackTrace();
+            }
+
 
             if (allEventData != null) {
                 for (int i = 0; i < allEventData.length; i++) {
@@ -251,7 +279,7 @@ public class Tab_Map_Fragment extends Fragment {
                 for (UserData user : result) {
                 //    LatLng latLng = new LatLng(user.getLatitude(), user.getLongitude());
                 //    googleMap.addMarker(new MarkerOptions().position(latLng).title(user.getName()).snippet(user.getStatus()).icon(BitmapDescriptorFactory.fromResource(R.drawable.person2))).showInfoWindow();
-                    GetBitmapFromURLAsync getBitmapFromURLAsync = new GetBitmapFromURLAsync();
+                    getBitmapFromURLAsync = new GetBitmapFromURLAsync();
                     getBitmapFromURLAsync.execute(user.getImgURLSmall());
                 }
 /*                if (loc != null){
@@ -280,8 +308,13 @@ public class Tab_Map_Fragment extends Fragment {
 
     @Override
     public void onDestroy() {
-        super.onDestroy();
+        if (getBitmapFromURLAsync != null) {
+            getBitmapFromURLAsync.cancel(true);
+        }
         mMapView.onDestroy();
+
+        //Should be destroyed last.
+        super.onDestroy();
     }
 
     @Override
@@ -290,28 +323,7 @@ public class Tab_Map_Fragment extends Fragment {
         mMapView.onLowMemory();
     }
 
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
 
-
-            if (ActivityCompat.checkSelfPermission(getActivity(), android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getContext(), android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                // TODO: Consider calling
-                //    ActivityCompat#requestPermissions
-                // here to request the missing permissions, and then overriding
-                //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-                //                                          int[] grantResults)
-                // to handle the case where the user grants the permission. See the documentation
-                // for ActivityCompat#requestPermissions for more details.
-                return;
-            }
-            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 3000, 0, locationListener);
-            locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 3000, 0, locationListener);
-
-
-        }
-    }
 
     public static Bitmap getBitmapFromURL(String imgUrl) {
         try {
