@@ -506,6 +506,8 @@ public class MenuTabbedView extends AppCompatActivity implements NavigationView.
 
 
         } else if (id == R.id.nav_slideshow) {
+            Intent intent = new Intent(getApplicationContext(), DetailEventActivity.class);
+            startActivity(intent);
 
 
         } else if (id == R.id.nav_manage) {
