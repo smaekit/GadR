@@ -11,6 +11,7 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
@@ -18,9 +19,11 @@ import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
 import android.support.v4.view.GravityCompat;
+import android.support.v4.view.PagerAdapter;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
@@ -67,6 +70,7 @@ import java.util.Date;
 import java.util.List;
 
 import static android.R.attr.name;
+import static android.support.v4.view.PagerAdapter.POSITION_NONE;
 
 public class MenuTabbedView extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
@@ -75,6 +79,8 @@ public class MenuTabbedView extends AppCompatActivity implements NavigationView.
     private SectionsPagerAdapter sectionsPageAdapter;
 
     private ViewPager viewPager;
+
+    private TabLayout tabLayout;
 
     private FirebaseConnection firebaseConnection;
 
@@ -95,17 +101,31 @@ public class MenuTabbedView extends AppCompatActivity implements NavigationView.
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_tabbed_view);
 
-
-
         sectionsPageAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
 
         viewPager = (ViewPager) findViewById(R.id.container);
         viewPager.setOffscreenPageLimit(3);  //How many screens before reload
+        tabLayout = (TabLayout) findViewById(R.id.tabs);
         setupViewPager(viewPager);
-
-        TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(viewPager);
 
+
+        // If device is running SDK < 23
+        if (Build.VERSION.SDK_INT < 23)
+        {
+            //We can just request locationUpdates
+        }else
+        {
+            if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                //Ask for permisson
+                ActivityCompat.requestPermissions(this, new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION}, 1);
+            }
+            else
+            {
+                //We have permisson
+                Log.i(TAG, "we have permisson");
+            }
+        }
 
 
 
@@ -122,8 +142,6 @@ public class MenuTabbedView extends AppCompatActivity implements NavigationView.
                 startActivityForResult(intent, AddEventActivity.REQUEST_CODE_DidAddEvent);
             }
         });
-
-
 
 
 
@@ -214,7 +232,7 @@ public class MenuTabbedView extends AppCompatActivity implements NavigationView.
                 firebaseConnection.UpdateUserLocation(location.getLatitude(),location.getLongitude());
                 reloadEventData();
 
-                Toast.makeText(getApplicationContext(), "Menutabbed view", Toast.LENGTH_LONG);
+                Toast.makeText(getApplicationContext(), "Location Refreshed", Toast.LENGTH_LONG).show();
             }
 
             @Override
@@ -427,6 +445,34 @@ public class MenuTabbedView extends AppCompatActivity implements NavigationView.
 //    /**
 //     * A placeholder fragment containing a simple view.
 //     */
+
+
+
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+
+
+            if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                ActivityCompat.requestPermissions(this, new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION}, 1);
+                return;
+            }
+            //We have permisson
+            try {
+                //refresh fragments
+                viewPager.getAdapter().notifyDataSetChanged();
+            }catch (NullPointerException e)
+            {
+                e.printStackTrace();
+            }
+
+
+        }
+    }
+
+    //Todo what is this?
     public static class PlaceholderFragment extends Fragment {
 
         public PlaceholderFragment() {
@@ -446,6 +492,8 @@ public class MenuTabbedView extends AppCompatActivity implements NavigationView.
     }
 
 
+
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will
@@ -459,6 +507,8 @@ public class MenuTabbedView extends AppCompatActivity implements NavigationView.
         if (id == R.id.refresh_button) {
             if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
                 // TODO: Consider calling
+                ActivityCompat.requestPermissions(this, new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION}, 1);
+
                 //    ActivityCompat#requestPermissions
                 // here to request the missing permissions, and then overriding
                 //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
@@ -468,9 +518,13 @@ public class MenuTabbedView extends AppCompatActivity implements NavigationView.
                 return true;
             }
 
-            //User location updates from here?
-            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 3000, 0, locationListener);
-            locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 3000, 0, locationListener);
+            if(ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED)
+            {
+                //User location updates from here?
+                locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 3000, 0, locationListener);
+                locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 3000, 0, locationListener);
+            }
+
             return true;
         }
 
@@ -506,6 +560,8 @@ public class MenuTabbedView extends AppCompatActivity implements NavigationView.
 
 
         } else if (id == R.id.nav_slideshow) {
+            Intent intent = new Intent(getApplicationContext(), DetailEventActivity.class);
+            startActivity(intent);
 
 
         } else if (id == R.id.nav_manage) {
@@ -522,6 +578,12 @@ public class MenuTabbedView extends AppCompatActivity implements NavigationView.
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    //Todo destroy asyncTasks and objects when view is getting onDestroy
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
     }
 
     //Async task to set user Profileimage from url in drawer menu
