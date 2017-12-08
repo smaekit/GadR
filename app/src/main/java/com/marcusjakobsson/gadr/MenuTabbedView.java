@@ -89,6 +89,7 @@ public class MenuTabbedView extends AppCompatActivity implements NavigationView.
     LocationManager locationManager;
     LocationListener locationListener;
 
+    String userStatus;
 
     //Fragments
     Tab_Map_Fragment tabMapFragment = new Tab_Map_Fragment();
@@ -269,9 +270,8 @@ public class MenuTabbedView extends AppCompatActivity implements NavigationView.
                 Boolean b = data.getBooleanExtra(CreateStatus.IntentExtra_DidAddStatus, false);
                 if (b) {
                     Log.i(TAG, "True");
-                    String status = data.getStringExtra(CreateStatus.IntentExtra_UserStatus);
-                    userStatus_TextView = (TextView)findViewById(R.id.userStatus_TextView);
-                    userStatus_TextView.setText(status);
+                    userStatus = data.getStringExtra(CreateStatus.IntentExtra_UserStatus);
+
                     reloadEventData();
                 }
                 else { Log.i(TAG, "False"); }
@@ -310,9 +310,15 @@ public class MenuTabbedView extends AppCompatActivity implements NavigationView.
         });
     }
 
+    private void setUserStatus()
+    {
+        userStatus_TextView = (TextView)findViewById(R.id.userStatus_TextView);
+        userStatus_TextView.setText(userStatus);
+    }
 
     private void reloadFragmentData() {
 
+        setUserStatus();
         //tabAllEventsFragment.reloadListData();
         tabMapFragment.reloadUserData();
 //        tabMapFragment.reloadEventMarkers();

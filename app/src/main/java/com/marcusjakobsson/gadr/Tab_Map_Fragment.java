@@ -91,7 +91,12 @@ public class Tab_Map_Fragment extends Fragment {
             e.printStackTrace();
         }
 
+        return rootView;
+    }
 
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
 
         locationManager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
 
@@ -165,16 +170,7 @@ public class Tab_Map_Fragment extends Fragment {
                 //reloadUserData();
             }
         });
-
-
-
-
-
-
-        return rootView;
     }
-
-
 
     public void reloadEventMarkers() {
 
