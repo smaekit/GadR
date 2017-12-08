@@ -45,12 +45,16 @@ public class Tab_All_Events_Fragment extends Fragment {
         listViewAdapter = new CustomListViewAdapter(getActivity(), listData);
         listView.setAdapter(listViewAdapter);
 
+
+        reloadListData();
+
         return view;
     }
 
 
     public void reloadListData() {
         //TODO: Add reload animation.
+
 
         EventData[] newAllEventData = ((ThisApp) getActivity().getApplication()).getAllEvents();
 

@@ -117,7 +117,7 @@ public class Tab_Map_Fragment extends Fragment {
                 }
                 reloadEventMarkers();
 
-                Toast.makeText(getContext(), "Map fragment refreshing updates", Toast.LENGTH_SHORT).show();
+                //Toast.makeText(getContext(), "Map fragment refreshing updates", Toast.LENGTH_SHORT).show();
 
             }
 
@@ -302,6 +302,11 @@ public class Tab_Map_Fragment extends Fragment {
 
     @Override
     public void onPause() {
+
+        if(getBitmapFromURLAsync != null){
+            getBitmapFromURLAsync.cancel(true);
+        }
+
         super.onPause();
         mMapView.onPause();
     }
@@ -349,13 +354,16 @@ public class Tab_Map_Fragment extends Fragment {
 
         @Override
         protected void onPostExecute(Bitmap bitmap) {
-            RoundedBitmapDrawable drawable = RoundedBitmapDrawableFactory.create( getResources(),bitmap);
-            drawable.setCircular(true);
-            icon.add(drawable);
+/*
+            if (getResources() != null) {
+                RoundedBitmapDrawable drawable = RoundedBitmapDrawableFactory.create(getResources(), bitmap);
+                drawable.setCircular(true);
+                icon.add(drawable);
 
-            if (userData.size() == icon.size())
-            {
-                reloadEventMarkers();
-            }
+                if (userData.size() == icon.size()) {
+                    reloadEventMarkers();
+
+                }
+            }*/
         }
     }}

@@ -313,7 +313,7 @@ public class MenuTabbedView extends AppCompatActivity implements NavigationView.
 
     private void reloadFragmentData() {
 
-        tabAllEventsFragment.reloadListData();
+        //tabAllEventsFragment.reloadListData();
         tabMapFragment.reloadUserData();
 //        tabMapFragment.reloadEventMarkers();
     }
@@ -518,12 +518,12 @@ public class MenuTabbedView extends AppCompatActivity implements NavigationView.
                 return true;
             }
 
-            if(ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED)
+            /*if(ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED)
             {
                 //User location updates from here?
                 locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 3000, 0, locationListener);
                 locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 3000, 0, locationListener);
-            }
+            }*/
 
             return true;
         }
