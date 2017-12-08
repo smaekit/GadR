@@ -18,6 +18,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
@@ -68,25 +69,28 @@ public class Tab_Map_Fragment extends Fragment {
     LatLng loc;
     List<RoundedBitmapDrawable> icon = new ArrayList<>();
 
+    private static final String TAG_RETAINED_MAP_FRAGMENT = "RetainedMapFragment";
+
+    private RetainedMapFragment mRetainedMapFragment;
+
+
     GetBitmapFromURLAsync getBitmapFromURLAsync;
+
+
 
 
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        //Init mapView
         View rootView = inflater.inflate(R.layout.fragment_tab_map, container, false);
-
-
-
 
 
         mMapView = (MapView) rootView.findViewById(R.id.mapView);
         mMapView.onCreate(savedInstanceState);
 
         mMapView.onResume(); // needed to get the map to display immediately
-
-
 
 
         try {
@@ -96,6 +100,28 @@ public class Tab_Map_Fragment extends Fragment {
         }
 
 
+        return rootView;
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        // find the retained fragment on activity restarts
+        FragmentManager fm = getFragmentManager();
+        mRetainedMapFragment = (RetainedMapFragment) fm.findFragmentByTag(TAG_RETAINED_MAP_FRAGMENT);
+
+        // create the fragment and data the first time
+        if (mRetainedMapFragment == null) {
+            // add the fragment
+            mRetainedMapFragment = new RetainedMapFragment();
+            fm.beginTransaction().add(mRetainedMapFragment, TAG_RETAINED_MAP_FRAGMENT).commit();
+            // load data from a data source or perform any calculation
+
+        }
+
+        // the data is available in mRetainedFragment.getData() even after
+        // subsequent configuration change restarts.
 
 
         locationManager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
@@ -103,16 +129,18 @@ public class Tab_Map_Fragment extends Fragment {
         locationListener = new LocationListener() {
             @Override
             public void onLocationChanged(Location location) {
-                loc = new LatLng(location.getLatitude(), location.getLongitude());
+                mRetainedMapFragment.loc = new LatLng(location.getLatitude(), location.getLongitude());
                 locationManager.removeUpdates(locationListener);
 
                 FirebaseConnection firebaseConnection = new FirebaseConnection();
                 firebaseConnection.UpdateUserLocation(location.getLatitude(),location.getLongitude());
 
-                reloadUserData();
+
+                    //reloadUserData();
+
 
                 if (googleMap != null) {
-                    CameraPosition cameraPosition = new CameraPosition.Builder().target(loc).zoom(17).build();
+                    CameraPosition cameraPosition = new CameraPosition.Builder().target(mRetainedMapFragment.loc).zoom(17).build();
                     googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
                 }
                 reloadEventMarkers();
@@ -151,13 +179,18 @@ public class Tab_Map_Fragment extends Fragment {
                 ActivityCompat.requestPermissions(getActivity(), new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION}, 1);
             }else
             {
-                //If user already granted us permisson
-                if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
-                    locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 3000, 0, locationListener);
+                //Check if we can retrieve state
+                if(mRetainedMapFragment.loc == null)
+                {
+                    //If user already granted us permisson
+                    if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+                        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 3000, 0, locationListener);
+                    }
+                    if(locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {
+                        locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 3000, 0, locationListener);
+                    }
                 }
-                if(locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {
-                    locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 3000, 0, locationListener);
-                }
+
             }
 
         }
@@ -172,30 +205,23 @@ public class Tab_Map_Fragment extends Fragment {
                 //googleMap.setMyLocationEnabled(true);
 
 
+                if(mRetainedMapFragment.userData == null)
+                {
+                    //get from database
+                    reloadUserData();
+                }
+                else
+                {
+                    //retrieve from saved state
 
-                reloadUserData();
+                    reloadEventMarkers();
+                }
 
 
 
-
-                // For dropping a marker at a point on the Map
-//                LatLng jth = new LatLng(57.7779500801111, 14.161934852600098);
-//                LatLng jkpg = new LatLng(57.7824464, 14.176048900000069);
-//                googleMap.addMarker(new MarkerOptions().position(jkpg).title("Makkan").snippet("Kodar Android").icon(BitmapDescriptorFactory.fromResource(R.drawable.person2))).showInfoWindow();
-//                googleMap.addMarker(new MarkerOptions().position(jth).title("Beerpong i JTH").snippet("19.00 - 21.00").icon(BitmapDescriptorFactory.fromResource(R.drawable.beer)));
-//
-//                // For zooming automatically to the location of the marker
-//                CameraPosition cameraPosition = new CameraPosition.Builder().target(jkpg).zoom(13).build();
-//                googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
             }
         });
 
-
-
-
-
-
-        return rootView;
     }
 
     public void reloadEventMarkers() {
@@ -206,39 +232,39 @@ public class Tab_Map_Fragment extends Fragment {
             String today = new SimpleDateFormat(EventData.DATE_FORMAT_STRING).format(new Date());
 
             try{
-                allEventData = ((ThisApp) getActivity().getApplication()).getAllEvents();
-                myEventData = ((ThisApp) getActivity().getApplication()).getMyEvents();
+                mRetainedMapFragment.allEventData = ((ThisApp) getActivity().getApplication()).getAllEvents();
+                mRetainedMapFragment.myEventData = ((ThisApp) getActivity().getApplication()).getMyEvents();
             }catch (NullPointerException e)
             {
                 e.printStackTrace();
             }
 
 
-            if (allEventData != null) {
-                for (int i = 0; i < allEventData.length; i++) {
-                    if (allEventData[i].getDate().equals(today))
-                        googleMap.addMarker(new MarkerOptions().position(new LatLng(allEventData[i].getCustomLocation().getLatitude(), allEventData[i].getCustomLocation().getLongitude())).title(allEventData[i].getTitle()).snippet(allEventData[i].getStartTime() + " - " + allEventData[i].getEndTime()).icon(BitmapDescriptorFactory.fromResource(R.drawable.beer)));
+            if (mRetainedMapFragment.allEventData != null) {
+                for (int i = 0; i < mRetainedMapFragment.allEventData.length; i++) {
+                    if (mRetainedMapFragment.allEventData[i].getDate().equals(today))
+                        googleMap.addMarker(new MarkerOptions().position(new LatLng(mRetainedMapFragment.allEventData[i].getCustomLocation().getLatitude(), mRetainedMapFragment.allEventData[i].getCustomLocation().getLongitude())).title(mRetainedMapFragment.allEventData[i].getTitle()).snippet(mRetainedMapFragment.allEventData[i].getStartTime() + " - " + mRetainedMapFragment.allEventData[i].getEndTime()).icon(BitmapDescriptorFactory.fromResource(R.drawable.beer)));
                 }
             }
 
-            if (myEventData != null) {
-                for (int i = 0; i < myEventData.length; i++) {
-                    if (myEventData[i].getDate().equals(today))
-                        googleMap.addMarker(new MarkerOptions().position(new LatLng(myEventData[i].getCustomLocation().getLatitude(), myEventData[i].getCustomLocation().getLongitude())).title(myEventData[i].getTitle()).snippet(myEventData[i].getStartTime() + " - " + myEventData[i].getEndTime()).icon(BitmapDescriptorFactory.fromResource(R.drawable.beer)));
+            if (mRetainedMapFragment.myEventData != null) {
+                for (int i = 0; i < mRetainedMapFragment.myEventData.length; i++) {
+                    if (mRetainedMapFragment.myEventData[i].getDate().equals(today))
+                        googleMap.addMarker(new MarkerOptions().position(new LatLng(mRetainedMapFragment.myEventData[i].getCustomLocation().getLatitude(), mRetainedMapFragment.myEventData[i].getCustomLocation().getLongitude())).title(mRetainedMapFragment.myEventData[i].getTitle()).snippet(mRetainedMapFragment.myEventData[i].getStartTime() + " - " + mRetainedMapFragment.myEventData[i].getEndTime()).icon(BitmapDescriptorFactory.fromResource(R.drawable.beer)));
                 }
             }
 
-            if (userData != null) {
+            if (mRetainedMapFragment.userData != null) {
                 //for (UserData user : userData) {
-                for (int i = 0; i < userData.size(); i++) {
-                    if (userData.get(i).getShareLocation()) {
-                        LatLng latLng = new LatLng(userData.get(i).getLatitude(), userData.get(i).getLongitude());
-                        if (icon != null && icon.size() > 0) {
-                            Drawable circleDrawable = icon.get(i);
+                for (int i = 0; i < mRetainedMapFragment.userData.size(); i++) {
+                    if (mRetainedMapFragment.userData.get(i).getShareLocation()) {
+                        LatLng latLng = new LatLng(mRetainedMapFragment.userData.get(i).getLatitude(), mRetainedMapFragment.userData.get(i).getLongitude());
+                        if (mRetainedMapFragment.icon != null && mRetainedMapFragment.icon.size() > 0) {
+                            Drawable circleDrawable = mRetainedMapFragment.icon.get(i);
                             BitmapDescriptor markerIcon = getMarkerIconFromDrawable(circleDrawable);
-                            googleMap.addMarker(new MarkerOptions().position(latLng).title(userData.get(i).getName()).snippet(userData.get(i).getStatus()).icon(markerIcon)).showInfoWindow();
+                            googleMap.addMarker(new MarkerOptions().position(latLng).title(mRetainedMapFragment.userData.get(i).getName()).snippet(mRetainedMapFragment.userData.get(i).getStatus()).icon(markerIcon)).showInfoWindow();
                         } else {
-                            googleMap.addMarker(new MarkerOptions().position(latLng).title(userData.get(i).getName()).snippet(userData.get(i).getStatus()).icon(BitmapDescriptorFactory.fromResource(R.drawable.person2))).showInfoWindow();
+                            googleMap.addMarker(new MarkerOptions().position(latLng).title(mRetainedMapFragment.userData.get(i).getName()).snippet(mRetainedMapFragment.userData.get(i).getStatus()).icon(BitmapDescriptorFactory.fromResource(R.drawable.person2))).showInfoWindow();
                         }
                     }
                 }
@@ -262,7 +288,8 @@ public class Tab_Map_Fragment extends Fragment {
         FirebaseConnection.UsersCallback usersCallback = new FirebaseConnection.UsersCallback() {
             @Override
             public void onSuccess(List<UserData> result) {
-                userData = result;
+                if (mRetainedMapFragment != null)
+                mRetainedMapFragment.userData = result;
 /*
                 if (ContextCompat.checkSelfPermission(getContext(), android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
                     //Ask for permisson
@@ -301,9 +328,28 @@ public class Tab_Map_Fragment extends Fragment {
     }
 
     @Override
+    public void onStop() {
+        // notice here that I keep a reference to the task being executed as a class member:
+        if (this.getBitmapFromURLAsync != null && this.getBitmapFromURLAsync.getStatus() == AsyncTask.Status.RUNNING) this.getBitmapFromURLAsync.cancel(true);
+        super.onStop();
+    }
+
+    @Override
     public void onPause() {
+        // perform other onPause related actions
+        if (getBitmapFromURLAsync != null) {
+            getBitmapFromURLAsync.cancel(true);
+        }
         super.onPause();
         mMapView.onPause();
+        // this means that this activity will not be recreated now, user is leaving it
+        // or the activity is otherwise finishing
+        if(isRemoving()) {
+            FragmentManager fm = getFragmentManager();
+            // we will not need this fragment anymore, this may also be a good place to signal
+            // to the retained fragment object to perform its own cleanup.
+            fm.beginTransaction().remove(mRetainedMapFragment).commit();
+        }
     }
 
     @Override
@@ -351,11 +397,12 @@ public class Tab_Map_Fragment extends Fragment {
         protected void onPostExecute(Bitmap bitmap) {
             RoundedBitmapDrawable drawable = RoundedBitmapDrawableFactory.create( getResources(),bitmap);
             drawable.setCircular(true);
-            icon.add(drawable);
+            mRetainedMapFragment.icon.add(drawable);
 
-            if (userData.size() == icon.size())
+            if (mRetainedMapFragment.userData.size() == mRetainedMapFragment.icon.size())
             {
                 reloadEventMarkers();
             }
         }
-    }}
+    }
+}

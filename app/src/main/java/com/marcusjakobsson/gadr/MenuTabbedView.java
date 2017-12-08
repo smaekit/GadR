@@ -101,10 +101,12 @@ public class MenuTabbedView extends AppCompatActivity implements NavigationView.
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_tabbed_view);
 
+
+
         sectionsPageAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
 
         viewPager = (ViewPager) findViewById(R.id.container);
-        viewPager.setOffscreenPageLimit(3);  //How many screens before reload
+        viewPager.setOffscreenPageLimit(1);  //How many screens before reload
         tabLayout = (TabLayout) findViewById(R.id.tabs);
         setupViewPager(viewPager);
         tabLayout.setupWithViewPager(viewPager);
@@ -313,7 +315,7 @@ public class MenuTabbedView extends AppCompatActivity implements NavigationView.
 
     private void reloadFragmentData() {
 
-        tabAllEventsFragment.reloadListData();
+        //tabAllEventsFragment.reloadListData();
         tabMapFragment.reloadUserData();
 //        tabMapFragment.reloadEventMarkers();
     }
@@ -578,6 +580,17 @@ public class MenuTabbedView extends AppCompatActivity implements NavigationView.
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+    }
+
+    @Override
+    protected void onStop() {
+        viewPager.setAdapter(null);
+        super.onStop();
     }
 
     //Todo destroy asyncTasks and objects when view is getting onDestroy
