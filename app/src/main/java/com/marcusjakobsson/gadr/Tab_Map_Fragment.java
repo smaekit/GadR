@@ -66,7 +66,8 @@ public class Tab_Map_Fragment extends Fragment {
     LocationListener locationListener;
 
     LatLng loc;
-    List<RoundedBitmapDrawable> icon = new ArrayList<>();
+    List<Bitmap> icon = new ArrayList<>();
+    List<RoundedBitmapDrawable> roundIcon = new ArrayList<>();
 
     GetBitmapFromURLAsync getBitmapFromURLAsync;
 
@@ -78,15 +79,10 @@ public class Tab_Map_Fragment extends Fragment {
         View rootView = inflater.inflate(R.layout.fragment_tab_map, container, false);
 
 
-
-
-
         mMapView = (MapView) rootView.findViewById(R.id.mapView);
         mMapView.onCreate(savedInstanceState);
 
         mMapView.onResume(); // needed to get the map to display immediately
-
-
 
 
         try {
@@ -94,7 +90,6 @@ public class Tab_Map_Fragment extends Fragment {
         } catch (Exception e) {
             e.printStackTrace();
         }
-
 
 
 
@@ -115,7 +110,7 @@ public class Tab_Map_Fragment extends Fragment {
                     CameraPosition cameraPosition = new CameraPosition.Builder().target(loc).zoom(17).build();
                     googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
                 }
-                reloadEventMarkers();
+                //reloadEventMarkers();
 
                 //Toast.makeText(getContext(), "Map fragment refreshing updates", Toast.LENGTH_SHORT).show();
 
@@ -167,26 +162,7 @@ public class Tab_Map_Fragment extends Fragment {
             @Override
             public void onMapReady(GoogleMap mMap) {
                 googleMap = mMap;
-
-                // For showing a move to my location button
-                //googleMap.setMyLocationEnabled(true);
-
-
-
-                reloadUserData();
-
-
-
-
-                // For dropping a marker at a point on the Map
-//                LatLng jth = new LatLng(57.7779500801111, 14.161934852600098);
-//                LatLng jkpg = new LatLng(57.7824464, 14.176048900000069);
-//                googleMap.addMarker(new MarkerOptions().position(jkpg).title("Makkan").snippet("Kodar Android").icon(BitmapDescriptorFactory.fromResource(R.drawable.person2))).showInfoWindow();
-//                googleMap.addMarker(new MarkerOptions().position(jth).title("Beerpong i JTH").snippet("19.00 - 21.00").icon(BitmapDescriptorFactory.fromResource(R.drawable.beer)));
-//
-//                // For zooming automatically to the location of the marker
-//                CameraPosition cameraPosition = new CameraPosition.Builder().target(jkpg).zoom(13).build();
-//                googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+                //reloadUserData();
             }
         });
 
@@ -197,6 +173,8 @@ public class Tab_Map_Fragment extends Fragment {
 
         return rootView;
     }
+
+
 
     public void reloadEventMarkers() {
 
@@ -214,36 +192,60 @@ public class Tab_Map_Fragment extends Fragment {
             }
 
 
-            if (allEventData != null) {
-                for (int i = 0; i < allEventData.length; i++) {
-                    if (allEventData[i].getDate().equals(today))
-                        googleMap.addMarker(new MarkerOptions().position(new LatLng(allEventData[i].getCustomLocation().getLatitude(), allEventData[i].getCustomLocation().getLongitude())).title(allEventData[i].getTitle()).snippet(allEventData[i].getStartTime() + " - " + allEventData[i].getEndTime()).icon(BitmapDescriptorFactory.fromResource(R.drawable.beer)));
-                }
-            }
+            placeAllEventMarkers(today);
 
-            if (myEventData != null) {
-                for (int i = 0; i < myEventData.length; i++) {
-                    if (myEventData[i].getDate().equals(today))
-                        googleMap.addMarker(new MarkerOptions().position(new LatLng(myEventData[i].getCustomLocation().getLatitude(), myEventData[i].getCustomLocation().getLongitude())).title(myEventData[i].getTitle()).snippet(myEventData[i].getStartTime() + " - " + myEventData[i].getEndTime()).icon(BitmapDescriptorFactory.fromResource(R.drawable.beer)));
-                }
-            }
+            placeMyEventMarkers(today);
 
-            if (userData != null) {
-                //for (UserData user : userData) {
-                for (int i = 0; i < userData.size(); i++) {
-                    if (userData.get(i).getShareLocation()) {
-                        LatLng latLng = new LatLng(userData.get(i).getLatitude(), userData.get(i).getLongitude());
-                        if (icon != null && icon.size() > 0) {
-                            Drawable circleDrawable = icon.get(i);
-                            BitmapDescriptor markerIcon = getMarkerIconFromDrawable(circleDrawable);
-                            googleMap.addMarker(new MarkerOptions().position(latLng).title(userData.get(i).getName()).snippet(userData.get(i).getStatus()).icon(markerIcon)).showInfoWindow();
-                        } else {
-                            googleMap.addMarker(new MarkerOptions().position(latLng).title(userData.get(i).getName()).snippet(userData.get(i).getStatus()).icon(BitmapDescriptorFactory.fromResource(R.drawable.person2))).showInfoWindow();
-                        }
+            placeUserMarkes();
+        }
+    }
+
+    private void placeAllEventMarkers(String today)
+    {
+        if (allEventData != null) {
+            for (int i = 0; i < allEventData.length; i++) {
+                if (allEventData[i].getDate().equals(today))
+                    googleMap.addMarker(new MarkerOptions().position(new LatLng(allEventData[i].getCustomLocation().getLatitude(), allEventData[i].getCustomLocation().getLongitude())).title(allEventData[i].getTitle()).snippet(allEventData[i].getStartTime() + " - " + allEventData[i].getEndTime()).icon(BitmapDescriptorFactory.fromResource(R.drawable.beer)));
+            }
+        }
+    }
+
+    private void placeMyEventMarkers(String today)
+    {
+        if (myEventData != null) {
+            for (int i = 0; i < myEventData.length; i++) {
+                if (myEventData[i].getDate().equals(today))
+                    googleMap.addMarker(new MarkerOptions().position(new LatLng(myEventData[i].getCustomLocation().getLatitude(), myEventData[i].getCustomLocation().getLongitude())).title(myEventData[i].getTitle()).snippet(myEventData[i].getStartTime() + " - " + myEventData[i].getEndTime()).icon(BitmapDescriptorFactory.fromResource(R.drawable.beer)));
+            }
+        }
+    }
+
+    private void placeUserMarkes()
+    {
+        if (userData != null) {
+            //for (UserData user : userData) {
+            for (int i = 0; i < userData.size(); i++) {
+                if (userData.get(i).getShareLocation()) {
+                    LatLng latLng = new LatLng(userData.get(i).getLatitude(), userData.get(i).getLongitude());
+                    if (icon != null && icon.size() > 0) {
+
+                        BitmapDescriptor markerIcon = getMarkerIconFromDrawable(convertToRoundDrawable(icon.get(i)));
+                        googleMap.addMarker(new MarkerOptions().position(latLng).title(userData.get(i).getName()).snippet(userData.get(i).getStatus()).icon(markerIcon)).showInfoWindow();
+                    } else {
+                        googleMap.addMarker(new MarkerOptions().position(latLng).title(userData.get(i).getName()).snippet(userData.get(i).getStatus()).icon(BitmapDescriptorFactory.fromResource(R.drawable.person2))).showInfoWindow();
                     }
                 }
             }
         }
+    }
+
+    private Drawable convertToRoundDrawable(Bitmap bitmap)
+    {
+        RoundedBitmapDrawable drawable = RoundedBitmapDrawableFactory.create(getResources(), bitmap);
+        drawable.setCircular(true);
+        roundIcon.add(drawable);
+        Drawable circleDrawable = drawable;
+        return circleDrawable;
     }
 
     private BitmapDescriptor getMarkerIconFromDrawable(Drawable drawable) {
@@ -263,31 +265,15 @@ public class Tab_Map_Fragment extends Fragment {
             @Override
             public void onSuccess(List<UserData> result) {
                 userData = result;
-/*
-                if (ContextCompat.checkSelfPermission(getContext(), android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                    //Ask for permisson
-                    ActivityCompat.requestPermissions(getActivity(), new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION}, 1);
-                }
 
-                if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
-                    locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 3000, 0, locationListener);
-                }
-                if(locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {
-                    locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 3000, 0, locationListener);
-                }*/
-
+                icon.clear();
+                roundIcon.clear();
                 for (UserData user : result) {
-                //    LatLng latLng = new LatLng(user.getLatitude(), user.getLongitude());
-                //    googleMap.addMarker(new MarkerOptions().position(latLng).title(user.getName()).snippet(user.getStatus()).icon(BitmapDescriptorFactory.fromResource(R.drawable.person2))).showInfoWindow();
+
                     getBitmapFromURLAsync = new GetBitmapFromURLAsync();
                     getBitmapFromURLAsync.execute(user.getImgURLSmall());
                 }
-/*                if (loc != null){
-                    CameraPosition cameraPosition = new CameraPosition.Builder().target(loc).zoom(17).build();
-                    googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
-                }*/
 
-                reloadEventMarkers();
             }
         };
         firebaseConnection.getUsers(usersCallback);
@@ -354,16 +340,14 @@ public class Tab_Map_Fragment extends Fragment {
 
         @Override
         protected void onPostExecute(Bitmap bitmap) {
-/*
-            if (getResources() != null) {
-                RoundedBitmapDrawable drawable = RoundedBitmapDrawableFactory.create(getResources(), bitmap);
-                drawable.setCircular(true);
-                icon.add(drawable);
+
+                icon.add(bitmap);
 
                 if (userData.size() == icon.size()) {
+
                     reloadEventMarkers();
 
                 }
-            }*/
+
         }
     }}
