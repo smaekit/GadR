@@ -90,6 +90,7 @@ public class MenuTabbedView extends AppCompatActivity implements NavigationView.
     LocationListener locationListener;
 
     String userStatus;
+    Boolean isShareLocation;
 
     //Fragments
     Tab_Map_Fragment tabMapFragment = new Tab_Map_Fragment();
@@ -321,7 +322,7 @@ public class MenuTabbedView extends AppCompatActivity implements NavigationView.
         setUserStatus();
         //tabAllEventsFragment.reloadListData();
         tabMapFragment.reloadUserData();
-//        tabMapFragment.reloadEventMarkers();
+        tabMapFragment.reloadEventMarkers();
     }
 
 
@@ -344,6 +345,7 @@ public class MenuTabbedView extends AppCompatActivity implements NavigationView.
                     new DownloadImageTask((ImageView)findViewById(R.id.userProfilePicture)).execute(profilePicUrl);
                     TextView textView = (TextView)findViewById(R.id.userNameTextView);
                     textView.setText(name);
+                    isShareLocation = result.get(i).getShareLocation();
                 }
             }
         }
@@ -524,17 +526,62 @@ public class MenuTabbedView extends AppCompatActivity implements NavigationView.
                 return true;
             }
 
-            /*if(ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED)
+            if(ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED)
             {
                 //User location updates from here?
                 locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 3000, 0, locationListener);
                 locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 3000, 0, locationListener);
-            }*/
+            }
 
             return true;
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    public void setShareLocationStateON(MenuItem item)
+    {
+        FirebaseConnection firebaseConnection2 = new FirebaseConnection();
+        firebaseConnection2.UpdateUserShareLocation(true);
+        item.setIcon(R.drawable.ic_location_on);
+        item.setTitle(R.string.shareLocationOnTitle);
+        isShareLocation = true;
+    }
+
+    public void setShareLocationStateOFF(MenuItem item)
+    {
+        FirebaseConnection firebaseConnection2 = new FirebaseConnection();
+        firebaseConnection2.UpdateUserShareLocation(false);
+        item.setIcon(R.drawable.ic_action_name);
+        item.setTitle(R.string.shareLocationOffTitle);
+        isShareLocation = false;
+    }
+
+    public void setShareLocationState(MenuItem item)
+    {
+        if(item.getTitle() == getString(R.string.shareLocationOffTitle))
+        {
+            setShareLocationStateON(item);
+            Toast.makeText(getApplicationContext(), R.string.shareLocationOnText, Toast.LENGTH_SHORT).show();
+        }
+        else
+        {
+            setShareLocationStateOFF(item);
+            Toast.makeText(getApplicationContext(), R.string.shareLocationOffText, Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    public void checkShareLocationState(MenuItem item)
+    {
+        if(isShareLocation)
+        {
+            item.setIcon(R.drawable.ic_action_name);
+            item.setTitle(R.string.shareLocationOffTitle);
+        }
+        else {
+            item.setIcon(R.drawable.ic_location_on);
+            item.setTitle(R.string.shareLocationOnTitle);
+        }
     }
 
     @SuppressWarnings("StatementWithEmptyBody")
@@ -547,23 +594,8 @@ public class MenuTabbedView extends AppCompatActivity implements NavigationView.
             Intent intent = new Intent(getApplicationContext(), CreateStatus.class);
             startActivityForResult(intent, CreateStatus.REQUEST_CODE_DidAddStatus);
         } else if (id == R.id.nav_shareLocation) {
-            if(item.getTitle() == getString(R.string.shareLocationOffTitle))
-            {
-                FirebaseConnection firebaseConnection2 = new FirebaseConnection();
-                firebaseConnection2.UpdateUserShareLocation(true);
-                item.setIcon(R.drawable.ic_location_on);
-                item.setTitle(R.string.shareLocationOnTitle);
-                Toast.makeText(getApplicationContext(), R.string.shareLocationOnText, Toast.LENGTH_SHORT).show();
-            }
-            else
-            {
-                FirebaseConnection firebaseConnection2 = new FirebaseConnection();
-                firebaseConnection2.UpdateUserShareLocation(false);
-                item.setIcon(R.drawable.ic_action_name);
-                item.setTitle(R.string.shareLocationOffTitle);
-                Toast.makeText(getApplicationContext(), R.string.shareLocationOffText, Toast.LENGTH_SHORT).show();
-            }
-
+            checkShareLocationState(item);
+            setShareLocationState(item);
 
         } else if (id == R.id.nav_slideshow) {
             Intent intent = new Intent(getApplicationContext(), DetailEventActivity.class);

@@ -167,7 +167,7 @@ public class Tab_Map_Fragment extends Fragment {
             @Override
             public void onMapReady(GoogleMap mMap) {
                 googleMap = mMap;
-                //reloadUserData();
+                reloadUserData();
             }
         });
     }
@@ -262,8 +262,8 @@ public class Tab_Map_Fragment extends Fragment {
             public void onSuccess(List<UserData> result) {
                 userData = result;
 
-                icon.clear();
-                roundIcon.clear();
+//                icon.clear();
+//                roundIcon.clear();
                 for (UserData user : result) {
 
                     getBitmapFromURLAsync = new GetBitmapFromURLAsync();
