@@ -235,6 +235,7 @@ public class MenuTabbedView extends AppCompatActivity implements NavigationView.
                 FirebaseConnection firebaseConnection = new FirebaseConnection();
                 firebaseConnection.UpdateUserLocation(location.getLatitude(),location.getLongitude());
                 reloadEventData();
+                tabMapFragment.reloadUserData();
 
                 Toast.makeText(getApplicationContext(), "Location Refreshed", Toast.LENGTH_LONG).show();
             }
@@ -324,7 +325,7 @@ public class MenuTabbedView extends AppCompatActivity implements NavigationView.
         setUserStatus();
         //tabAllEventsFragment.reloadListData();
         tabMapFragment.reloadUserData();
-//        tabMapFragment.reloadEventMarkers();
+        tabMapFragment.reloadEventMarkers();
     }
 
 

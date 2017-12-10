@@ -6,6 +6,7 @@ import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.location.LocationListener;
@@ -70,6 +71,7 @@ public class Tab_Map_Fragment extends Fragment {
     List<RoundedBitmapDrawable> roundIcon = new ArrayList<>();
 
     GetBitmapFromURLAsync getBitmapFromURLAsync;
+    Boolean isFragmentUp = false;
 
 
 
@@ -97,6 +99,8 @@ public class Tab_Map_Fragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
+        isFragmentUp = true;
 
         locationManager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
 
@@ -223,7 +227,7 @@ public class Tab_Map_Fragment extends Fragment {
             for (int i = 0; i < userData.size(); i++) {
                 if (userData.get(i).getShareLocation()) {
                     LatLng latLng = new LatLng(userData.get(i).getLatitude(), userData.get(i).getLongitude());
-                    if (icon != null && icon.size() > 0) {
+                    if (icon != null && icon.size() > 0 && isFragmentUp) {
 
                         BitmapDescriptor markerIcon = getMarkerIconFromDrawable(convertToRoundDrawable(icon.get(i)));
                         googleMap.addMarker(new MarkerOptions().position(latLng).title(userData.get(i).getName()).snippet(userData.get(i).getStatus()).icon(markerIcon)).showInfoWindow();
@@ -237,11 +241,13 @@ public class Tab_Map_Fragment extends Fragment {
 
     private Drawable convertToRoundDrawable(Bitmap bitmap)
     {
-        RoundedBitmapDrawable drawable = RoundedBitmapDrawableFactory.create(getResources(), bitmap);
-        drawable.setCircular(true);
-        roundIcon.add(drawable);
-        Drawable circleDrawable = drawable;
-        return circleDrawable;
+
+            RoundedBitmapDrawable drawable = RoundedBitmapDrawableFactory.create(getResources(), bitmap);
+            drawable.setCircular(true);
+            roundIcon.add(drawable);
+            Drawable circleDrawable = drawable;
+            return circleDrawable;
+
     }
 
     private BitmapDescriptor getMarkerIconFromDrawable(Drawable drawable) {
@@ -295,6 +301,7 @@ public class Tab_Map_Fragment extends Fragment {
 
     @Override
     public void onDestroy() {
+        isFragmentUp = false;
         if (getBitmapFromURLAsync != null) {
             getBitmapFromURLAsync.cancel(true);
         }
