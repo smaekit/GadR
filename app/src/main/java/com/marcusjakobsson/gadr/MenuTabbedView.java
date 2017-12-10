@@ -156,6 +156,9 @@ public class MenuTabbedView extends AppCompatActivity implements NavigationView.
         navigationView.setNavigationItemSelectedListener(this);
 
 
+
+
+
         //Firebase
         FirebaseConnection fc = new FirebaseConnection();
 
@@ -325,6 +328,23 @@ public class MenuTabbedView extends AppCompatActivity implements NavigationView.
     }
 
 
+    public void checkShareLocation(Boolean isShareLocation)
+    {
+        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        navigationView.setNavigationItemSelectedListener(this);
+        Menu menu = navigationView.getMenu();
+        MenuItem nav_shareLocation = menu.findItem(R.id.nav_shareLocation);
+        if(isShareLocation)
+        {
+            nav_shareLocation.setIcon(R.drawable.ic_location_on);
+            nav_shareLocation.setTitle(R.string.shareLocationOnTitle);
+        }
+        else {
+            nav_shareLocation.setIcon(R.drawable.ic_action_name);
+            nav_shareLocation.setTitle(R.string.shareLocationOffTitle);
+        }
+    }
+
     //Checks if the current user is in the database then updates the drawerMenu profile picture and name
     private void setupCurrentUser(List<UserData> result)
     {
@@ -337,6 +357,8 @@ public class MenuTabbedView extends AppCompatActivity implements NavigationView.
                 Log.i(TAG,user.getUid());
                 if (result.get(i).getFbID().equals(user.getUid()) )
                 {
+                    checkShareLocation(result.get(i).getShareLocation());
+
                     Log.i(TAG,"found the right user lets get his picture");
                     String profilePicUrl = result.get(i).getImgURLLarge();
                     String name = result.get(i).getName();
@@ -524,12 +546,12 @@ public class MenuTabbedView extends AppCompatActivity implements NavigationView.
                 return true;
             }
 
-            /*if(ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED)
+            if(ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED)
             {
                 //User location updates from here?
                 locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 3000, 0, locationListener);
                 locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 3000, 0, locationListener);
-            }*/
+            }
 
             return true;
         }
