@@ -11,6 +11,7 @@ import android.widget.Adapter;
 import android.widget.ArrayAdapter;
 import android.widget.ListAdapter;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import java.util.List;
 
@@ -69,6 +70,7 @@ public class Tab_All_Events_Fragment extends Fragment {
             listViewAdapter = new CustomListViewAdapter(getActivity(), listData);
             listView.setAdapter(listViewAdapter);
         }
+        Toast.makeText(getContext(), "all event reload list", Toast.LENGTH_SHORT).show();
     }
 
 }

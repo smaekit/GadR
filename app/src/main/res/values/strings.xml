@@ -40,6 +40,7 @@
     <string name="appwidget_text">EXAMPLE</string>
     <string name="add_widget">Add widget</string>
     <string name="change_your_status">Change your Status</string>
+    <string name="Refresh">Refreshing..</string>
 
 
 </resources>

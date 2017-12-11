@@ -32,6 +32,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -70,6 +71,7 @@ import java.util.Date;
 import java.util.List;
 
 import static android.R.attr.name;
+import static android.R.attr.theme;
 import static android.support.v4.view.PagerAdapter.POSITION_NONE;
 
 public class MenuTabbedView extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
@@ -82,12 +84,9 @@ public class MenuTabbedView extends AppCompatActivity implements NavigationView.
 
     private TabLayout tabLayout;
 
-    private FirebaseConnection firebaseConnection;
 
     TextView userStatus_TextView;
 
-    LocationManager locationManager;
-    LocationListener locationListener;
 
     String userStatus;
 
@@ -154,8 +153,6 @@ public class MenuTabbedView extends AppCompatActivity implements NavigationView.
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-//                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-  //                      .setAction("Action", null).show();
                 Intent intent = new Intent(getApplicationContext(), AddEventActivity.class);
                 startActivityForResult(intent, AddEventActivity.REQUEST_CODE_DidAddEvent);
             }
@@ -174,21 +171,8 @@ public class MenuTabbedView extends AppCompatActivity implements NavigationView.
 
 
 
-
-
         //Firebase
         FirebaseConnection fc = new FirebaseConnection();
-
-
-/*        for (int i = 0; i< 5; i++) {
-            fc.AddUser(new UserData("ID" + Integer.toString(i),
-                    "Name" + Integer.toString(i),
-                    i * 10,
-                    "LargeURL" + Integer.toString(i),
-                    "SmallURL" + Integer.toString(i)));
-        }*/
-
-
 
 
        fc.getUsers(new FirebaseConnection.UsersCallback(){
@@ -202,76 +186,6 @@ public class MenuTabbedView extends AppCompatActivity implements NavigationView.
         });
 
 
-
-
-
-
-
-/*        for (int i = 0; i< 5; i++) {
-            fc.AddEvent(new EventData(
-                    "creId" + Integer.toString(i),
-                    "EventTitle" + Integer.toString(i),
-                    "Bla bla bla desc " + Integer.toString(i),
-                    new CustomLocation(57.7824464, 14.176048900000069),
-                    new Date())
-            );
-        }*/
-
-
-
-       /*for (int i = 0; i< 5; i++) {
-            fc.AddStatus(new StatusData(
-                    "creID" +Integer.toString(i),
-                    "This is a cool status to have",
-                    new CustomLocation(57.7824464, 14.176048900000069),
-                    new Date()
-            ));
-        }*/
-
-
-/*        fc.getStatus(new FirebaseConnection.StatusCallback(){
-            @Override
-            public void onSuccess(List<StatusData> result){
-
-                for (int i = 0; i < result.size(); i++) {
-                    Log.i(TAG, DateFormat.getDateTimeInstance().format(result.get(i).getDate()));
-                }
-
-            }
-        });*/
-
-
-
-        locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
-
-        locationListener = new LocationListener() {
-            @Override
-            public void onLocationChanged(Location location) {
-                locationManager.removeUpdates(locationListener);
-
-                FirebaseConnection firebaseConnection = new FirebaseConnection();
-                firebaseConnection.UpdateUserLocation(location.getLatitude(),location.getLongitude());
-                reloadEventData();
-                tabMapFragment.reloadUserData();
-
-                Toast.makeText(getApplicationContext(), "Location Refreshed", Toast.LENGTH_LONG).show();
-            }
-
-            @Override
-            public void onStatusChanged(String provider, int status, Bundle extras) {
-
-            }
-
-            @Override
-            public void onProviderEnabled(String provider) {
-
-            }
-
-            @Override
-            public void onProviderDisabled(String provider) {
-
-            }
-        };
 
     }
 
@@ -347,6 +261,7 @@ public class MenuTabbedView extends AppCompatActivity implements NavigationView.
 
     private void reloadFragmentData() {
 
+        //Todo reload current fragmet?
         setUserStatus();
         //tabAllEventsFragment.reloadListData();
         tabMapFragment.reloadUserData();
@@ -427,78 +342,7 @@ public class MenuTabbedView extends AppCompatActivity implements NavigationView.
 
     }
 
-//
-//
-//    /**
-//     * The {@link android.support.v4.view.PagerAdapter} that will provide
-//     * fragments for each of the sections. We use a
-//     * {@link FragmentPagerAdapter} derivative, which will keep every
-//     * loaded fragment in memory. If this becomes too memory intensive, it
-//     * may be best to switch to a
-//     * {@link android.support.v4.app.FragmentStatePagerAdapter}.
-//     */
-//    private SectionsPagerAdapter mSectionsPagerAdapter;
-//
-//    /**
-//     * The {@link ViewPager} that will host the section contents.
-//     */
-//    private ViewPager mViewPager;
-//
-//    @Override
-//    protected void onCreate(Bundle savedInstanceState) {
-//        super.onCreate(savedInstanceState);
-//        setContentView(R.layout.activity_tabbed_view);
-//
-//        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-//        setSupportActionBar(toolbar);
-//        // Create the adapter that will return a fragment for each of the three
-//        // primary sections of the activity.
-//        mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
-//
-//        // Set up the ViewPager with the sections adapter.
-//        mViewPager = (ViewPager) findViewById(R.id.container);
-//        mViewPager.setAdapter(mSectionsPagerAdapter);
-//
-//        TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
-//        tabLayout.setupWithViewPager(mViewPager);
-//
-//        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-//        fab.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-//                        .setAction("Action", null).show();
-//            }
-//        });
-//
-//    }
-//
-//
-//    @Override
-//    public boolean onCreateOptionsMenu(Menu menu) {
-//        // Inflate the menu; this adds items to the action bar if it is present.
-//        getMenuInflater().inflate(R.menu.menu_tabbed_view, menu);
-//        return true;
-//    }
-//
-//    @Override
-//    public boolean onOptionsItemSelected(MenuItem item) {
-//        // Handle action bar item clicks here. The action bar will
-//        // automatically handle clicks on the Home/Up button, so long
-//        // as you specify a parent activity in AndroidManifest.xml.
-//        int id = item.getItemId();
-//
-//        //noinspection SimplifiableIfStatement
-//        if (id == R.id.action_settings) {
-//            return true;
-//        }
-//
-//        return super.onOptionsItemSelected(item);
-//    }
-//
-//    /**
-//     * A placeholder fragment containing a simple view.
-//     */
+
 
 
 
@@ -562,27 +406,13 @@ public class MenuTabbedView extends AppCompatActivity implements NavigationView.
 
 
             if (viewPager.getCurrentItem() == 0) {
-                if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                    // TODO: Consider calling
-                    ActivityCompat.requestPermissions(this, new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION}, 1);
-
-                    //    ActivityCompat#requestPermissions
-                    // here to request the missing permissions, and then overriding
-                    //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-                    //                                          int[] grantResults)
-                    // to handle the case where the user grants the permission. See the documentation
-                    // for ActivityCompat#requestPermissions for more details.
-                    return true;
-                }
-
-                if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-                    //User location updates from here?
-                    locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 3000, 0, locationListener);
-                    locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 3000, 0, locationListener);
-                }
+                tabMapFragment.refreshUserLocationData();
+                showSnackBar(R.string.Refresh);
             }
             if (viewPager.getCurrentItem() == 1) {
-                Toast.makeText(getApplicationContext(),"All event",Toast.LENGTH_LONG).show();
+                tabAllEventsFragment.reloadListData();
+                showSnackBar(R.string.Refresh);
+                //Toast.makeText(getApplicationContext(),"All event",Toast.LENGTH_LONG).show();
             }
             if (viewPager.getCurrentItem() == 2){
                 Toast.makeText(getApplicationContext(),"My event",Toast.LENGTH_LONG).show();
@@ -592,6 +422,25 @@ public class MenuTabbedView extends AppCompatActivity implements NavigationView.
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    public void showSnackBar(Integer stringID)
+    {
+        // make snackbar
+        Snackbar mSnackbar = Snackbar.make(getCurrentFocus(), stringID, Snackbar.LENGTH_LONG);
+        // get snackbar view
+        View mView = mSnackbar.getView();
+        // get textview inside snackbar view
+        TextView mTextView = (TextView) mView.findViewById(android.support.design.R.id.snackbar_text);
+        mTextView.setTextColor(getResources().getColor(R.color.colorAccent,getTheme()));
+        mTextView.setTextSize(24);
+        // set text to center
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1)
+            mTextView.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
+        else
+            mTextView.setGravity(Gravity.CENTER_HORIZONTAL);
+        // show the snackbar
+        mSnackbar.show();
     }
 
     @SuppressWarnings("StatementWithEmptyBody")
@@ -610,7 +459,9 @@ public class MenuTabbedView extends AppCompatActivity implements NavigationView.
                 firebaseConnection2.UpdateUserShareLocation(true);
                 item.setIcon(R.drawable.ic_location_on);
                 item.setTitle(R.string.shareLocationOnTitle);
-                Toast.makeText(getApplicationContext(), R.string.shareLocationOnText, Toast.LENGTH_SHORT).show();
+                //Toast.makeText(getApplicationContext(), R.string.shareLocationOnText, Toast.LENGTH_SHORT).show();
+                showSnackBar(R.string.shareLocationOnText);
+
             }
             else
             {
@@ -618,7 +469,8 @@ public class MenuTabbedView extends AppCompatActivity implements NavigationView.
                 firebaseConnection2.UpdateUserShareLocation(false);
                 item.setIcon(R.drawable.ic_action_name);
                 item.setTitle(R.string.shareLocationOffTitle);
-                Toast.makeText(getApplicationContext(), R.string.shareLocationOffText, Toast.LENGTH_SHORT).show();
+                //Toast.makeText(getApplicationContext(), R.string.shareLocationOffText, Toast.LENGTH_SHORT).show();
+                showSnackBar(R.string.shareLocationOffText);
             }
 
 

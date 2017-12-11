@@ -176,6 +176,19 @@ public class Tab_Map_Fragment extends Fragment {
         });
     }
 
+
+    public void refreshUserLocationData()
+    {
+        if(isFragmentUp){
+            if (ContextCompat.checkSelfPermission(getActivity(), android.Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+                //User location updates from here?
+                locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, locationListener);
+                locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, locationListener);
+            }
+        }
+    }
+
+
     public void reloadEventMarkers() {
 
         if (googleMap != null) {
