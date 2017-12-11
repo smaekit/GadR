@@ -15,6 +15,7 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Looper;
+import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
@@ -45,6 +46,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
@@ -54,6 +56,10 @@ import java.util.List;
  */
 
 public class Tab_Map_Fragment extends Fragment {
+
+    static final String PAR_ALL_EVENT = "par_all_event";
+    static final String PAR_MY_EVENT = "par_my_event";
+    static final String PAR_USER_DATA = "par_user_data";
 
     MapView mMapView;
     private GoogleMap googleMap;
@@ -97,7 +103,7 @@ public class Tab_Map_Fragment extends Fragment {
     }
 
     @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+    public void onViewCreated(@NonNull View view, @Nullable final Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
         isFragmentUp = true;
@@ -113,7 +119,37 @@ public class Tab_Map_Fragment extends Fragment {
                 FirebaseConnection firebaseConnection = new FirebaseConnection();
                 firebaseConnection.UpdateUserLocation(location.getLatitude(),location.getLongitude());
 
-                reloadUserData();
+                if (savedInstanceState == null) {
+                    reloadUserData();
+                }
+                else{
+                    Parcelable[] parcelableArray = savedInstanceState.getParcelableArray(PAR_ALL_EVENT);
+
+                    if (parcelableArray != null) {
+                        allEventData = Arrays.copyOf(parcelableArray, parcelableArray.length, EventData[].class);
+                    }
+
+                    parcelableArray = savedInstanceState.getParcelableArray(PAR_MY_EVENT);
+
+                    if (parcelableArray != null) {
+                        myEventData = Arrays.copyOf(parcelableArray,parcelableArray.length, EventData[].class);
+                    }
+
+/*                    ArrayList<Parcelable> parcelableArrayList = savedInstanceState.getParcelableArrayList(PAR_USER_DATA);
+
+                    if (parcelableArrayList != null) {
+                        userData = new ArrayList<UserData>(parcelableArrayList<UserData>);
+                    }*/
+
+                    List<UserData> mUserDataList = savedInstanceState.getParcelableArrayList(PAR_USER_DATA);
+                    if (mUserDataList != null) {
+                        userData = mUserDataList;
+                    }
+
+
+                    reloadEventMarkers();
+                }
+
 
                 if (googleMap != null) {
                     CameraPosition cameraPosition = new CameraPosition.Builder().target(loc).zoom(17).build();
@@ -174,6 +210,16 @@ public class Tab_Map_Fragment extends Fragment {
                 //reloadUserData();
             }
         });
+    }
+
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+
+        outState.putParcelableArray(PAR_ALL_EVENT, allEventData);
+        outState.putParcelableArray(PAR_MY_EVENT, myEventData);
+        outState.putParcelableArrayList(PAR_USER_DATA, (ArrayList<? extends Parcelable>) userData);
+
     }
 
     public void reloadEventMarkers() {

@@ -1,14 +1,17 @@
 package com.marcusjakobsson.gadr;
 
 import android.location.Location;
+import android.os.Parcel;
+import android.os.Parcelable;
 
 import java.util.Date;
+import java.util.List;
 
 /**
  * Created by carlbratt on 2017-11-13.
  */
 
-public class EventData {
+public class EventData implements Parcelable{
 
     private static final String TAG = "EventData";
 
@@ -95,5 +98,44 @@ public class EventData {
                 ", startTime='" + startTime + '\'' +
                 ", endTime='" + endTime + '\'' +
                 '}';
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel parcel, int i) {
+        parcel.writeString(title);
+        parcel.writeString(description);
+        parcel.writeDouble(customLocation.getLatitude());
+        parcel.writeDouble(customLocation.getLongitude());
+        parcel.writeString(date);
+        parcel.writeString(startTime);
+        parcel.writeString(endTime);
+    }
+
+
+    public static final Parcelable.Creator<EventData> CREATOR
+            = new Parcelable.Creator<EventData>() {
+        public EventData createFromParcel(Parcel in) {
+            return new EventData(in);
+        }
+
+        public EventData[] newArray(int size) {
+            return new EventData[size];
+        }
+
+    };
+
+    public EventData(Parcel in) {
+        title = in.readString();
+        description = in.readString();
+        customLocation.setLatitude(in.readDouble());
+        customLocation.setLongitude(in.readDouble());
+        date = in.readString();
+        startTime = in.readString();
+        endTime = in.readString();
     }
 }

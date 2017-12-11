@@ -1,12 +1,16 @@
 package com.marcusjakobsson.gadr;
 
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
+import java.util.ArrayList;
 
 /**
  * Created by carlbratt on 2017-11-13.
  */
 
-public class UserData {
+public class UserData extends ArrayList<UserData> implements Parcelable{
 
     private static final String TAG = "UserData";
 
@@ -120,5 +124,44 @@ public class UserData {
                 ", latitude=" + latitude +
                 ", longitude=" + longitude +
                 '}';
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel parcel, int i) {
+        parcel.writeString(fbID);
+        parcel.writeString(name);
+        parcel.writeString(imgURLLarge);
+        parcel.writeString(imgURLSmall);
+        parcel.writeString(status);
+        parcel.writeDouble(latitude);
+        parcel.writeDouble(longitude);
+        parcel.writeInt((shareLocation) ? 1 : 0);
+    }
+
+    public static final Parcelable.Creator<UserData> CREATOR
+            = new Parcelable.Creator<UserData>() {
+        public UserData createFromParcel(Parcel in) {
+            return new UserData(in);
+        }
+
+        public UserData[] newArray(int size) {
+            return new UserData[size];
+        }
+    };
+
+    public UserData(Parcel in) {
+        fbID = in.readString();
+        name = in.readString();
+        imgURLLarge = in.readString();
+        imgURLSmall = in.readString();
+        status = in.readString();
+        latitude = in.readDouble();
+        longitude = in.readDouble();
+        shareLocation = (in.readInt() == 1) ? true : false;
     }
 }
