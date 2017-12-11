@@ -55,6 +55,8 @@ import java.util.List;
 
 public class Tab_Map_Fragment extends Fragment {
 
+    static final String TAG = "Tab_Map_Fragment";
+
     MapView mMapView;
     private GoogleMap googleMap;
     FirebaseConnection fc;
@@ -93,8 +95,12 @@ public class Tab_Map_Fragment extends Fragment {
             e.printStackTrace();
         }
 
+
+
         return rootView;
     }
+
+
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
@@ -248,6 +254,52 @@ public class Tab_Map_Fragment extends Fragment {
             Drawable circleDrawable = drawable;
             return circleDrawable;
 
+    }
+
+    public void refresh() {
+        //locationManager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
+/*
+        locationListener = new LocationListener() {
+            @Override
+            public void onLocationChanged(Location location) {
+                loc = new LatLng(location.getLatitude(), location.getLongitude());
+                locationManager.removeUpdates(locationListener);
+
+                FirebaseConnection firebaseConnection = new FirebaseConnection();
+                firebaseConnection.UpdateUserLocation(location.getLatitude(), location.getLongitude());
+
+                reloadUserData();
+
+                if (googleMap != null) {
+                    CameraPosition cameraPosition = new CameraPosition.Builder().target(loc).zoom(17).build();
+                    googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+                }
+                //reloadEventMarkers();
+
+                //Toast.makeText(getContext(), "Map fragment refreshing updates", Toast.LENGTH_SHORT).show();
+
+            }
+
+            @Override
+            public void onStatusChanged(String provider, int status, Bundle extras) {
+
+            }
+
+            @Override
+            public void onProviderEnabled(String provider) {
+
+            }
+
+            @Override
+            public void onProviderDisabled(String provider) {
+
+            }
+        };*/
+
+        //if (isAdded())
+        if(ContextCompat.checkSelfPermission(getContext(), android.Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, locationListener);
+        }
     }
 
     private BitmapDescriptor getMarkerIconFromDrawable(Drawable drawable) {

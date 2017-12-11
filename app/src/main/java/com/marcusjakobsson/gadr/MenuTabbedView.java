@@ -70,6 +70,7 @@ import java.util.Date;
 import java.util.List;
 
 import static android.R.attr.name;
+import static android.R.attr.viewportHeight;
 import static android.support.v4.view.PagerAdapter.POSITION_NONE;
 
 public class MenuTabbedView extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
@@ -89,12 +90,14 @@ public class MenuTabbedView extends AppCompatActivity implements NavigationView.
     LocationManager locationManager;
     LocationListener locationListener;
 
+    private Bundle savedInstanceState;
+
     String userStatus;
 
     //Fragments
-    Tab_Map_Fragment tabMapFragment = new Tab_Map_Fragment();
-    Tab_All_Events_Fragment tabAllEventsFragment = new Tab_All_Events_Fragment();
-    Tab_My_Events_Fragment tabMyEventsFragment = new Tab_My_Events_Fragment();
+    Tab_Map_Fragment tabMapFragment;
+    Tab_All_Events_Fragment tabAllEventsFragment;
+    Tab_My_Events_Fragment tabMyEventsFragment;
 
 
     @Override
@@ -102,13 +105,58 @@ public class MenuTabbedView extends AppCompatActivity implements NavigationView.
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_tabbed_view);
 
+        this.savedInstanceState = savedInstanceState;
+
         sectionsPageAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
 
+
+        tabMapFragment = (Tab_Map_Fragment) getFragment(0);
+        if(tabMapFragment == null){
+            tabMapFragment = new Tab_Map_Fragment();
+        }
+
+
+            tabAllEventsFragment = (Tab_All_Events_Fragment) getFragment(1);
+
+        if (tabAllEventsFragment == null) {
+            tabAllEventsFragment = new Tab_All_Events_Fragment();
+        }
+
+        tabMyEventsFragment = (Tab_My_Events_Fragment) getFragment(2);
+        if (tabMyEventsFragment == null) {
+            tabMyEventsFragment = new Tab_My_Events_Fragment();
+        }
+
+
+
+
+
+
         viewPager = (ViewPager) findViewById(R.id.container);
-        viewPager.setOffscreenPageLimit(3);  //How many screens before reload
+
+        //sectionsPageAdapter.getItem(viewPager.getCurrentItem())
+
+        viewPager.setOffscreenPageLimit(0);  //How many screens before reload
         tabLayout = (TabLayout) findViewById(R.id.tabs);
         setupViewPager(viewPager);
         tabLayout.setupWithViewPager(viewPager);
+
+
+        viewPager.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                System.out.println("aaaaaaaaaaa"+getSupportFragmentManager().getFragments().size());
+            }
+        }, 5000);
+
+/*
+        if(savedInstanceState != null) {
+            tabMapFragment = (Tab_Map_Fragment) sectionsPageAdapter.getItem(0);
+            tabAllEventsFragment = (Tab_All_Events_Fragment) sectionsPageAdapter.getItem(1);
+            tabMyEventsFragment = (Tab_My_Events_Fragment) sectionsPageAdapter.getItem(2);
+        }*/
+
+        getSupportFragmentManager().executePendingTransactions();
 
 
         // If device is running SDK < 23
@@ -256,6 +304,15 @@ public class MenuTabbedView extends AppCompatActivity implements NavigationView.
             }
         };
 
+    }
+
+
+    private Fragment getFragment(int position){
+        return getSupportFragmentManager().findFragmentByTag(getFragmentTag(position));
+    }
+
+    private String getFragmentTag(int position) {
+        return "android:switcher:" + R.id.container + ":" + position;
     }
 
     @Override
@@ -550,9 +607,9 @@ public class MenuTabbedView extends AppCompatActivity implements NavigationView.
             if(ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED)
             {
                 //User location updates from here?
-                locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 3000, 0, locationListener);
-                locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 3000, 0, locationListener);
+                tabMapFragment.refresh();
             }
+
 
             return true;
         }
