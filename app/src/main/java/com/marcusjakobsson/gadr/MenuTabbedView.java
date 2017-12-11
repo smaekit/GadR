@@ -92,15 +92,20 @@ public class MenuTabbedView extends AppCompatActivity implements NavigationView.
     String userStatus;
 
     //Fragments
-    Tab_Map_Fragment tabMapFragment = new Tab_Map_Fragment();
-    Tab_All_Events_Fragment tabAllEventsFragment = new Tab_All_Events_Fragment();
-    Tab_My_Events_Fragment tabMyEventsFragment = new Tab_My_Events_Fragment();
+    Tab_Map_Fragment tabMapFragment;
+    Tab_All_Events_Fragment tabAllEventsFragment;
+    Tab_My_Events_Fragment tabMyEventsFragment;
 
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_tabbed_view);
+
+
+        tabMapFragment = new Tab_Map_Fragment();
+        tabAllEventsFragment = new Tab_All_Events_Fragment();
+        tabMyEventsFragment = new Tab_My_Events_Fragment();
 
         sectionsPageAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
 
@@ -225,36 +230,37 @@ public class MenuTabbedView extends AppCompatActivity implements NavigationView.
 
 
 
-        locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
-
-        locationListener = new LocationListener() {
-            @Override
-            public void onLocationChanged(Location location) {
-                locationManager.removeUpdates(locationListener);
-
-                FirebaseConnection firebaseConnection = new FirebaseConnection();
-                firebaseConnection.UpdateUserLocation(location.getLatitude(),location.getLongitude());
-                reloadEventData();
-                tabMapFragment.reloadUserData();
-
-                Toast.makeText(getApplicationContext(), "Location Refreshed", Toast.LENGTH_LONG).show();
-            }
-
-            @Override
-            public void onStatusChanged(String provider, int status, Bundle extras) {
-
-            }
-
-            @Override
-            public void onProviderEnabled(String provider) {
-
-            }
-
-            @Override
-            public void onProviderDisabled(String provider) {
-
-            }
-        };
+//        locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
+//
+//        locationListener = new LocationListener() {
+//            @Override
+//            public void onLocationChanged(Location location) {
+//                locationManager.removeUpdates(locationListener);
+//
+//                FirebaseConnection firebaseConnection = new FirebaseConnection();
+//                firebaseConnection.UpdateUserLocation(location.getLatitude(),location.getLongitude());
+//                reloadEventData();
+//                //tabMapFragment.reloadUserData();
+//                tabMapFragment.refreshUserLocationData();
+//
+//                Toast.makeText(getApplicationContext(), "Location Refreshed", Toast.LENGTH_LONG).show();
+//            }
+//
+//            @Override
+//            public void onStatusChanged(String provider, int status, Bundle extras) {
+//
+//            }
+//
+//            @Override
+//            public void onProviderEnabled(String provider) {
+//
+//            }
+//
+//            @Override
+//            public void onProviderDisabled(String provider) {
+//
+//            }
+//        };
 
     }
 
@@ -324,7 +330,8 @@ public class MenuTabbedView extends AppCompatActivity implements NavigationView.
 
         setUserStatus();
         //tabAllEventsFragment.reloadListData();
-        tabMapFragment.reloadUserData();
+        //tabMapFragment.reloadUserData();
+        tabMapFragment.refreshUserLocationData();
         tabMapFragment.reloadEventMarkers();
     }
 
@@ -387,9 +394,9 @@ public class MenuTabbedView extends AppCompatActivity implements NavigationView.
 
     private void setupViewPager(ViewPager viewPager) {
         SectionsPagerAdapter adapter = new SectionsPagerAdapter(getSupportFragmentManager());
-        adapter.addFragment(tabMapFragment, getResources().getString(R.string.Tabbed_Menu_Map));
-        adapter.addFragment(tabAllEventsFragment, getResources().getString(R.string.Tabbed_Menu_All));
-        adapter.addFragment(tabMyEventsFragment, getResources().getString(R.string.Tabbed_Menu_My));
+        adapter.addFragment(tabMapFragment);
+        adapter.addFragment(tabAllEventsFragment);
+        adapter.addFragment(tabMyEventsFragment);
         viewPager.setAdapter(adapter);
     }
 
@@ -547,12 +554,13 @@ public class MenuTabbedView extends AppCompatActivity implements NavigationView.
                 return true;
             }
 
-            if(ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED)
-            {
-                //User location updates from here?
-                locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 3000, 0, locationListener);
-                locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 3000, 0, locationListener);
-            }
+            tabMapFragment.refreshUserLocationData();
+//            if(ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED)
+//            {
+//                //User location updates from here?
+//                locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 3000, 0, locationListener);
+//                locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 3000, 0, locationListener);
+//            }
 
             return true;
         }

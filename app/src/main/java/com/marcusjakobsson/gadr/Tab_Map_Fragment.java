@@ -74,11 +74,12 @@ public class Tab_Map_Fragment extends Fragment {
     Boolean isFragmentUp = false;
 
 
-
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_tab_map, container, false);
+
+
 
 
         mMapView = (MapView) rootView.findViewById(R.id.mapView);
@@ -111,7 +112,7 @@ public class Tab_Map_Fragment extends Fragment {
                 locationManager.removeUpdates(locationListener);
 
                 FirebaseConnection firebaseConnection = new FirebaseConnection();
-                firebaseConnection.UpdateUserLocation(location.getLatitude(),location.getLongitude());
+                firebaseConnection.UpdateUserLocation(location.getLatitude(), location.getLongitude());
 
                 reloadUserData();
 
@@ -143,23 +144,20 @@ public class Tab_Map_Fragment extends Fragment {
 
 
         // If device is running SDK < 23
-        if (Build.VERSION.SDK_INT < 23)
-        {
+        if (Build.VERSION.SDK_INT < 23) {
             //We can just request locationUpdates
             //we also need to target min sdk version less then 23
-        }else
-        {
+        } else {
             //Todo: make funciton
             if (ContextCompat.checkSelfPermission(getContext(), android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
                 //Ask for permisson
                 ActivityCompat.requestPermissions(getActivity(), new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION}, 1);
-            }else
-            {
+            } else {
                 //If user already granted us permisson
                 if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
                     locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 3000, 0, locationListener);
                 }
-                if(locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {
+                if (locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {
                     locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 3000, 0, locationListener);
                 }
             }
@@ -183,11 +181,10 @@ public class Tab_Map_Fragment extends Fragment {
 
             String today = new SimpleDateFormat(EventData.DATE_FORMAT_STRING).format(new Date());
 
-            try{
+            try {
                 allEventData = ((ThisApp) getActivity().getApplication()).getAllEvents();
                 myEventData = ((ThisApp) getActivity().getApplication()).getMyEvents();
-            }catch (NullPointerException e)
-            {
+            } catch (NullPointerException e) {
                 e.printStackTrace();
             }
 
@@ -200,8 +197,7 @@ public class Tab_Map_Fragment extends Fragment {
         }
     }
 
-    private void placeAllEventMarkers(String today)
-    {
+    private void placeAllEventMarkers(String today) {
         if (allEventData != null) {
             for (int i = 0; i < allEventData.length; i++) {
                 if (allEventData[i].getDate().equals(today))
@@ -210,8 +206,7 @@ public class Tab_Map_Fragment extends Fragment {
         }
     }
 
-    private void placeMyEventMarkers(String today)
-    {
+    private void placeMyEventMarkers(String today) {
         if (myEventData != null) {
             for (int i = 0; i < myEventData.length; i++) {
                 if (myEventData[i].getDate().equals(today))
@@ -220,8 +215,7 @@ public class Tab_Map_Fragment extends Fragment {
         }
     }
 
-    private void placeUserMarkes()
-    {
+    private void placeUserMarkes() {
         if (userData != null) {
             //for (UserData user : userData) {
             for (int i = 0; i < userData.size(); i++) {
@@ -239,15 +233,42 @@ public class Tab_Map_Fragment extends Fragment {
         }
     }
 
-    private Drawable convertToRoundDrawable(Bitmap bitmap)
+    private Drawable convertToRoundDrawable(Bitmap bitmap) {
+
+        RoundedBitmapDrawable drawable = RoundedBitmapDrawableFactory.create(getResources(), bitmap);
+        drawable.setCircular(true);
+        roundIcon.add(drawable);
+        Drawable circleDrawable = drawable;
+        return circleDrawable;
+
+    }
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+    }
+
+    public void refreshUserLocationData()
     {
+        if(isFragmentUp){
+            if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
 
-            RoundedBitmapDrawable drawable = RoundedBitmapDrawableFactory.create(getResources(), bitmap);
-            drawable.setCircular(true);
-            roundIcon.add(drawable);
-            Drawable circleDrawable = drawable;
-            return circleDrawable;
-
+                if (ActivityCompat.checkSelfPermission(getActivity(), android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getActivity(), android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                    // TODO: Consider calling
+                    //    ActivityCompat#requestPermissions
+                    // here to request the missing permissions, and then overriding
+                    //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+                    //                                          int[] grantResults)
+                    // to handle the case where the user grants the permission. See the documentation
+                    // for ActivityCompat#requestPermissions for more details.
+                    return;
+                }
+                locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 3000, 0, locationListener);
+            }
+            if(locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {
+                locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 3000, 0, locationListener);
+            }
+        }
     }
 
     private BitmapDescriptor getMarkerIconFromDrawable(Drawable drawable) {
@@ -260,12 +281,19 @@ public class Tab_Map_Fragment extends Fragment {
     }
 
     public void reloadUserData() {
+
+
         FirebaseConnection firebaseConnection = new FirebaseConnection();
 
 
         FirebaseConnection.UsersCallback usersCallback = new FirebaseConnection.UsersCallback() {
             @Override
             public void onSuccess(List<UserData> result) {
+                if(userData != null)
+                {
+                    userData.clear();
+                }
+
                 userData = result;
 
                 icon.clear();
