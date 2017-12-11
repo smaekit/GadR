@@ -92,9 +92,9 @@ public class MenuTabbedView extends AppCompatActivity implements NavigationView.
     String userStatus;
 
     //Fragments
-    Tab_Map_Fragment tabMapFragment = new Tab_Map_Fragment();
-    Tab_All_Events_Fragment tabAllEventsFragment = new Tab_All_Events_Fragment();
-    Tab_My_Events_Fragment tabMyEventsFragment = new Tab_My_Events_Fragment();
+    Tab_Map_Fragment tabMapFragment;
+    Tab_All_Events_Fragment tabAllEventsFragment;
+    Tab_My_Events_Fragment tabMyEventsFragment;
 
 
     @Override
@@ -103,6 +103,23 @@ public class MenuTabbedView extends AppCompatActivity implements NavigationView.
         setContentView(R.layout.activity_tabbed_view);
 
         sectionsPageAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
+
+
+        tabMapFragment = (Tab_Map_Fragment) getFragment(0);
+        if(tabMapFragment == null){
+            tabMapFragment = new Tab_Map_Fragment();
+        }
+
+        tabAllEventsFragment = (Tab_All_Events_Fragment) getFragment(1);
+        if (tabAllEventsFragment == null) {
+            tabAllEventsFragment = new Tab_All_Events_Fragment();
+        }
+
+        tabMyEventsFragment = (Tab_My_Events_Fragment) getFragment(2);
+        if (tabMyEventsFragment == null) {
+            tabMyEventsFragment = new Tab_My_Events_Fragment();
+        }
+
 
         viewPager = (ViewPager) findViewById(R.id.container);
         viewPager.setOffscreenPageLimit(3);  //How many screens before reload
@@ -312,6 +329,14 @@ public class MenuTabbedView extends AppCompatActivity implements NavigationView.
                 reloadFragmentData();
             }
         });
+    }
+
+    private Fragment getFragment(int position){
+        return getSupportFragmentManager().findFragmentByTag(getFragmentTag(position));
+    }
+
+    private String getFragmentTag(int position) {
+        return "android:switcher:" + R.id.container + ":" + position;
     }
 
     private void setUserStatus()
@@ -534,24 +559,33 @@ public class MenuTabbedView extends AppCompatActivity implements NavigationView.
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.refresh_button) {
-            if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                // TODO: Consider calling
-                ActivityCompat.requestPermissions(this, new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION}, 1);
 
-                //    ActivityCompat#requestPermissions
-                // here to request the missing permissions, and then overriding
-                //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-                //                                          int[] grantResults)
-                // to handle the case where the user grants the permission. See the documentation
-                // for ActivityCompat#requestPermissions for more details.
-                return true;
+
+            if (viewPager.getCurrentItem() == 0) {
+                if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                    // TODO: Consider calling
+                    ActivityCompat.requestPermissions(this, new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION}, 1);
+
+                    //    ActivityCompat#requestPermissions
+                    // here to request the missing permissions, and then overriding
+                    //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+                    //                                          int[] grantResults)
+                    // to handle the case where the user grants the permission. See the documentation
+                    // for ActivityCompat#requestPermissions for more details.
+                    return true;
+                }
+
+                if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+                    //User location updates from here?
+                    locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 3000, 0, locationListener);
+                    locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 3000, 0, locationListener);
+                }
             }
-
-            if(ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED)
-            {
-                //User location updates from here?
-                locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 3000, 0, locationListener);
-                locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 3000, 0, locationListener);
+            if (viewPager.getCurrentItem() == 1) {
+                Toast.makeText(getApplicationContext(),"All event",Toast.LENGTH_LONG).show();
+            }
+            if (viewPager.getCurrentItem() == 2){
+                Toast.makeText(getApplicationContext(),"My event",Toast.LENGTH_LONG).show();
             }
 
             return true;
