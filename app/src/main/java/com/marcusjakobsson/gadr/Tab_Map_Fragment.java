@@ -62,6 +62,7 @@ public class Tab_Map_Fragment extends Fragment {
 
 
 
+
     LocationManager locationManager;
     LocationListener locationListener;
 
@@ -72,6 +73,7 @@ public class Tab_Map_Fragment extends Fragment {
 
     GetBitmapFromURLAsync getBitmapFromURLAsync;
     Boolean isFragmentUp = false;
+    Boolean cameFromEarlierView = false;
 
 
 
@@ -138,18 +140,6 @@ public class Tab_Map_Fragment extends Fragment {
         };
 
 
-
-
-
-        mMapView.getMapAsync(new OnMapReadyCallback() {
-            @Override
-            public void onMapReady(GoogleMap mMap) {
-                googleMap = mMap;
-                //reloadUserData();
-            }
-        });
-
-        // find the retained fragment on activity restarts
         FragmentManager fm = getFragmentManager();
         mData = (RetainedMapFragment) fm.findFragmentByTag(TAG_RETAINED_MAP_FRAGMENT);
 
@@ -159,14 +149,32 @@ public class Tab_Map_Fragment extends Fragment {
             mData = new RetainedMapFragment();
             fm.beginTransaction().add(mData, TAG_RETAINED_MAP_FRAGMENT).commit();
             // load data from a data source or perform any calculation
-
+            cameFromEarlierView = true;
             requestLocationUpdates();
         }else {
             reloadMapMarkers();
+
         }
 
-        // the data is available in mRetainedFragment.getData() even after
-        // subsequent configuration change restarts.
+
+        mMapView.getMapAsync(new OnMapReadyCallback() {
+            @Override
+            public void onMapReady(GoogleMap mMap) {
+                googleMap = mMap;
+                //reloadUserData();
+                // find the retained fragment on activity restarts
+                if(!cameFromEarlierView)
+                {
+                    reloadMapMarkers();
+                    googleMap.moveCamera(mData.cameraUpdate);
+                }
+
+                // the data is available in mRetainedFragment.getData() even after
+                // subsequent configuration change restarts.
+            }
+        });
+
+
 
 
 
@@ -240,7 +248,7 @@ public class Tab_Map_Fragment extends Fragment {
             placeMyEventMarkers(today);
 
             placeUserMarkes();
-            updateCameraPosition();
+            //updateCameraPosition();
         }
     }
 
@@ -327,6 +335,7 @@ public class Tab_Map_Fragment extends Fragment {
                 }
                 else {
                     reloadMapMarkers();
+                    updateCameraPosition();
                 }
 
             }
@@ -348,6 +357,7 @@ public class Tab_Map_Fragment extends Fragment {
             getBitmapFromURLAsync.cancel(true);
         }
 
+        mData.cameraUpdate = CameraUpdateFactory.newLatLngZoom(googleMap.getCameraPosition().target,googleMap.getCameraPosition().zoom);
         super.onPause();
         mMapView.onPause();
     }
@@ -402,8 +412,10 @@ public class Tab_Map_Fragment extends Fragment {
                 if (mData.userData.size() == mData.icon.size()) {
 
                     reloadMapMarkers();
+                    updateCameraPosition();
 
                 }
 
         }
-    }}
+    }
+}
