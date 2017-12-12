@@ -26,6 +26,7 @@ import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
@@ -74,8 +75,10 @@ import com.google.firebase.messaging.RemoteMessage;
 
 import org.json.JSONObject;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.lang.ref.WeakReference;
+import java.net.HttpURLConnection;
 import java.net.URL;
 import java.text.DateFormat;
 import java.util.ArrayList;
@@ -97,6 +100,11 @@ public class MenuTabbedView extends AppCompatActivity implements NavigationView.
 
     private TabLayout tabLayout;
 
+
+    GetBitmapFromURLAsync getBitmapFromURLAsync;
+    private static final String TAG_RETAINED_MENU_FRAGMENT = "RetainedMenuTabbedFragment";
+
+    private RetainedMenuTabbedFragmet mData;
 
     TextView userStatus_TextView;
 
@@ -196,19 +204,43 @@ public class MenuTabbedView extends AppCompatActivity implements NavigationView.
 
 
 
-        //Firebase
-        FirebaseConnection fc = new FirebaseConnection();
+
+        FragmentManager fm = getSupportFragmentManager();
+        mData = (RetainedMenuTabbedFragmet) fm.findFragmentByTag(TAG_RETAINED_MENU_FRAGMENT);
+
+        // create the fragment and data the first time
+        if (mData == null) {
+            // add the fragment
+            mData = new RetainedMenuTabbedFragmet();
+            fm.beginTransaction().add(mData, TAG_RETAINED_MENU_FRAGMENT).commit();
+            // load data from a data source or perform any calculation
+            (new FirebaseConnection()).getUsers(new FirebaseConnection.UsersCallback() {
+                @Override
+                public void onSuccess(List<UserData> result) {
+
+                    setupCurrentUser(result);
+                    reloadEventData();
+
+                }
+            });
+        }else {
+            //intitiate drawer menu with saved rounded image and name and maybe status...
+            View hView =  navigationView.getHeaderView(0);
+            TextView nav_user = (TextView)hView.findViewById(R.id.userNameTextView);
+            nav_user.setText(mData.drawerUserName);
+            ImageView imageView = (ImageView)hView.findViewById(R.id.userProfilePicture);
+            imageView.setImageDrawable(mData.drawable);
+            TextView nav_userStatus = (TextView)hView.findViewById(R.id.userStatus_TextView);
+            nav_userStatus.setText(mData.userStatus);
+
+            //reloadEventData();
+            //tabMapFragment.reloadUserData();
 
 
-       fc.getUsers(new FirebaseConnection.UsersCallback(){
-            @Override
-            public void onSuccess(List<UserData> result){
 
-                setupCurrentUser(result);
-                reloadEventData();
+        }
 
-            }
-        });
+
 
 
         if (activityReceiver != null) {
@@ -245,7 +277,7 @@ public class MenuTabbedView extends AppCompatActivity implements NavigationView.
                 Boolean b = data.getBooleanExtra(CreateStatus.IntentExtra_DidAddStatus, false);
                 if (b) {
                     Log.i(TAG, "True");
-                    userStatus = data.getStringExtra(CreateStatus.IntentExtra_UserStatus);
+                    mData.userStatus = data.getStringExtra(CreateStatus.IntentExtra_UserStatus);
 
                     reloadEventData();
                 }
@@ -294,7 +326,7 @@ public class MenuTabbedView extends AppCompatActivity implements NavigationView.
     private void setUserStatus()
     {
         userStatus_TextView = (TextView)findViewById(R.id.userStatus_TextView);
-        userStatus_TextView.setText(userStatus);
+        userStatus_TextView.setText(mData.userStatus);
     }
 
     private void reloadFragmentData() {
@@ -302,8 +334,8 @@ public class MenuTabbedView extends AppCompatActivity implements NavigationView.
         //Todo reload current fragmet?
         setUserStatus();
         //tabAllEventsFragment.reloadListData();
-        tabMapFragment.reloadUserData();
-        tabMapFragment.reloadMapMarkers();
+        //tabMapFragment.reloadUserData();
+        //tabMapFragment.reloadMapMarkers();
     }
 
 
@@ -342,9 +374,12 @@ public class MenuTabbedView extends AppCompatActivity implements NavigationView.
                     String profilePicUrl = result.get(i).getImgURLLarge();
                     String name = result.get(i).getName();
 
-                    new DownloadImageTask((ImageView)findViewById(R.id.userProfilePicture)).execute(profilePicUrl);
+                    //new DownloadImageTask((ImageView)findViewById(R.id.userProfilePicture)).execute(profilePicUrl);
+                    getBitmapFromURLAsync = new GetBitmapFromURLAsync();
+                    getBitmapFromURLAsync.execute(profilePicUrl);
                     TextView textView = (TextView)findViewById(R.id.userNameTextView);
                     textView.setText(name);
+                    mData.drawerUserName = name;
                 }
             }
         }
@@ -575,7 +610,18 @@ public class MenuTabbedView extends AppCompatActivity implements NavigationView.
     //Todo destroy asyncTasks and objects when view is getting onDestroy
     @Override
     protected void onDestroy() {
+        if(getBitmapFromURLAsync != null){
+            getBitmapFromURLAsync.cancel(true);
+        }
         super.onDestroy();
+    }
+
+    @Override
+    protected void onPause() {
+        if(getBitmapFromURLAsync != null){
+            getBitmapFromURLAsync.cancel(true);
+        }
+        super.onPause();
     }
 
     @Override
@@ -625,6 +671,44 @@ public class MenuTabbedView extends AppCompatActivity implements NavigationView.
             RoundedBitmapDrawable drawable = RoundedBitmapDrawableFactory.create( imageView.getResources(),result);
             drawable.setCircular(true);
             imageView.setImageDrawable(drawable);
+        }
+    }
+
+
+    public static Bitmap getBitmapFromURL(String imgUrl) {
+        try {
+            URL url = new URL(imgUrl);
+            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+            connection.setDoInput(true);
+            connection.connect();
+            InputStream input = connection.getInputStream();
+            Bitmap myBitmap = BitmapFactory.decodeStream(input);
+            return myBitmap;
+        } catch (IOException e) {
+            // Log exception
+            return null;
+        }
+    }
+
+    /**     AsyncTAsk for Image Bitmap  */
+    private class GetBitmapFromURLAsync extends AsyncTask<String, Void, Bitmap> {
+        @Override
+        protected Bitmap doInBackground(String... params) {
+            return getBitmapFromURL(params[0]);
+        }
+
+        @Override
+        protected void onPostExecute(Bitmap bitmap) {
+
+//            if(imageView == null){return;}
+
+            RoundedBitmapDrawable drawable = RoundedBitmapDrawableFactory.create(getResources(),bitmap);
+            drawable.setCircular(true);
+
+            mData.drawable = drawable;
+            ImageView imageView = (ImageView)findViewById(R.id.userProfilePicture);
+            imageView.setImageDrawable(drawable);
+
         }
     }
 

@@ -5,6 +5,8 @@ import android.database.DataSetObserver;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,6 +17,11 @@ import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.facebook.Profile;
+
+import org.json.JSONArray;
+
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -28,6 +35,8 @@ public class Tab_All_Events_Fragment extends Fragment {
 
     EventData[] allEventData;
     CustomListViewItem[] listData;
+    private SwipeRefreshLayout swipeContainer;
+
 
     @Nullable
     @Override
@@ -49,9 +58,60 @@ public class Tab_All_Events_Fragment extends Fragment {
             }
         });
 
+
+        swipeContainer = (SwipeRefreshLayout) view.findViewById(R.id.swipeContainer);
+        // Setup refresh listener which triggers new data loading
+        swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+
+                reloadEventData();
+            }
+        });
+        // Configure the refreshing colors
+        swipeContainer.setColorSchemeResources(android.R.color.holo_blue_bright,
+                android.R.color.holo_green_light,
+                android.R.color.holo_orange_light,
+                android.R.color.holo_red_light);
+
+
+
         return view;
     }
 
+
+
+
+    private void reloadEventData() {
+        (new FirebaseConnection()).getEvents(new FirebaseConnection.EventsCallback(){
+            @Override
+            public void onSuccess(List<EventData> result){
+                List<EventData> allEventData = new ArrayList<EventData>();
+                List<EventData> myEventData = new ArrayList<EventData>();
+
+                for (int i = 0; i < result.size(); i++) {
+
+
+
+
+                    if(result.get(i).getCreatorID().equals(Profile.getCurrentProfile().getId())) {
+                        myEventData.add(result.get(i));
+                    }
+                    else {
+                        allEventData.add(result.get(i));
+                    }
+                }
+
+                ((ThisApp) getActivity().getApplication()).setAllEvents((EventData[]) allEventData.toArray(new EventData[allEventData.size()]));
+                ((ThisApp) getActivity().getApplication()).setMyEvents((EventData[]) myEventData.toArray(new EventData[myEventData.size()]));
+
+                reloadListData();
+                // Now we call setRefreshing(false) to signal refresh has finished
+                swipeContainer.setRefreshing(false);
+
+            }
+        });
+    }
 
     public void reloadListData() {
         //TODO: Add reload animation.
@@ -70,6 +130,7 @@ public class Tab_All_Events_Fragment extends Fragment {
             listViewAdapter = new CustomListViewAdapter(getActivity(), listData);
             listView.setAdapter(listViewAdapter);
         }
+
         Toast.makeText(getContext(), "all event reload list", Toast.LENGTH_SHORT).show();
     }
 

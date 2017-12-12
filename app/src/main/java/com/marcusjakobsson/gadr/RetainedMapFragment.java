@@ -6,6 +6,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
 
+import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.model.LatLng;
 
 import java.util.ArrayList;
@@ -22,6 +23,7 @@ public class RetainedMapFragment extends Fragment {
     public LatLng loc;
     public List<Bitmap> icon = new ArrayList<>();
     public List<RoundedBitmapDrawable> roundIcon = new ArrayList<>();
+    public CameraUpdate cameraUpdate;
 
     public EventData[] getAllEventData() {
         return allEventData;
