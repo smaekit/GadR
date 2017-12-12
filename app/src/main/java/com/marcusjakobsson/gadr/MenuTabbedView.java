@@ -308,8 +308,6 @@ public class MenuTabbedView extends AppCompatActivity implements NavigationView.
                 List<EventData> allEventData = new ArrayList<EventData>();
                 List<EventData> myEventData = new ArrayList<EventData>();
 
-
-
                 for (int i = 0; i < result.size(); i++) {
                     Log.i(TAG, "ID:          " + result.get(i).getCreatorID().equals(Profile.getCurrentProfile().getId()));
 
@@ -583,6 +581,7 @@ public class MenuTabbedView extends AppCompatActivity implements NavigationView.
             }
             if (viewPager.getCurrentItem() == 1) {
                 Toast.makeText(getApplicationContext(),"All event",Toast.LENGTH_LONG).show();
+                tabAllEventsFragment.reloadListData();
             }
             if (viewPager.getCurrentItem() == 2){
                 Toast.makeText(getApplicationContext(),"My event",Toast.LENGTH_LONG).show();

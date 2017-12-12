@@ -18,8 +18,10 @@ public class EventData {
     private String creatorID;
     private String title;
     private String description;
+
     private CustomLocation customLocation;
-    //private Date date;
+    private String locationNickname;
+    private int categoryIndex;
 
     private String date;
     private String startTime;
@@ -27,11 +29,24 @@ public class EventData {
 
     public EventData() {}
 
-    public EventData(String creatorID, String title, String description, CustomLocation customLocation, String date, String startTime, String endTime) {
+    public EventData(
+            String creatorID,
+            String title,
+            String description,
+            CustomLocation customLocation,
+            String locationNickname,
+            int categoryIndex,
+            String date,
+            String startTime,
+            String endTime) {
+
         this.creatorID = creatorID;
         this.title = title;
         this.description = description;
+
         this.customLocation = customLocation;
+        this.locationNickname = locationNickname;
+        this.categoryIndex = categoryIndex;
 
         this.date = date;
         this.startTime = startTime;
@@ -52,6 +67,10 @@ public class EventData {
     }
 
     public void setCustomLocation(CustomLocation customLocation) { this.customLocation = customLocation; }
+
+    public void setLocationNickname(String locationNickname) { this.locationNickname = locationNickname; }
+
+    public void setCategoryIndex(int categoryIndex) { this.categoryIndex = categoryIndex; }
 
     public void setDate(String date) { this.date = date; }
 
@@ -76,6 +95,10 @@ public class EventData {
         return customLocation;
     }
 
+    public String getLocationNickname() { return locationNickname; }
+
+    public int getCategoryIndex() { return categoryIndex; }
+
     public String getDate() {
         return date;
     }
@@ -91,6 +114,8 @@ public class EventData {
                 ", title='" + title + '\'' +
                 ", description='" + description + '\'' +
                 ", customLocation=" + customLocation +
+                ", locationNickname=" + locationNickname +
+                ", categoryIndex=" + categoryIndex +
                 ", date='" + date + '\'' +
                 ", startTime='" + startTime + '\'' +
                 ", endTime='" + endTime + '\'' +

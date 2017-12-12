@@ -37,8 +37,8 @@ public class FirebaseConnection {
     public static String users_shareLocation = "shareLocation";
 
 
-    //Event
-    public static String event_parent = "Events";
+    //Event                             //TODO: change back to Events
+    public static String event_parent = "Events2";
 
 
     //Status

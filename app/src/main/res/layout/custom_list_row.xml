@@ -3,8 +3,6 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="150dp">
-
-
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -16,7 +14,7 @@
             android:id="@+id/category_ImageView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:scaleType="fitXY"
+            android:scaleType="center"
             android:alpha="0.5"
             android:backgroundTint="@android:color/black"
             android:foregroundTint="@android:color/black"
@@ -55,35 +53,6 @@
             android:text="Tid"
             android:textColor="#FFFFFF" />
     </RelativeLayout>
-
-
-    <!--
-    <TextView
-        android:id="@+id/textView_title"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true"
-        android:layout_marginStart="20dp"
-        android:layout_marginTop="20dp"
-        android:text="TextView" />
-
-    <TextView
-        android:id="@+id/textView_time"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignStart="@+id/textView_title"
-        android:layout_below="@+id/textView_title"
-        android:layout_marginTop="20dp"
-        android:layout_marginBottom="20dp"
-        android:text="TextView">
-        -->
-
-
-
-
-
-
 </LinearLayout>
 
 

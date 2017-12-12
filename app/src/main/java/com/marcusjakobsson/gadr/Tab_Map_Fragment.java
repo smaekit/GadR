@@ -205,7 +205,11 @@ public class Tab_Map_Fragment extends Fragment {
         if (allEventData != null) {
             for (int i = 0; i < allEventData.length; i++) {
                 if (allEventData[i].getDate().equals(today))
-                    googleMap.addMarker(new MarkerOptions().position(new LatLng(allEventData[i].getCustomLocation().getLatitude(), allEventData[i].getCustomLocation().getLongitude())).title(allEventData[i].getTitle()).snippet(allEventData[i].getStartTime() + " - " + allEventData[i].getEndTime()).icon(BitmapDescriptorFactory.fromResource(R.drawable.beer)));
+                    googleMap.addMarker(new MarkerOptions()
+                            .position(new LatLng(allEventData[i].getCustomLocation().getLatitude(), allEventData[i].getCustomLocation().getLongitude()))
+                            .title(allEventData[i].getTitle())
+                            .snippet(allEventData[i].getStartTime() + " - " + allEventData[i].getEndTime())
+                            .icon(BitmapDescriptorFactory.fromResource(Category.categoryIconIndex[allEventData[i].getCategoryIndex()])));
             }
         }
     }
@@ -215,7 +219,11 @@ public class Tab_Map_Fragment extends Fragment {
         if (myEventData != null) {
             for (int i = 0; i < myEventData.length; i++) {
                 if (myEventData[i].getDate().equals(today))
-                    googleMap.addMarker(new MarkerOptions().position(new LatLng(myEventData[i].getCustomLocation().getLatitude(), myEventData[i].getCustomLocation().getLongitude())).title(myEventData[i].getTitle()).snippet(myEventData[i].getStartTime() + " - " + myEventData[i].getEndTime()).icon(BitmapDescriptorFactory.fromResource(R.drawable.beer)));
+                    googleMap.addMarker(new MarkerOptions()
+                            .position(new LatLng(myEventData[i].getCustomLocation().getLatitude(), myEventData[i].getCustomLocation().getLongitude()))
+                            .title(myEventData[i].getTitle())
+                            .snippet(myEventData[i].getStartTime() + " - " + myEventData[i].getEndTime())
+                            .icon(BitmapDescriptorFactory.fromResource(Category.categoryIconIndex[myEventData[i].getCategoryIndex()])));
             }
         }
     }
@@ -230,9 +238,19 @@ public class Tab_Map_Fragment extends Fragment {
                     if (icon != null && icon.size() > 0 && isFragmentUp) {
 
                         BitmapDescriptor markerIcon = getMarkerIconFromDrawable(convertToRoundDrawable(icon.get(i)));
-                        googleMap.addMarker(new MarkerOptions().position(latLng).title(userData.get(i).getName()).snippet(userData.get(i).getStatus()).icon(markerIcon)).showInfoWindow();
+                        googleMap.addMarker(new MarkerOptions()
+                                .position(latLng)
+                                .title(userData.get(i).getName())
+                                .snippet(userData.get(i).getStatus())
+                                .icon(markerIcon))
+                                .showInfoWindow();
                     } else {
-                        googleMap.addMarker(new MarkerOptions().position(latLng).title(userData.get(i).getName()).snippet(userData.get(i).getStatus()).icon(BitmapDescriptorFactory.fromResource(R.drawable.person2))).showInfoWindow();
+                        googleMap.addMarker(new MarkerOptions()
+                                .position(latLng)
+                                .title(userData.get(i).getName())
+                                .snippet(userData.get(i).getStatus())
+                                .icon(BitmapDescriptorFactory.fromResource(R.drawable.person2)))
+                                .showInfoWindow();
                     }
                 }
             }

@@ -6,13 +6,13 @@ package com.marcusjakobsson.gadr;
 
 public class Category {
 
-    public static final String[] categories = {
-            "Coffee",
-            "Cinema",
-            "Food",
-            "Game",
-            "Party",
-            "Pub"
+    public static final int[] categoriesIndex = {
+            R.string.Cat1,
+            R.string.Cat2,
+            R.string.Cat3,
+            R.string.Cat4,
+            R.string.Cat5,
+            R.string.Cat6
     };
 
     public static final int[] categoryImageIndex = {

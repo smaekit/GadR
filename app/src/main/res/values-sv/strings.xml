@@ -33,4 +33,11 @@
     <string name="userprofilepicture">Användarens profilbild</string>
     <string name="StatusHint">Vad har du för dig?..</string>
     <string name="change_your_status">Ändra din status</string>
+    <string name="Cat1">Fika</string>
+    <string name="Cat2">Bio</string>
+    <string name="Cat3">Mat</string>
+    <string name="Cat4">Game</string>
+    <string name="Cat5">Fest</string>
+    <string name="Cat6">Bar</string>
+    <string name="AddEvent_LocationNickname">Plats-smeknamn</string>
 </resources>

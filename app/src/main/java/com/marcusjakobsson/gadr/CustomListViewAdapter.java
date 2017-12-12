@@ -1,6 +1,7 @@
 package com.marcusjakobsson.gadr;
 
 import android.content.Context;
+import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -34,6 +35,7 @@ public class CustomListViewAdapter extends ArrayAdapter<CustomListViewItem>{
         title.setText(singleItem.getTitle());
         time.setText(singleItem.getTime());
         place.setText(singleItem.getPlace());
+        imageView.setImageDrawable(ContextCompat.getDrawable(getContext(), Category.categoryImageIndex[singleItem.getCategoryIndex()]));
 
         return view;
     }

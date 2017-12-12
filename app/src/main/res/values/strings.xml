@@ -40,6 +40,13 @@
     <string name="appwidget_text">EXAMPLE</string>
     <string name="add_widget">Add widget</string>
     <string name="change_your_status">Change your Status</string>
+    <string name="Cat1">Coffee</string>
+    <string name="Cat2">Cinema</string>
+    <string name="Cat3">Food</string>
+    <string name="Cat4">Game</string>
+    <string name="Cat5">Party</string>
+    <string name="Cat6">Pub</string>
+    <string name="AddEvent_LocationNickname">Location nickname</string>
 
 
 </resources>

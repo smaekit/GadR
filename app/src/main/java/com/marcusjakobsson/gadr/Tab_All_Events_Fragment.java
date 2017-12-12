@@ -62,8 +62,8 @@ public class Tab_All_Events_Fragment extends Fragment {
             listData = new CustomListViewItem[newAllEventData.length];
             allEventData = newAllEventData;
 
-            for (int i = 0; i < listData.length; i++) {                                                                         //TODO: set get place.
-                listData[i] = new CustomListViewItem(allEventData[i].getTitle(), allEventData[i].getStartTime() + " - " + allEventData[i].getEndTime(), allEventData[i].getDate(), 0); //TODO: set func for getting cat-index
+            for (int i = 0; i < listData.length; i++) {
+                listData[i] = new CustomListViewItem(allEventData[i].getTitle(), allEventData[i].getStartTime() + " - " + allEventData[i].getEndTime(), allEventData[i].getLocationNickname(), allEventData[i].getCategoryIndex()); //TODO: set func for getting cat-index
             }
 
             listViewAdapter = new CustomListViewAdapter(getActivity(), listData);
