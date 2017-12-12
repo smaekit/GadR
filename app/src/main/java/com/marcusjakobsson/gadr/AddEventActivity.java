@@ -17,8 +17,10 @@ import android.util.TimeUtils;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.ArrayAdapter;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.Spinner;
 import android.widget.TimePicker;
 
 import com.facebook.AccessToken;
@@ -51,6 +53,8 @@ public class AddEventActivity extends AppCompatActivity {
     EditText startTime_EditText;
     EditText endTime_EditText;
     EditText location_EditText;
+    EditText locationNickname_EditText;
+    Spinner category_Spinner;
 
     Calendar calendar;
     Calendar endCalendar;
@@ -71,6 +75,8 @@ public class AddEventActivity extends AppCompatActivity {
         startTime_EditText = (EditText) findViewById(R.id.EditText_StartTime);
         endTime_EditText = (EditText) findViewById(R.id.EditText_EndTime);
         location_EditText = (EditText) findViewById(R.id.EditText_Location);
+        locationNickname_EditText = (EditText) findViewById(R.id.EditText_LocationNickname);
+        category_Spinner = (Spinner) findViewById(R.id.Spinner_Category);
 
 
         calendar = Calendar.getInstance();
@@ -81,6 +87,7 @@ public class AddEventActivity extends AppCompatActivity {
         setOnTouchListener(startTime_EditText);
         setOnTouchListener(endTime_EditText);
         setOnTouchListener(date_EditText);
+        setOnTouchListener(locationNickname_EditText);
 
         dateListener = new DatePickerDialog.OnDateSetListener() {
             @Override
@@ -171,9 +178,19 @@ public class AddEventActivity extends AppCompatActivity {
         location_EditText.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                removeHighlightFromEditText(location_EditText);
                 openGooglePlaceSearch();
             }
         });
+
+
+        String[] items = new String[Category.categoriesIndex.length];
+        for (int i = 0; i < items.length; i++) {
+            items[i] = getString(Category.categoriesIndex[i]);
+        }
+
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item, items);
+        category_Spinner.setAdapter(adapter);
     }
 
     private void openGooglePlaceSearch() {
@@ -236,6 +253,8 @@ public class AddEventActivity extends AppCompatActivity {
                     title_EditText.getText().toString(),
                     description_EditText.getText().toString(),
                     customLocation,
+                    locationNickname_EditText.getText().toString(),
+                    category_Spinner.getSelectedItemPosition(),
                     date_EditText.getText().toString(),
                     startTime_EditText.getText().toString(),
                     endTime_EditText.getText().toString()
@@ -260,6 +279,7 @@ public class AddEventActivity extends AppCompatActivity {
         removeHighlightFromEditText(startTime_EditText);
         removeHighlightFromEditText(endTime_EditText);
         removeHighlightFromEditText(location_EditText);
+        removeHighlightFromEditText(locationNickname_EditText);
 
         //Check if input are empty or invalid.
 
@@ -277,6 +297,8 @@ public class AddEventActivity extends AppCompatActivity {
         if (fieldIsEmpty(endTime_EditText)) { fieldsOK = false; }
 
         if (fieldIsEmpty(location_EditText)) { fieldsOK = false; }
+
+        if (fieldIsEmpty(locationNickname_EditText)) { fieldsOK = false; }
 
         // Starttime must be earlier than endtime.
         if (timesAreInvalid(startTime_EditText.getText().toString(), endTime_EditText.getText().toString())) {
@@ -328,7 +350,6 @@ public class AddEventActivity extends AppCompatActivity {
 
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat(EventData.TIME_FORMAT_STRING);
 
-        //TODO: check if timeStrings are not null
         if (DateUtils.isToday(cal.getTimeInMillis())) {
             Log.i(TAG, "Is today!");
             if (timesAreInvalid(simpleDateFormat.format(Calendar.getInstance().getTime()), editText.getText().toString())) {

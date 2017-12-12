@@ -51,104 +51,140 @@
             app:layout_constraintTop_toTopOf="parent" />
     </android.support.constraint.ConstraintLayout>
 
-    <EditText
-        android:id="@+id/EditText_Title"
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginRight="8dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="28dp"
-        android:ems="10"
-        android:hint="@string/AddEvent_title"
-        android:inputType="textPersonName"
-        android:textAlignment="center" />
+        android:layout_height="wrap_content">
 
-    <EditText
-        android:id="@+id/EditText_Description"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="8dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginRight="8dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="25dp"
-        android:ems="10"
-        android:hint="@string/AddEvent_Description"
-        android:inputType="textMultiLine"
-        android:textAlignment="center" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
 
-    <EditText
-        android:id="@+id/EditText_Date"
-        android:layout_width="match_parent"
-        android:layout_height="41dp"
-        android:layout_marginBottom="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginRight="8dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:clickable="true"
-        android:ems="10"
-        android:focusable="false"
-        android:hint="@string/AddEvent_Date"
-        android:inputType="textPersonName"
-        android:textAlignment="center" />
+        <EditText
+            android:id="@+id/EditText_Title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginRight="8dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="28dp"
+            android:ems="10"
+            android:hint="@string/AddEvent_title"
+            android:inputType="textPersonName"
+            android:textAlignment="center"
+            android:focusedByDefault="true"/>
 
+        <EditText
+            android:id="@+id/EditText_Description"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginRight="8dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="25dp"
+            android:ems="10"
+            android:hint="@string/AddEvent_Description"
+            android:inputType="textMultiLine"
+            android:textAlignment="center" />
 
-    <EditText
-        android:id="@+id/EditText_StartTime"
-        android:layout_width="match_parent"
-        android:layout_height="41dp"
-        android:layout_marginBottom="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginRight="8dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:clickable="true"
-        android:ems="10"
-        android:focusable="false"
-        android:hint="@string/AddEvent_StartTime"
-        android:inputType="textPersonName"
-        android:textAlignment="center" />
-
-    <EditText
-        android:id="@+id/EditText_EndTime"
-        android:layout_width="match_parent"
-        android:layout_height="41dp"
-        android:layout_marginBottom="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginRight="8dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:clickable="true"
-        android:ems="10"
-        android:focusable="false"
-        android:hint="@string/AddEvent_EndTime"
-        android:inputType="textPersonName"
-        android:textAlignment="center" />
+        <EditText
+            android:id="@+id/EditText_Date"
+            android:layout_width="match_parent"
+            android:layout_height="41dp"
+            android:layout_marginBottom="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginRight="8dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:clickable="true"
+            android:ems="10"
+            android:focusable="false"
+            android:hint="@string/AddEvent_Date"
+            android:inputType="textPersonName"
+            android:textAlignment="center" />
 
 
-    <EditText
-        android:id="@+id/EditText_Location"
-        android:layout_width="match_parent"
-        android:layout_height="41dp"
-        android:layout_marginBottom="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginRight="8dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:clickable="true"
-        android:ems="10"
-        android:focusable="false"
-        android:hint="@string/AddEvent_Location"
-        android:inputType="textPersonName"
-        android:textAlignment="center" />
+        <EditText
+            android:id="@+id/EditText_StartTime"
+            android:layout_width="match_parent"
+            android:layout_height="41dp"
+            android:layout_marginBottom="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginRight="8dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:clickable="true"
+            android:ems="10"
+            android:focusable="false"
+            android:hint="@string/AddEvent_StartTime"
+            android:inputType="textPersonName"
+            android:textAlignment="center" />
+
+        <EditText
+            android:id="@+id/EditText_EndTime"
+            android:layout_width="match_parent"
+            android:layout_height="41dp"
+            android:layout_marginBottom="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginRight="8dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:clickable="true"
+            android:ems="10"
+            android:focusable="false"
+            android:hint="@string/AddEvent_EndTime"
+            android:inputType="textPersonName"
+            android:textAlignment="center" />
+
+
+        <EditText
+            android:id="@+id/EditText_Location"
+            android:layout_width="match_parent"
+            android:layout_height="41dp"
+            android:layout_marginBottom="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginRight="8dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:clickable="true"
+            android:ems="10"
+            android:focusable="false"
+            android:hint="@string/AddEvent_Location"
+            android:inputType="textPersonName"
+            android:textAlignment="center" />
+
+        <EditText
+            android:id="@+id/EditText_LocationNickname"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginRight="8dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:ems="10"
+            android:hint="@string/AddEvent_title"
+            android:inputType="textPersonName"
+            android:textAlignment="center" />
+
+
+        <Spinner
+            android:id="@+id/Spinner_Category"
+            android:layout_width="match_parent"
+            android:layout_height="41dp"
+            android:background="@android:drawable/btn_dropdown"
+            android:spinnerMode="dropdown"/>
+
+        </LinearLayout>
+    </ScrollView>
 
 
 </LinearLayout>

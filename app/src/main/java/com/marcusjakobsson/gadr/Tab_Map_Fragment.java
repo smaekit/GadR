@@ -272,7 +272,6 @@ public class Tab_Map_Fragment extends Fragment {
                 if (mData.userData.get(i).getShareLocation()) {
                     LatLng latLng = new LatLng(mData.userData.get(i).getLatitude(), mData.userData.get(i).getLongitude());
                     if (mData.icon != null && mData.icon.size() > 0 && isFragmentUp) {
-
                         BitmapDescriptor markerIcon = getMarkerIconFromDrawable(convertToRoundDrawable(mData.icon.get(i)));
                         googleMap.addMarker(new MarkerOptions().position(latLng).title(mData.userData.get(i).getName()).snippet(mData.userData.get(i).getStatus()).icon(markerIcon)).showInfoWindow();
                     } else {
