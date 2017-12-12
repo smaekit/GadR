@@ -47,6 +47,10 @@
     <string name="Cat5">Party</string>
     <string name="Cat6">Pub</string>
     <string name="AddEvent_LocationNickname">Location nickname</string>
+    <string name="Refresh">Refreshing..</string>
+    <string name="default_notification_channel_id">1337</string>
+    <string name="default_notification_channel_name">newEvents</string>
+    <string name="play_services_message">You need to download Google Play Services in order to use this part of the application</string>
 
 
 </resources>

@@ -40,4 +40,5 @@
     <string name="Cat5">Fest</string>
     <string name="Cat6">Bar</string>
     <string name="AddEvent_LocationNickname">Plats-smeknamn</string>
+    <string name="Refresh">Uppdaterar..</string>
 </resources>
