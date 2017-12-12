@@ -261,7 +261,7 @@ public class Tab_Map_Fragment extends Fragment {
                             .position(new LatLng(mData.allEventData[i].getCustomLocation().getLatitude(), mData.allEventData[i].getCustomLocation().getLongitude()))
                             .title(mData.allEventData[i].getTitle())
                             .snippet(mData.allEventData[i].getStartTime() + " - " + mData.allEventData[i].getEndTime())
-                            .icon(BitmapDescriptorFactory.fromResource(R.drawable.beer)));
+                            .icon(BitmapDescriptorFactory.fromResource(Category.categoryIconIndex[mData.allEventData[i].getCategoryIndex()])));
             }
         }
     }
