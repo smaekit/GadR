@@ -1,8 +1,12 @@
 package com.marcusjakobsson.gadr;
 
 import android.annotation.SuppressLint;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
@@ -12,6 +16,9 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.AsyncTask;
 import android.os.Build;
+import android.os.Handler;
+import android.os.Looper;
+import android.os.Message;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
@@ -26,6 +33,7 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.support.v4.app.Fragment;
@@ -49,6 +57,8 @@ import com.facebook.GraphResponse;
 import com.facebook.HttpMethod;
 import com.facebook.Profile;
 import com.facebook.login.LoginManager;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
@@ -59,6 +69,8 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.messaging.FirebaseMessaging;
+import com.google.firebase.messaging.RemoteMessage;
 
 import org.json.JSONObject;
 
@@ -69,6 +81,7 @@ import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import static android.R.attr.name;
 import static android.R.attr.theme;
@@ -100,6 +113,18 @@ public class MenuTabbedView extends AppCompatActivity implements NavigationView.
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_tabbed_view);
+
+        GoogleApiAvailability api = GoogleApiAvailability.getInstance();
+        int code = api.isGooglePlayServicesAvailable(this);
+        if (code == ConnectionResult.SUCCESS) {
+            // Do Your Stuff Here
+        } else {
+            AlertDialog alertDialog =
+                    new AlertDialog.Builder(this, R.style.Theme_AppCompat_Dialog_Alert).setMessage(
+                            R.string.play_services_message)
+                            .create();
+            alertDialog.show();
+        }
 
         sectionsPageAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
 
@@ -186,8 +211,23 @@ public class MenuTabbedView extends AppCompatActivity implements NavigationView.
         });
 
 
+        if (activityReceiver != null) {
+            IntentFilter intentFilter = new  IntentFilter("ACTION_STRING_ACTIVITY");
+            registerReceiver(activityReceiver, intentFilter);
+        }
+
+
 
     }
+
+    private BroadcastReceiver activityReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            //TextView textview = (TextView) findViewById(R.id.textview);
+            Bundle bundle = intent.getBundleExtra("msg");
+            showSnackBar(bundle.getString("msgBody"));
+        }
+    };
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -443,6 +483,25 @@ public class MenuTabbedView extends AppCompatActivity implements NavigationView.
         mSnackbar.show();
     }
 
+    public void showSnackBar(String message)
+    {
+        // make snackbar
+        Snackbar mSnackbar = Snackbar.make(getCurrentFocus(), message, Snackbar.LENGTH_LONG);
+        // get snackbar view
+        View mView = mSnackbar.getView();
+        // get textview inside snackbar view
+        TextView mTextView = (TextView) mView.findViewById(android.support.design.R.id.snackbar_text);
+        mTextView.setTextColor(getResources().getColor(R.color.colorAccent,getTheme()));
+        mTextView.setTextSize(24);
+        // set text to center
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1)
+            mTextView.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
+        else
+            mTextView.setGravity(Gravity.CENTER_HORIZONTAL);
+        // show the snackbar
+        mSnackbar.show();
+    }
+
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
@@ -480,8 +539,27 @@ public class MenuTabbedView extends AppCompatActivity implements NavigationView.
 
 
         } else if (id == R.id.nav_manage) {
+//            FirebaseMessaging.getInstance().subscribeToTopic("news");
+//            Toast.makeText(this, "Notifications ON", Toast.LENGTH_SHORT).show();
+//            if (false)
+//            {
+//                FirebaseMessaging.getInstance().unsubscribeFromTopic("news");
+//                Toast.makeText(this, "Notifications OFF", Toast.LENGTH_SHORT).show();
+//
+//            }
+
 
         } else if (id == R.id.nav_share) {
+//            MyFirebaseMessagingService myFirebaseMessagingService = new MyFirebaseMessagingService();
+//            FirebaseMessaging fm = FirebaseMessaging.getInstance();
+//            String SENDER_ID = "21598535641";
+//            AtomicInteger msgId = new AtomicInteger();
+//            msgId.incrementAndGet();
+//            fm.send(new RemoteMessage.Builder(SENDER_ID + "@gcm.googleapis.com")
+//                    .setMessageId(msgId.toString())
+//                    .addData("my_message", "Hello World")
+//                    .addData("my_action","SAY_HELLO")
+//                    .build());
 
         } else if (id == R.id.nav_send) {
 
@@ -499,6 +577,22 @@ public class MenuTabbedView extends AppCompatActivity implements NavigationView.
     @Override
     protected void onDestroy() {
         super.onDestroy();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        GoogleApiAvailability api = GoogleApiAvailability.getInstance();
+        int code = api.isGooglePlayServicesAvailable(this);
+        if (code == ConnectionResult.SUCCESS) {
+            // Do Your Stuff Here
+        } else {
+            AlertDialog alertDialog =
+                    new AlertDialog.Builder(this, R.style.Theme_AppCompat_Dialog_Alert).setMessage(
+                            "You need to download Google Play Services in order to use this part of the application")
+                            .create();
+            alertDialog.show();
+        }
     }
 
     //Async task to set user Profileimage from url in drawer menu

@@ -41,6 +41,9 @@
     <string name="add_widget">Add widget</string>
     <string name="change_your_status">Change your Status</string>
     <string name="Refresh">Refreshing..</string>
+    <string name="default_notification_channel_id">1337</string>
+    <string name="default_notification_channel_name">newEvents</string>
+    <string name="play_services_message">You need to download Google Play Services in order to use this part of the application</string>
 
 
 </resources>
