@@ -6,7 +6,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="com.marcusjakobsson.gadr.DetailEventActivity"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:background="@color/colorPrimary">
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -73,11 +74,13 @@
             android:layout_centerVertical="true"
             android:text="Datum" />
     </RelativeLayout>
-    <RelativeLayout
+    <LinearLayout
+        android:layout_marginTop="20dp"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_weight="1.1"
-        android:background="@color/colorPrimary">
+        android:background="@color/colorPrimary"
+        android:orientation="vertical">
 
         <TextView
             android:id="@+id/descriptionTitle_TextView"
@@ -86,14 +89,10 @@
             android:layout_centerHorizontal="true"
             android:layout_centerVertical="true"
             android:text="@string/AddEvent_Description"
-            android:textColor="@color/colorAccent" />
-
-    </RelativeLayout>
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_weight="1"
-        android:background="@color/colorPrimary">
+            android:textAllCaps="false"
+            android:textColor="@color/colorAccent"
+            android:textStyle="bold"
+            android:layout_gravity="center"/>
 
         <TextView
             android:id="@+id/description_TextView"
@@ -101,8 +100,9 @@
             android:layout_height="wrap_content"
             android:text="TextView"
             android:layout_centerVertical="true"
-            android:layout_centerHorizontal="true" />
-    </RelativeLayout>
+            android:layout_centerHorizontal="true"
+            android:layout_gravity="center"/>
+    </LinearLayout>
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"

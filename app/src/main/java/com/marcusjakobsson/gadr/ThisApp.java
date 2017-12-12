@@ -25,8 +25,16 @@ public class ThisApp extends Application {
         return allEvents;
     }
 
+    public EventData getAllEventByIndex(int position) {
+        return allEvents[position];
+    }
+
     public EventData[] getMyEvents() {
         return myEvents;
+    }
+
+    public EventData getMyEventByIndex(int position) {
+        return myEvents[position];
     }
 
 

@@ -1,5 +1,6 @@
 package com.marcusjakobsson.gadr;
 
+import android.content.Intent;
 import android.database.DataSetObserver;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -8,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Adapter;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListAdapter;
 import android.widget.ListView;
@@ -27,9 +29,6 @@ public class Tab_All_Events_Fragment extends Fragment {
     EventData[] allEventData;
     CustomListViewItem[] listData;
 
-    String[] dummyData = {"Andreas", "Bengt" , "Carl" , "David" , "Erik", "Andreas", "Bengt" , "Carl" , "David" , "Andreas", "Bengt" , "Carl" , "David" , "Andreas", "Bengt" , "Carl" , "David" , "Andreas", "Bengt" , "Carl" , "David" , "Andreas", "Bengt" , "Carl" , "David" };
-
-
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -39,6 +38,17 @@ public class Tab_All_Events_Fragment extends Fragment {
         loadDefault();
 
         reloadListData();
+
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position,long arg3) {
+                Intent intent = new Intent(getContext(),DetailEventActivity.class);
+                intent.putExtra(DetailEventActivity.EXTRA_EVENT_INDEX, position);
+                startActivity(intent);
+
+            }
+        });
+
         return view;
     }
 
