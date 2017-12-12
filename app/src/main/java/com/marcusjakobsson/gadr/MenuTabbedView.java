@@ -483,9 +483,7 @@ public class MenuTabbedView extends AppCompatActivity implements NavigationView.
                 showSnackBar(R.string.Refresh);
             }
             if (viewPager.getCurrentItem() == 1) {
-                tabAllEventsFragment.reloadListData();
-                showSnackBar(R.string.Refresh);
-                //Toast.makeText(getApplicationContext(),"All event",Toast.LENGTH_LONG).show();
+                tabAllEventsFragment.reloadEventData();
             }
             if (viewPager.getCurrentItem() == 2){
                 Toast.makeText(getApplicationContext(),"My event",Toast.LENGTH_LONG).show();
