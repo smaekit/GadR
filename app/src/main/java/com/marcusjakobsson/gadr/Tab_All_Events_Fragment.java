@@ -34,20 +34,10 @@ public class Tab_All_Events_Fragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_tab_all_events,container,false);
 
-        listData = new CustomListViewItem[10];
-
-        for (int i = 0; i < listData.length; i++) {
-            listData[i] = new CustomListViewItem(dummyData[i], "00:00 - 01:00", "JTH", 0);
-        }
-
         listView = (ListView) view.findViewById(R.id.ListView_AllEvents);
-
-        listViewAdapter = new CustomListViewAdapter(getActivity(), listData);
-        listView.setAdapter(listViewAdapter);
-
+        loadDefault();
 
         reloadListData();
-
         return view;
     }
 
@@ -63,12 +53,18 @@ public class Tab_All_Events_Fragment extends Fragment {
             allEventData = newAllEventData;
 
             for (int i = 0; i < listData.length; i++) {
-                listData[i] = new CustomListViewItem(allEventData[i].getTitle(), allEventData[i].getStartTime() + " - " + allEventData[i].getEndTime(), allEventData[i].getLocationNickname(), allEventData[i].getCategoryIndex()); //TODO: set func for getting cat-index
+                listData[i] = new CustomListViewItem(allEventData[i].getTitle(), allEventData[i].getStartTime() + " - " + allEventData[i].getEndTime(), allEventData[i].getLocationNickname(), allEventData[i].getCategoryIndex());
             }
 
             listViewAdapter = new CustomListViewAdapter(getActivity(), listData);
             listView.setAdapter(listViewAdapter);
         }
+    }
+
+    private void loadDefault() {
+        CustomListViewItem[] mListData = {new CustomListViewItem("Inga event", "", "",0) };
+        listViewAdapter = new CustomListViewAdapter(getActivity(), mListData);
+        listView.setAdapter(listViewAdapter);
     }
 
 }
