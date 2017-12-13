@@ -8,6 +8,7 @@ import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -65,9 +66,11 @@ public class MainActivity extends AppCompatActivity {
             public void onSuccess(LoginResult loginResult) {
                 // App code
                 Log.i("FB:", "Callback success!");
-                Toast.makeText(MainActivity.this, "Success", Toast.LENGTH_SHORT).show();
+                //Toast.makeText(MainActivity.this, "Success", Toast.LENGTH_SHORT).show();
                 Log.i("FB", loginResult.getAccessToken().getToken());
                 handleFacebookAccessToken(loginResult.getAccessToken());
+
+                loginButton.setVisibility(View.INVISIBLE);
             }
 
             @Override
@@ -113,6 +116,7 @@ public class MainActivity extends AppCompatActivity {
         // Check if user is signed in (non-null) and update UI accordingly.
         FirebaseUser currentUser = mAuth.getCurrentUser();
         updateUI(currentUser);
+        loginButton.setVisibility(View.VISIBLE);
     }
 
 

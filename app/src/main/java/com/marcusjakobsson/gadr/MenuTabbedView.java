@@ -33,6 +33,7 @@ import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -135,8 +136,6 @@ public class MenuTabbedView extends AppCompatActivity implements NavigationView.
             alertDialog.show();
         }
 
-        Toast.makeText(getApplicationContext(), "MACKE!!!!", Toast.LENGTH_SHORT);
-
         sectionsPageAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
 
 
@@ -155,12 +154,14 @@ public class MenuTabbedView extends AppCompatActivity implements NavigationView.
             tabMyEventsFragment = new Tab_My_Events_Fragment();
         }
 
-
         viewPager = (ViewPager) findViewById(R.id.container);
         viewPager.setOffscreenPageLimit(3);  //How many screens before reload
         tabLayout = (TabLayout) findViewById(R.id.tabs);
         setupViewPager(viewPager);
         tabLayout.setupWithViewPager(viewPager);
+
+
+
 
 
         // If device is running SDK < 23
@@ -222,8 +223,15 @@ public class MenuTabbedView extends AppCompatActivity implements NavigationView.
                 public void onSuccess(List<UserData> result) {
 
                     setupCurrentUser(result);
-                    reloadEventData();
+                    //reloadEventData((ThisApp)getApplication(), new Handler());
 
+                }
+            });
+
+            reloadEventData((ThisApp)getApplication(), new Handler(getMainLooper()) {
+                @Override
+                public void handleMessage(Message msg) {
+                    reloadFragmentData();
                 }
             });
         }else {
@@ -273,7 +281,12 @@ public class MenuTabbedView extends AppCompatActivity implements NavigationView.
                 Boolean b = data.getBooleanExtra(AddEventActivity.IntentExtra_DidAddEvent, false);
                 if (b) {
                     Log.i(TAG, "True");
-                    reloadEventData();
+                    reloadEventData((ThisApp)getApplication(), new Handler(getMainLooper()) {
+                        @Override
+                        public void handleMessage(Message msg) {
+                            reloadFragmentData();
+                        }
+                    });
                 }
                 else { Log.i(TAG, "False"); }
             } else if (requestCode == CreateStatus.REQUEST_CODE_DidAddStatus) {
@@ -282,7 +295,12 @@ public class MenuTabbedView extends AppCompatActivity implements NavigationView.
                     Log.i(TAG, "True");
                     mData.userStatus = data.getStringExtra(CreateStatus.IntentExtra_UserStatus);
 
-                    reloadEventData();
+                    reloadEventData((ThisApp)getApplication(), new Handler(getMainLooper()) {
+                        @Override
+                        public void handleMessage(Message msg) {
+                            reloadFragmentData();
+                        }
+                    });
                 }
                 else { Log.i(TAG, "False"); }
             }
@@ -290,7 +308,7 @@ public class MenuTabbedView extends AppCompatActivity implements NavigationView.
         }
     }
 
-    private void reloadEventData() {
+    public static void reloadEventData(final ThisApp thisApp, final Handler handler) {
         (new FirebaseConnection()).getEvents(new FirebaseConnection.EventsCallback(){
             @Override
             public void onSuccess(List<EventData> result,List<String> keys){
@@ -312,12 +330,15 @@ public class MenuTabbedView extends AppCompatActivity implements NavigationView.
                     }
                 }
 
-                ((ThisApp) getApplication()).setAllEvents((EventData[]) allEventData.toArray(new EventData[allEventData.size()]));
-                ((ThisApp) getApplication()).setMyEvents((EventData[]) myEventData.toArray(new EventData[myEventData.size()]));
-                ((ThisApp) getApplication()).setAllEventsKeys((String[]) allEventDataKeys.toArray(new String[allEventDataKeys.size()]));
-                ((ThisApp) getApplication()).setMyEventsKeys((String[]) myEventDataKeys.toArray(new String[myEventDataKeys.size()]));
+                thisApp.setAllEvents((EventData[]) allEventData.toArray(new EventData[allEventData.size()]));
+                thisApp.setMyEvents((EventData[]) myEventData.toArray(new EventData[myEventData.size()]));
+                thisApp.setAllEventsKeys(allEventDataKeys.toArray(new String[allEventDataKeys.size()]));
+                thisApp.setMyEventsKeys(myEventDataKeys.toArray(new String[myEventDataKeys.size()]));
 
-                reloadFragmentData();
+
+
+                handler.dispatchMessage(new Message());
+                //reloadFragmentData();
             }
         });
     }
@@ -340,7 +361,8 @@ public class MenuTabbedView extends AppCompatActivity implements NavigationView.
 
         //Todo reload current fragmet?
         setUserStatus();
-        //tabAllEventsFragment.reloadListData();
+        tabAllEventsFragment.reloadListData();
+        tabMyEventsFragment.reloadListData();
         //tabMapFragment.reloadUserData();
         //tabMapFragment.reloadMapMarkers();
     }
@@ -484,18 +506,25 @@ public class MenuTabbedView extends AppCompatActivity implements NavigationView.
         //noinspection SimplifiableIfStatement
         if (id == R.id.refresh_button) {
 
+            showSnackBar(R.string.Refresh);
+
 
             if (viewPager.getCurrentItem() == 0) {
                 tabMapFragment.refreshUserLocationData();
-                showSnackBar(R.string.Refresh);
             }
-            if (viewPager.getCurrentItem() == 1) {
-                tabAllEventsFragment.reloadEventData();
-            }
-            if (viewPager.getCurrentItem() == 2){
-                tabMyEventsFragment.reloadListData();
-                showSnackBar(R.string.Refresh);
-            }
+
+            reloadEventData((ThisApp)getApplication(), new Handler(getMainLooper()) {
+                @Override
+                public void handleMessage(Message msg) {
+                    if (viewPager.getCurrentItem() == 1) {
+                        tabAllEventsFragment.reloadListData();
+                    }
+                    if (viewPager.getCurrentItem() == 2){
+                        tabMyEventsFragment.reloadListData();
+                    }
+                }
+            });
+
 
             return true;
         }

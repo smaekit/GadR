@@ -1,7 +1,12 @@
 package com.marcusjakobsson.gadr;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
+import android.os.Message;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -29,7 +34,7 @@ public class Tab_My_Events_Fragment extends Fragment {
 
     EventData[] myEventData;
     CustomListViewItem[] listData;
-    private SwipeRefreshLayout swipeContainer;
+    public SwipeRefreshLayout swipeContainer;
 
     boolean listHasData = false;
 
@@ -61,7 +66,14 @@ public class Tab_My_Events_Fragment extends Fragment {
             @Override
             public void onRefresh() {
 
-                reloadEventData();
+                MenuTabbedView.reloadEventData((ThisApp)getActivity().getApplication(), new Handler(Looper.getMainLooper()) {
+                    @Override
+                    public void handleMessage(Message msg) {
+                        reloadListData();
+
+                        swipeContainer.setRefreshing(false);
+                    }
+                });
             }
         });
         // Configure the refreshing colors
@@ -71,40 +83,6 @@ public class Tab_My_Events_Fragment extends Fragment {
                 android.R.color.holo_red_light);
 
         return view;
-    }
-
-    public void reloadEventData() {
-        (new FirebaseConnection()).getEvents(new FirebaseConnection.EventsCallback(){
-            @Override
-            public void onSuccess(List<EventData> result, List<String> keys){
-                List<EventData> allEventData = new ArrayList<EventData>();
-                List<EventData> myEventData = new ArrayList<EventData>();
-                List<String> allEventDataKeys = new ArrayList<>();
-                List<String> myEventDataKeys = new ArrayList<>();
-
-                for (int i = 0; i < result.size(); i++) {
-                    if(result.get(i).getCreatorID().equals(Profile.getCurrentProfile().getId())) {
-                        myEventData.add(result.get(i));
-                        myEventDataKeys.add(keys.get(i));
-                    }
-                    else {
-                        allEventData.add(result.get(i));
-                        allEventDataKeys.add(keys.get(i));
-                    }
-                }
-
-                ((ThisApp) getActivity().getApplication()).setAllEvents((EventData[]) allEventData.toArray(new EventData[allEventData.size()]));
-                ((ThisApp) getActivity().getApplication()).setMyEvents((EventData[]) myEventData.toArray(new EventData[myEventData.size()]));
-                ((ThisApp) getActivity().getApplication()).setAllEventsKeys((String[]) allEventDataKeys.toArray(new String[allEventDataKeys.size()]));
-                ((ThisApp) getActivity().getApplication()).setMyEventsKeys((String[]) myEventDataKeys.toArray(new String[myEventDataKeys.size()]));
-
-
-                reloadListData();
-                // Now we call setRefreshing(false) to signal refresh has finished
-                swipeContainer.setRefreshing(false);
-
-            }
-        });
     }
 
     public void reloadListData() {
