@@ -22,7 +22,6 @@ public class DetailEventActivity extends AppCompatActivity {
     TextView date_textView;
     TextView description_textView;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

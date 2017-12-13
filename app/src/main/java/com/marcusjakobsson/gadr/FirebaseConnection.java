@@ -90,12 +90,10 @@ public class FirebaseConnection {
 
                     if (userData.get(i).getFbID().equals(user.getUid()) )
                     {
-                        Log.i(TAG,"User found in database");
                         callback.onSuccess(true);
                         return;
                     }
                 }
-                Log.i(TAG,"No user was found in database");
                 callback.onSuccess(false);
 
 
@@ -103,7 +101,7 @@ public class FirebaseConnection {
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
-                Log.w(TAG, "getUsers:onCancelled", databaseError.toException());
+                //TODO: Handle error
             }
         };
         ref.addListenerForSingleValueEvent(valueEventListener);
@@ -139,7 +137,7 @@ public class FirebaseConnection {
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
-                Log.w(TAG, "getUsers:onCancelled", databaseError.toException());
+                //TODO: Handle error
             }
         };
         ref.addListenerForSingleValueEvent(valueEventListener);
@@ -163,7 +161,7 @@ public class FirebaseConnection {
             }
             @Override
             public void onCancelled(DatabaseError databaseError) {
-                Log.w(TAG, "getEvents:onCancelled", databaseError.toException());
+                //TODO: Handle error
             }
         };
         ref.addListenerForSingleValueEvent(valueEventListener);
@@ -186,7 +184,7 @@ public class FirebaseConnection {
             }
             @Override
             public void onCancelled(DatabaseError databaseError) {
-                Log.w(TAG, "getStatus:onCancelled", databaseError.toException());
+                //TODO: Handle error
             }
         };
         ref.addListenerForSingleValueEvent(valueEventListener);
@@ -214,7 +212,6 @@ public class FirebaseConnection {
 
     public void AddStatus(String status) {
         FirebaseUser currentUser = mAuth.getCurrentUser();
-        Log.i("heajda",currentUser.getUid());
         DatabaseReference ref = mRef.child(users_parent).child(currentUser.getUid()).child(users_status);
         ref.setValue(status);
     }

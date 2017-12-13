@@ -65,9 +65,6 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onSuccess(LoginResult loginResult) {
                 // App code
-                Log.i("FB:", "Callback success!");
-                //Toast.makeText(MainActivity.this, "Success", Toast.LENGTH_SHORT).show();
-                Log.i("FB", loginResult.getAccessToken().getToken());
                 handleFacebookAccessToken(loginResult.getAccessToken());
 
                 loginButton.setVisibility(View.INVISIBLE);
@@ -76,7 +73,6 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onCancel() {
                 // App code
-                Log.i("FB:", "Callback cancel!");
                 Toast.makeText(MainActivity.this, "Cancel", Toast.LENGTH_SHORT).show();
                 updateUI(null);
 
@@ -85,7 +81,6 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onError(FacebookException exception) {
                 // App code
-                Log.i("FB:", "Callback ERROR!" + exception.toString());
                 Toast.makeText(MainActivity.this, "Error", Toast.LENGTH_SHORT).show();
                 updateUI(null);
 
@@ -130,8 +125,6 @@ public class MainActivity extends AppCompatActivity {
     // [START auth_with_facebook]
     private void handleFacebookAccessToken(AccessToken token)
     {
-        Log.d(TAG, "handleFacebookAccessToken:" + token);
-
         AuthCredential credential = FacebookAuthProvider.getCredential(token.getToken());
         mAuth.signInWithCredential(credential)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
@@ -140,7 +133,6 @@ public class MainActivity extends AppCompatActivity {
                         if (task.isSuccessful())
                         {
                             // Sign in success, update UI with the signed-in user's information
-                            Log.d(TAG, "signInWithCredential:success");
                             final FirebaseUser user = mAuth.getCurrentUser();
                             if (user != null)
                             {
@@ -175,7 +167,6 @@ public class MainActivity extends AppCompatActivity {
 
                         } else {
                             // If sign in fails, display a message to the user.
-                            Log.w(TAG, "signInWithCredential:failure", task.getException());
                             Toast.makeText(MainActivity.this, "Authentication failed.",
                                     Toast.LENGTH_SHORT).show();
                             updateUI(null);
@@ -232,16 +223,14 @@ public class MainActivity extends AppCompatActivity {
                         try {
 
                             JSONObject data = response.getJSONObject();
-                            Log.i("response", response.toString());
+
                             String profilePicUrl = "";
                             String name = "";
 
                             profilePicUrl = data.getJSONObject("picture").getJSONObject("data").getString("url");
-                            Log.i("LargeUserPictureURl", profilePicUrl);
                             user.setImgURLLarge(profilePicUrl);
 
                             name = data.getString("name");
-                            Log.i("Name", name);
                             user.setName(name);
 
 
@@ -263,10 +252,8 @@ public class MainActivity extends AppCompatActivity {
                                 try {
 
                                     JSONObject data = response.getJSONObject();
-                                    Log.i("response", response.toString());
 
                                     String smallProfilePicUrl = data.getJSONObject("picture").getJSONObject("data").getString("url");
-                                    Log.i("SmallUserPictureURl", smallProfilePicUrl);
                                     user.setImgURLSmall(smallProfilePicUrl);
 
                                 } catch (Exception e) {

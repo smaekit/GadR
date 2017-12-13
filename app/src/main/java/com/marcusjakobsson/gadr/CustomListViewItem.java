@@ -11,7 +11,6 @@ public class CustomListViewItem {
     private String place;
     private int categoryIndex;
 
-
     public CustomListViewItem() {
         this.title = "";
         this.time = "";

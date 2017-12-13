@@ -18,10 +18,6 @@ public class RetainedMenuTabbedFragmet extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-
-
-
-
         //retain this fragment
         setRetainInstance(true);
     }

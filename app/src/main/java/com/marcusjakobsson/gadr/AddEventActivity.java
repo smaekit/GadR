@@ -6,14 +6,10 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
-import android.graphics.drawable.Drawable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.text.format.DateUtils;
-import android.util.EventLogTags;
-import android.util.Log;
-import android.util.TimeUtils;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
@@ -24,7 +20,6 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.TimePicker;
 
-import com.facebook.AccessToken;
 import com.facebook.Profile;
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
 import com.google.android.gms.common.GooglePlayServicesRepairableException;
@@ -36,8 +31,6 @@ import java.util.Locale;
 import com.google.android.gms.common.api.Status;
 import com.google.android.gms.location.places.*;
 import com.google.android.gms.location.places.ui.PlaceAutocomplete;
-import com.google.android.gms.location.places.ui.PlaceAutocompleteFragment;
-import com.google.android.gms.location.places.ui.PlaceSelectionListener;
 
 public class AddEventActivity extends AppCompatActivity {
 
@@ -83,7 +76,6 @@ public class AddEventActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_event);
 
-
         view_title_EditText = (TextView) findViewById(R.id.EditText_Title_For_View);
 
         title_EditText = (EditText) findViewById(R.id.EditText_Title);
@@ -94,7 +86,6 @@ public class AddEventActivity extends AppCompatActivity {
         location_EditText = (EditText) findViewById(R.id.EditText_Location);
         locationNickname_EditText = (EditText) findViewById(R.id.EditText_LocationNickname);
         category_Spinner = (Spinner) findViewById(R.id.Spinner_Category);
-
 
         resetView();
 
@@ -193,7 +184,6 @@ public class AddEventActivity extends AppCompatActivity {
             }
         });
 
-
         location_EditText.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -201,7 +191,6 @@ public class AddEventActivity extends AppCompatActivity {
                 openGooglePlaceSearch();
             }
         });
-
 
         String[] items = new String[Category.categoriesIndex.length];
         for (int i = 0; i < items.length; i++) {
@@ -236,8 +225,6 @@ public class AddEventActivity extends AppCompatActivity {
         customLocation = new CustomLocation(eventData.getCustomLocation().getLatitude(), eventData.getCustomLocation().getLongitude());
     }
 
-
-
     private void openGooglePlaceSearch() {
         try {
             Intent intent =
@@ -245,9 +232,11 @@ public class AddEventActivity extends AppCompatActivity {
                             .build(this);
             startActivityForResult(intent, PLACE_AUTOCOMPLETE_REQUEST_CODE);
         } catch (GooglePlayServicesRepairableException e) {
-            // TODO: Handle the error.
+            e.printStackTrace();
+            //TODO: Handle error
         } catch (GooglePlayServicesNotAvailableException e) {
-            // TODO: Handle the error.
+            e.printStackTrace();
+            //TODO: Handle error
         }
     }
 
@@ -400,7 +389,6 @@ public class AddEventActivity extends AppCompatActivity {
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat(EventData.TIME_FORMAT_STRING);
 
         if (DateUtils.isToday(cal.getTimeInMillis())) {
-            Log.i(TAG, "Is today!");
             if (timesAreInvalid(simpleDateFormat.format(Calendar.getInstance().getTime()), editText.getText().toString())) {
                 return true;
             }
@@ -442,16 +430,12 @@ public class AddEventActivity extends AppCompatActivity {
             if (resultCode == RESULT_OK) {
                 Place place = PlaceAutocomplete.getPlace(this, data);
 
-                Log.i(TAG, "Place: " + place.getName());
-                Log.i(TAG, place.getLatLng().toString() + " " + place.getAddress());
-
                 location_EditText.setText(place.getAddress());
                 customLocation.setValues(place.getLatLng().latitude, place.getLatLng().longitude);
 
             } else if (resultCode == PlaceAutocomplete.RESULT_ERROR) {
                 Status status = PlaceAutocomplete.getStatus(this, data);
                 // TODO: Handle the error.
-                Log.i(TAG, status.getStatusMessage());
 
             } else if (resultCode == RESULT_CANCELED) {
                 // The user canceled the operation.

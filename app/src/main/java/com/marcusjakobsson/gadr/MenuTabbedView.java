@@ -97,19 +97,14 @@ public class MenuTabbedView extends AppCompatActivity implements NavigationView.
     private static final String TAG = "MenuTabbedView";
 
     private SectionsPagerAdapter sectionsPageAdapter;
-
     private ViewPager viewPager;
-
     private TabLayout tabLayout;
-
 
     GetBitmapFromURLAsync getBitmapFromURLAsync;
     private static final String TAG_RETAINED_MENU_FRAGMENT = "RetainedMenuTabbedFragment";
-
     private RetainedMenuTabbedFragmet mData;
 
     TextView userStatus_TextView;
-
 
     String userStatus;
 
@@ -117,7 +112,6 @@ public class MenuTabbedView extends AppCompatActivity implements NavigationView.
     Tab_Map_Fragment tabMapFragment;
     Tab_All_Events_Fragment tabAllEventsFragment;
     Tab_My_Events_Fragment tabMyEventsFragment;
-
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
