@@ -191,6 +191,7 @@ public class MenuTabbedView extends AppCompatActivity implements NavigationView.
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(getApplicationContext(), AddEventActivity.class);
+                intent.getBooleanExtra(AddEventActivity.IntentExtra_willAddEvent, true);
                 startActivityForResult(intent, AddEventActivity.REQUEST_CODE_DidAddEvent);
             }
         });
@@ -278,9 +279,7 @@ public class MenuTabbedView extends AppCompatActivity implements NavigationView.
 
         if (resultCode == RESULT_OK) {
             if (requestCode == AddEventActivity.REQUEST_CODE_DidAddEvent) {
-                Boolean b = data.getBooleanExtra(AddEventActivity.IntentExtra_DidAddEvent, false);
-                if (b) {
-                    Log.i(TAG, "True");
+                if (data.getBooleanExtra(AddEventActivity.IntentExtra_DidAddEvent, false)) {
                     reloadEventData((ThisApp)getApplication(), new Handler(getMainLooper()) {
                         @Override
                         public void handleMessage(Message msg) {
@@ -288,17 +287,16 @@ public class MenuTabbedView extends AppCompatActivity implements NavigationView.
                         }
                     });
                 }
-                else { Log.i(TAG, "False"); }
+
             } else if (requestCode == CreateStatus.REQUEST_CODE_DidAddStatus) {
-                Boolean b = data.getBooleanExtra(CreateStatus.IntentExtra_DidAddStatus, false);
-                if (b) {
-                    Log.i(TAG, "True");
+                if (data.getBooleanExtra(CreateStatus.IntentExtra_DidAddStatus, false)) {
                     mData.userStatus = data.getStringExtra(CreateStatus.IntentExtra_UserStatus);
 
                     reloadEventData((ThisApp)getApplication(), new Handler(getMainLooper()) {
                         @Override
                         public void handleMessage(Message msg) {
-                            reloadFragmentData();
+                            tabMapFragment.reloadUserData();
+                            tabMapFragment.reloadMapMarkers();
                         }
                     });
                 }

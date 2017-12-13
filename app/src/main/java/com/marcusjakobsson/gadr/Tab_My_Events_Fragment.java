@@ -23,6 +23,8 @@ import com.facebook.Profile;
 import java.util.ArrayList;
 import java.util.List;
 
+import static android.app.Activity.RESULT_OK;
+
 /**
  * Created by carlbratt on 2017-10-30.
  */
@@ -54,7 +56,8 @@ public class Tab_My_Events_Fragment extends Fragment {
                 if (listHasData) {
                     Intent intent = new Intent(getContext(), AddEventActivity.class);
                     intent.putExtra(AddEventActivity.EXTRA_EVENT_INDEX, position);
-                    startActivity(intent);
+                    intent.putExtra(AddEventActivity.IntentExtra_willEditEvent, true);
+                    startActivityForResult(intent, AddEventActivity.REQUEST_CODE_DidEditEvent);
                 }
 
             }
@@ -115,5 +118,23 @@ public class Tab_My_Events_Fragment extends Fragment {
         listView.setAdapter(listViewAdapter);
 
         listHasData = false;
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (resultCode == RESULT_OK) {
+            if (requestCode == AddEventActivity.REQUEST_CODE_DidEditEvent) {
+                if(data.getBooleanExtra(AddEventActivity.IntentExtra_DidEditEvent, false)){
+                    MenuTabbedView.reloadEventData((ThisApp) getActivity().getApplication(), new Handler(Looper.getMainLooper()) {
+                        @Override
+                        public void handleMessage(Message msg) {
+                            reloadListData();
+                        }
+                    });
+                }
+            }
+        }
     }
 }

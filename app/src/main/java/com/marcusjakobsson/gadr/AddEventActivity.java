@@ -21,6 +21,7 @@ import android.widget.ArrayAdapter;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.TimePicker;
 
 import com.facebook.AccessToken;
@@ -45,9 +46,17 @@ public class AddEventActivity extends AppCompatActivity {
     public static final String EXTRA_EVENT_INDEX = "event_index";
 
     public static final int REQUEST_CODE_DidAddEvent = 1;
+    public static final int REQUEST_CODE_DidEditEvent = 2;
+
+    public static final String IntentExtra_willAddEvent = "willAddEvent";
+    public static final String IntentExtra_willEditEvent = "willEditEvent";
+
     public static final String IntentExtra_DidAddEvent = "didAddEvent";
+    public static final String IntentExtra_DidEditEvent = "didEditEvent";
 
     public static final int PLACE_AUTOCOMPLETE_REQUEST_CODE = 5;
+
+    TextView view_title_EditText;
 
     EditText title_EditText;
     EditText description_EditText;
@@ -74,6 +83,9 @@ public class AddEventActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_event);
 
+
+        view_title_EditText = (TextView) findViewById(R.id.EditText_Title_For_View);
+
         title_EditText = (EditText) findViewById(R.id.EditText_Title);
         description_EditText = (EditText) findViewById(R.id.EditText_Description);
         date_EditText = (EditText) findViewById(R.id.EditText_Date);
@@ -83,6 +95,8 @@ public class AddEventActivity extends AppCompatActivity {
         locationNickname_EditText = (EditText) findViewById(R.id.EditText_LocationNickname);
         category_Spinner = (Spinner) findViewById(R.id.Spinner_Category);
 
+
+        resetView();
 
         calendar = Calendar.getInstance();
         endCalendar = Calendar.getInstance();
@@ -198,9 +212,10 @@ public class AddEventActivity extends AppCompatActivity {
         category_Spinner.setAdapter(adapter);
 
         Intent intent = getIntent();
-        if (intent != null) {
+        if (intent != null && intent.getBooleanExtra(IntentExtra_willEditEvent, false)) {
             EventData eventData = ((ThisApp) getApplication()).getMyEventByIndex(getIntent().getIntExtra(EXTRA_EVENT_INDEX, 0) );
             currentKey = ((ThisApp) getApplication()).getMyEventKeyByIndex(getIntent().getIntExtra(EXTRA_EVENT_INDEX, 0) );
+            view_title_EditText.setText(R.string.edit_eventLabel);
             setupViewByEventData(eventData);
             isEditing = true;
         }
@@ -293,16 +308,16 @@ public class AddEventActivity extends AppCompatActivity {
             FirebaseConnection firebaseConnection = new FirebaseConnection();
             if (!isEditing) {
                 firebaseConnection.AddEvent(eventData);
+                Intent intent = new Intent();
+                intent.putExtra(IntentExtra_DidAddEvent, true);
+                setResult(RESULT_OK, intent);
             }
             else {
                 firebaseConnection.EditEvent(eventData,currentKey);
+                Intent intent = new Intent();
+                intent.putExtra(IntentExtra_DidEditEvent, true);
+                setResult(RESULT_OK, intent);
             }
-
-            Log.i(TAG,eventData.toString());
-
-            Intent intent = new Intent();
-            intent.putExtra(IntentExtra_DidAddEvent, true);
-            setResult(RESULT_OK, intent);
             finish();
         }
     }
@@ -408,6 +423,18 @@ public class AddEventActivity extends AppCompatActivity {
             InputMethodManager inputMethodManager = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
             inputMethodManager.hideSoftInputFromWindow(view.getWindowToken(), 0);
         }
+    }
+
+    private void resetView(){
+        view_title_EditText.setText(R.string.create_eventLabel);
+        title_EditText.setText("");
+        description_EditText.setText("");
+        date_EditText.setText("");
+        startTime_EditText.setText("");
+        endTime_EditText.setText("");
+        location_EditText.setText("");
+        locationNickname_EditText.setText("");
+        category_Spinner.setSelection(0);
     }
 
     @Override

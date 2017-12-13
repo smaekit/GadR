@@ -38,7 +38,7 @@
             app:layout_constraintTop_toTopOf="@+id/Button_AddEvent" />
 
         <TextView
-            android:id="@+id/textView3"
+            android:id="@+id/EditText_Title_For_View"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="80dp"

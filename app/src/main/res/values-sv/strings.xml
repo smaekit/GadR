@@ -41,4 +41,5 @@
     <string name="Cat6">Bar</string>
     <string name="AddEvent_LocationNickname">Plats-smeknamn</string>
     <string name="Refresh">Uppdaterar..</string>
+    <string name="edit_eventLabel">Redigera event</string>
 </resources>
