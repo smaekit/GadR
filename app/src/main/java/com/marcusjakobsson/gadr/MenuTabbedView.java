@@ -639,6 +639,9 @@ public class MenuTabbedView extends AppCompatActivity implements NavigationView.
         if(getBitmapFromURLAsync != null){
             getBitmapFromURLAsync.cancel(true);
         }
+        if (activityReceiver != null) {
+            unregisterReceiver(activityReceiver);
+        }
         super.onDestroy();
     }
 
