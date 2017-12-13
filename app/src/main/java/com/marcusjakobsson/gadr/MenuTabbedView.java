@@ -135,6 +135,8 @@ public class MenuTabbedView extends AppCompatActivity implements NavigationView.
             alertDialog.show();
         }
 
+        Toast.makeText(getApplicationContext(), "MACKE!!!!", Toast.LENGTH_SHORT);
+
         sectionsPageAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
 
 
@@ -711,7 +713,6 @@ public class MenuTabbedView extends AppCompatActivity implements NavigationView.
             mData.drawable = drawable;
             ImageView imageView = (ImageView)findViewById(R.id.userProfilePicture);
             imageView.setImageDrawable(drawable);
-
         }
     }
 
