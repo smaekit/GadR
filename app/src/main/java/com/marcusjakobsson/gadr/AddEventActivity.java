@@ -333,7 +333,6 @@ public class AddEventActivity extends AppCompatActivity {
 
         //Check if input are empty or invalid.
 
-
         boolean fieldsOK = true;
 
         if (fieldIsEmpty(title_EditText)) { fieldsOK = false; }
