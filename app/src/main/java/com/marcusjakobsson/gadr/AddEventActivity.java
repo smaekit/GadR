@@ -22,6 +22,7 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TimePicker;
+import android.widget.Toast;
 
 import com.facebook.AccessToken;
 import com.facebook.Profile;
@@ -394,6 +395,12 @@ public class AddEventActivity extends AppCompatActivity {
 
             } else if (resultCode == RESULT_CANCELED) {
                 // The user canceled the operation.
+            }
+        }else if(requestCode == 1337){
+            if(resultCode == RESULT_OK){
+                Float lat = getIntent().getExtras().getFloat("lat");
+                Float lon = getIntent().getExtras().getFloat("lat");
+                location_EditText.setText(lon.toString());
             }
         }
     }

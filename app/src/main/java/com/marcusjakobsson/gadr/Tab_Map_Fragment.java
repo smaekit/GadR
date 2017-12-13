@@ -1,6 +1,8 @@
 package com.marcusjakobsson.gadr;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 
 import android.graphics.Bitmap;
@@ -163,6 +165,17 @@ public class Tab_Map_Fragment extends Fragment {
                 googleMap = mMap;
                 //reloadUserData();
                 // find the retained fragment on activity restarts
+                googleMap.setOnMapLongClickListener(new GoogleMap.OnMapLongClickListener() {
+                    @Override
+                    public void onMapLongClick(LatLng latLng) {
+                        Toast.makeText(getContext(), latLng.toString(), Toast.LENGTH_SHORT).show();
+                        Intent intent = new Intent(getActivity().getApplicationContext(), AddEventActivity.class);
+                        intent.putExtra("lat", latLng.latitude);
+                        intent.putExtra("lon", latLng.longitude);
+                        getActivity().setResult(Activity.RESULT_OK,intent);
+                        startActivityForResult(intent, 1337);
+                    }
+                });
                 if(!cameFromEarlierView)
                 {
                     reloadMapMarkers();
@@ -179,6 +192,10 @@ public class Tab_Map_Fragment extends Fragment {
 
 
     }
+
+
+
+
 
     public void updateCameraPosition(){
         if (googleMap != null && mData.loc != null) {
