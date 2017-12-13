@@ -49,6 +49,7 @@ import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -290,25 +291,29 @@ public class MenuTabbedView extends AppCompatActivity implements NavigationView.
     private void reloadEventData() {
         (new FirebaseConnection()).getEvents(new FirebaseConnection.EventsCallback(){
             @Override
-            public void onSuccess(List<EventData> result){
-                List<EventData> allEventData = new ArrayList<EventData>();
-                List<EventData> myEventData = new ArrayList<EventData>();
+            public void onSuccess(List<EventData> result,List<String> keys){
+                List<EventData> allEventData = new ArrayList<>();
+                List<EventData> myEventData = new ArrayList<>();
+                List<String> allEventDataKeys = new ArrayList<>();
+                List<String> myEventDataKeys = new ArrayList<>();
 
                 for (int i = 0; i < result.size(); i++) {
                     Log.i(TAG, "ID:          " + result.get(i).getCreatorID().equals(Profile.getCurrentProfile().getId()));
 
-
-
                     if(result.get(i).getCreatorID().equals(Profile.getCurrentProfile().getId())) {
                         myEventData.add(result.get(i));
+                        myEventDataKeys.add(keys.get(i));
                     }
                     else {
                         allEventData.add(result.get(i));
+                        allEventDataKeys.add(keys.get(i));
                     }
                 }
 
                 ((ThisApp) getApplication()).setAllEvents((EventData[]) allEventData.toArray(new EventData[allEventData.size()]));
                 ((ThisApp) getApplication()).setMyEvents((EventData[]) myEventData.toArray(new EventData[myEventData.size()]));
+                ((ThisApp) getApplication()).setAllEventsKeys((String[]) allEventDataKeys.toArray(new String[allEventDataKeys.size()]));
+                ((ThisApp) getApplication()).setMyEventsKeys((String[]) myEventDataKeys.toArray(new String[myEventDataKeys.size()]));
 
                 reloadFragmentData();
             }
@@ -483,7 +488,7 @@ public class MenuTabbedView extends AppCompatActivity implements NavigationView.
                 showSnackBar(R.string.Refresh);
             }
             if (viewPager.getCurrentItem() == 1) {
-                tabAllEventsFragment.reloadListData();
+                tabAllEventsFragment.reloadEventData();
                 showSnackBar(R.string.Refresh);
                 //Toast.makeText(getApplicationContext(),"All event",Toast.LENGTH_LONG).show();
             }

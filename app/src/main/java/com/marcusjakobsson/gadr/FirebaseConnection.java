@@ -55,7 +55,7 @@ public class FirebaseConnection {
     }
 
     public interface EventsCallback{
-        void onSuccess(List<EventData> result);
+        void onSuccess(List<EventData> result,List<String> keys);
     }
 
     public interface StatusCallback{
@@ -150,14 +150,16 @@ public class FirebaseConnection {
         DatabaseReference ref = mRef.child(event_parent);
 
         final List<EventData> eventData = new ArrayList<>();
+        final List<String> keys = new ArrayList<>();
 
         ValueEventListener valueEventListener = new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 for (DataSnapshot ds: dataSnapshot.getChildren()) {
                     eventData.add(ds.getValue(EventData.class));
+                    keys.add(ds.getKey());
                 }
-                callback.onSuccess(eventData);
+                callback.onSuccess(eventData,keys);
             }
             @Override
             public void onCancelled(DatabaseError databaseError) {
@@ -192,6 +194,11 @@ public class FirebaseConnection {
 
 
 
+    public void EditEvent(EventData eventData, String key) {
+        DatabaseReference ref = mRef.child(event_parent).child(key);
+
+        ref.setValue(eventData);
+    }
 
     public void AddEvent(EventData eventData) {
         DatabaseReference ref = mRef.child(event_parent).push();

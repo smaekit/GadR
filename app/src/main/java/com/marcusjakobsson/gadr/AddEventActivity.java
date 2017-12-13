@@ -42,6 +42,8 @@ public class AddEventActivity extends AppCompatActivity {
 
     private static final String TAG = "AddEventActivity";
 
+    public static final String EXTRA_EVENT_INDEX = "event_index";
+
     public static final int REQUEST_CODE_DidAddEvent = 1;
     public static final String IntentExtra_DidAddEvent = "didAddEvent";
 
@@ -63,6 +65,9 @@ public class AddEventActivity extends AppCompatActivity {
     TimePickerDialog.OnTimeSetListener endTimeListener;
 
     CustomLocation customLocation = new CustomLocation();
+
+    boolean isEditing = false;
+    String currentKey;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -191,7 +196,32 @@ public class AddEventActivity extends AppCompatActivity {
 
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item, items);
         category_Spinner.setAdapter(adapter);
+
+        Intent intent = getIntent();
+        if (intent != null) {
+            EventData eventData = ((ThisApp) getApplication()).getMyEventByIndex(getIntent().getIntExtra(EXTRA_EVENT_INDEX, 0) );
+            currentKey = ((ThisApp) getApplication()).getMyEventKeyByIndex(getIntent().getIntExtra(EXTRA_EVENT_INDEX, 0) );
+            setupViewByEventData(eventData);
+            isEditing = true;
+        }
+        title_EditText.requestFocus();
     }
+
+
+    private void setupViewByEventData(EventData eventData){
+        title_EditText.setText(eventData.getTitle());
+        description_EditText.setText(eventData.getDescription());
+        date_EditText.setText(eventData.getDate());
+        startTime_EditText.setText(eventData.getStartTime());
+        endTime_EditText.setText(eventData.getEndTime());
+        location_EditText.setText("...");
+        locationNickname_EditText.setText(eventData.getLocationNickname());
+        category_Spinner.setSelection(eventData.getCategoryIndex());
+
+        customLocation = new CustomLocation(eventData.getCustomLocation().getLatitude(), eventData.getCustomLocation().getLongitude());
+    }
+
+
 
     private void openGooglePlaceSearch() {
         try {
@@ -261,7 +291,12 @@ public class AddEventActivity extends AppCompatActivity {
             );
 
             FirebaseConnection firebaseConnection = new FirebaseConnection();
-            firebaseConnection.AddEvent(eventData);
+            if (!isEditing) {
+                firebaseConnection.AddEvent(eventData);
+            }
+            else {
+                firebaseConnection.EditEvent(eventData,currentKey);
+            }
 
             Log.i(TAG,eventData.toString());
 

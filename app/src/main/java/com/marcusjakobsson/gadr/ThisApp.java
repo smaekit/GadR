@@ -21,6 +21,11 @@ public class ThisApp extends Application {
     private EventData[] allEvents;
     private EventData[] myEvents;
 
+    //Keys
+    private String[] allEventsKeys;
+    private String[] myEventsKeys;
+
+    //Getters
     public EventData[] getAllEvents() {
         return allEvents;
     }
@@ -29,15 +34,17 @@ public class ThisApp extends Application {
         return allEvents[position];
     }
 
+    public String getAllEventKeyByIndex(int position) { return allEventsKeys[position]; }
+
     public EventData[] getMyEvents() {
         return myEvents;
     }
 
-    public EventData getMyEventByIndex(int position) {
-        return myEvents[position];
-    }
+    public EventData getMyEventByIndex(int position) { return myEvents[position]; }
 
+    public String getMyEventKeyByIndex(int position) { return myEventsKeys[position]; }
 
+    //Setters
     public void setAllEvents(EventData[] allEvents) {
         this.allEvents = allEvents;
     }
@@ -46,6 +53,7 @@ public class ThisApp extends Application {
         this.myEvents = myEvents;
     }
 
+    public void setAllEventsKeys(String[] allEventsKeys) { this.allEventsKeys = allEventsKeys; }
 
-
+    public void setMyEventsKeys(String[] myEventsKeys) { this.myEventsKeys = myEventsKeys; }
 }

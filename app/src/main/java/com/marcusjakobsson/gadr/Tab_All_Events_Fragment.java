@@ -1,25 +1,19 @@
 package com.marcusjakobsson.gadr;
 
 import android.content.Intent;
-import android.database.DataSetObserver;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Adapter;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
 
 import com.facebook.Profile;
-
-import org.json.JSONArray;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -37,6 +31,8 @@ public class Tab_All_Events_Fragment extends Fragment {
     CustomListViewItem[] listData;
     private SwipeRefreshLayout swipeContainer;
 
+    boolean listHasData = false;
+
 
     @Nullable
     @Override
@@ -51,13 +47,14 @@ public class Tab_All_Events_Fragment extends Fragment {
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position,long arg3) {
-                Intent intent = new Intent(getContext(),DetailEventActivity.class);
-                intent.putExtra(DetailEventActivity.EXTRA_EVENT_INDEX, position);
-                startActivity(intent);
+                if (listHasData) {
+                    Intent intent = new Intent(getContext(), DetailEventActivity.class);
+                    intent.putExtra(DetailEventActivity.EXTRA_EVENT_INDEX, position);
+                    startActivity(intent);
+                }
 
             }
         });
-
 
         swipeContainer = (SwipeRefreshLayout) view.findViewById(R.id.swipeContainer);
         // Setup refresh listener which triggers new data loading
@@ -82,28 +79,31 @@ public class Tab_All_Events_Fragment extends Fragment {
 
 
 
-    private void reloadEventData() {
+    public void reloadEventData() {
         (new FirebaseConnection()).getEvents(new FirebaseConnection.EventsCallback(){
             @Override
-            public void onSuccess(List<EventData> result){
+            public void onSuccess(List<EventData> result, List<String> keys){
                 List<EventData> allEventData = new ArrayList<EventData>();
                 List<EventData> myEventData = new ArrayList<EventData>();
+                List<String> allEventDataKeys = new ArrayList<>();
+                List<String> myEventDataKeys = new ArrayList<>();
 
                 for (int i = 0; i < result.size(); i++) {
-
-
-
-
                     if(result.get(i).getCreatorID().equals(Profile.getCurrentProfile().getId())) {
                         myEventData.add(result.get(i));
+                        myEventDataKeys.add(keys.get(i));
                     }
                     else {
                         allEventData.add(result.get(i));
+                        allEventDataKeys.add(keys.get(i));
                     }
                 }
 
                 ((ThisApp) getActivity().getApplication()).setAllEvents((EventData[]) allEventData.toArray(new EventData[allEventData.size()]));
                 ((ThisApp) getActivity().getApplication()).setMyEvents((EventData[]) myEventData.toArray(new EventData[myEventData.size()]));
+                ((ThisApp) getActivity().getApplication()).setAllEventsKeys((String[]) allEventDataKeys.toArray(new String[allEventDataKeys.size()]));
+                ((ThisApp) getActivity().getApplication()).setMyEventsKeys((String[]) myEventDataKeys.toArray(new String[myEventDataKeys.size()]));
+
 
                 reloadListData();
                 // Now we call setRefreshing(false) to signal refresh has finished
@@ -114,12 +114,9 @@ public class Tab_All_Events_Fragment extends Fragment {
     }
 
     public void reloadListData() {
-        //TODO: Add reload animation.
-
-
         EventData[] newAllEventData = ((ThisApp) getActivity().getApplication()).getAllEvents();
 
-        if (newAllEventData != null) {
+        if (newAllEventData != null && newAllEventData.length > 0) {
             listData = new CustomListViewItem[newAllEventData.length];
             allEventData = newAllEventData;
 
@@ -129,6 +126,11 @@ public class Tab_All_Events_Fragment extends Fragment {
 
             listViewAdapter = new CustomListViewAdapter(getActivity(), listData);
             listView.setAdapter(listViewAdapter);
+
+            listHasData = true;
+        }
+        else {
+            loadDefault();
         }
 
         Toast.makeText(getContext(), "all event reload list", Toast.LENGTH_SHORT).show();
@@ -138,6 +140,8 @@ public class Tab_All_Events_Fragment extends Fragment {
         CustomListViewItem[] mListData = {new CustomListViewItem("Inga event", "", "",0) };
         listViewAdapter = new CustomListViewAdapter(getActivity(), mListData);
         listView.setAdapter(listViewAdapter);
+
+        listHasData = false;
     }
 
 }
