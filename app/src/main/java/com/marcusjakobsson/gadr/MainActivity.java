@@ -87,22 +87,6 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        /*
-        final FirebaseDatabase database = FirebaseDatabase.getInstance();
-        DatabaseReference databaseRef = database.getReference();
-
-        databaseRef.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                String value = dataSnapshot.getValue(String.class);
-                Log.d(TAG, "Value is: " + value);
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-                Log.w(TAG, "Failed to read value.", databaseError.toException());
-            }
-        });*/
     }
 
     @Override
@@ -193,9 +177,6 @@ public class MainActivity extends AppCompatActivity {
 
             Intent intent = new Intent(this, MenuTabbedView.class);
             startActivity(intent);
-            //user.getUid()));
-            //loginButton.setVisibility(View.GONE);
-            //findViewById(R.id.button_facebook_signout).setVisibility(View.VISIBLE);
         }
     }
 

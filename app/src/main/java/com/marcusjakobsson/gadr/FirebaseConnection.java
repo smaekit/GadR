@@ -110,18 +110,6 @@ public class FirebaseConnection {
 //Users callback func
     public void getUsers(final UsersCallback callback) {
 
-        //Call with:
-        /*
-        FirebaseConnection fc = new FirebaseConnection();
-
-        fc.getUsers(new FirebaseConnection.UsersCallback(){
-            @Override
-            public void onSuccess(String result){
-                //Do somthing with result
-            }
-        });
-         */
-
         DatabaseReference ref = mRef.child(users_parent);
 
         final List<UserData> userData = new ArrayList<>();
@@ -185,6 +173,7 @@ public class FirebaseConnection {
             @Override
             public void onCancelled(DatabaseError databaseError) {
                 //TODO: Handle error
+                //Server rejects, could be that the user doesn't have permission to access the data
             }
         };
         ref.addListenerForSingleValueEvent(valueEventListener);

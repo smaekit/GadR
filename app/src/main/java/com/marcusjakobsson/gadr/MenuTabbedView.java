@@ -95,6 +95,8 @@ import static android.support.v4.view.PagerAdapter.POSITION_NONE;
 public class MenuTabbedView extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
     private static final String TAG = "MenuTabbedView";
+    private static final String MESSAGE_TAG = "msg";
+    private static final String MESSAGE_BODY_TAG = "msgBody";
 
     private SectionsPagerAdapter sectionsPageAdapter;
     private ViewPager viewPager;
@@ -105,8 +107,6 @@ public class MenuTabbedView extends AppCompatActivity implements NavigationView.
     private RetainedMenuTabbedFragmet mData;
 
     TextView userStatus_TextView;
-
-    String userStatus;
 
     //Fragments
     Tab_Map_Fragment tabMapFragment;
@@ -121,7 +121,7 @@ public class MenuTabbedView extends AppCompatActivity implements NavigationView.
         GoogleApiAvailability api = GoogleApiAvailability.getInstance();
         int code = api.isGooglePlayServicesAvailable(this);
         if (code == ConnectionResult.SUCCESS) {
-            // Do Your Stuff Here
+            // We got the functionality let go!
         } else {
             AlertDialog alertDialog =
                     new AlertDialog.Builder(this, R.style.Theme_AppCompat_Dialog_Alert).setMessage(
@@ -165,13 +165,12 @@ public class MenuTabbedView extends AppCompatActivity implements NavigationView.
         }else
         {
             if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                //Ask for permisson
+                //Ask for permission
                 ActivityCompat.requestPermissions(this, new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION}, 1);
             }
             else
             {
-                //We have permisson
-                Log.i(TAG, "we have permisson");
+                //We have permission
             }
         }
 
@@ -218,7 +217,6 @@ public class MenuTabbedView extends AppCompatActivity implements NavigationView.
                 public void onSuccess(List<UserData> result) {
 
                     setupCurrentUser(result);
-                    //reloadEventData((ThisApp)getApplication(), new Handler());
 
                 }
             });
@@ -230,6 +228,7 @@ public class MenuTabbedView extends AppCompatActivity implements NavigationView.
                 }
             });
         }else {
+
             //intitiate drawer menu with saved rounded image and name and maybe status...
             View hView =  navigationView.getHeaderView(0);
             TextView nav_user = (TextView)hView.findViewById(R.id.userNameTextView);
@@ -238,11 +237,6 @@ public class MenuTabbedView extends AppCompatActivity implements NavigationView.
             imageView.setImageDrawable(mData.drawable);
             TextView nav_userStatus = (TextView)hView.findViewById(R.id.userStatus_TextView);
             nav_userStatus.setText(mData.userStatus);
-
-            //reloadEventData();
-            //tabMapFragment.reloadUserData();
-
-
 
         }
 
@@ -258,12 +252,12 @@ public class MenuTabbedView extends AppCompatActivity implements NavigationView.
 
     }
 
+    //To receive messages from notification services
     private BroadcastReceiver activityReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            //TextView textview = (TextView) findViewById(R.id.textview);
-            Bundle bundle = intent.getBundleExtra("msg");
-            showSnackBar(bundle.getString("msgBody"));
+            Bundle bundle = intent.getBundleExtra(MESSAGE_TAG);
+            showSnackBar(bundle.getString(MESSAGE_BODY_TAG));
         }
     };
 
@@ -330,7 +324,6 @@ public class MenuTabbedView extends AppCompatActivity implements NavigationView.
 
 
                 handler.dispatchMessage(new Message());
-                //reloadFragmentData();
             }
         });
     }
@@ -395,7 +388,6 @@ public class MenuTabbedView extends AppCompatActivity implements NavigationView.
                     String profilePicUrl = result.get(i).getImgURLLarge();
                     String name = result.get(i).getName();
 
-                    //new DownloadImageTask((ImageView)findViewById(R.id.userProfilePicture)).execute(profilePicUrl);
                     getBitmapFromURLAsync = new GetBitmapFromURLAsync();
                     getBitmapFromURLAsync.execute(profilePicUrl);
                     TextView textView = (TextView)findViewById(R.id.userNameTextView);
@@ -407,10 +399,6 @@ public class MenuTabbedView extends AppCompatActivity implements NavigationView.
 
     }
 
-    void signOutButton(View view)
-    {
-        signOutUser();
-    }
     void signOutUser(){
         FirebaseAuth.getInstance().signOut();
         LoginManager.getInstance().logOut();
@@ -488,14 +476,9 @@ public class MenuTabbedView extends AppCompatActivity implements NavigationView.
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
+
         int id = item.getItemId();
 
-
-
-        //noinspection SimplifiableIfStatement
         if (id == R.id.refresh_button) {
 
             showSnackBar(R.string.Refresh);
@@ -574,21 +557,23 @@ public class MenuTabbedView extends AppCompatActivity implements NavigationView.
         } else if (id == R.id.nav_shareLocation) {
             if(item.getTitle() == getString(R.string.shareLocationOffTitle))
             {
+                //When user wants to share its location
                 FirebaseConnection firebaseConnection2 = new FirebaseConnection();
                 firebaseConnection2.UpdateUserShareLocation(true);
                 item.setIcon(R.drawable.ic_location_on);
                 item.setTitle(R.string.shareLocationOnTitle);
-                //Toast.makeText(getApplicationContext(), R.string.shareLocationOnText, Toast.LENGTH_SHORT).show();
+
                 showSnackBar(R.string.shareLocationOnText);
 
             }
             else
             {
+                //When user Don´t wants to share its location
                 FirebaseConnection firebaseConnection2 = new FirebaseConnection();
                 firebaseConnection2.UpdateUserShareLocation(false);
                 item.setIcon(R.drawable.ic_action_name);
                 item.setTitle(R.string.shareLocationOffTitle);
-                //Toast.makeText(getApplicationContext(), R.string.shareLocationOffText, Toast.LENGTH_SHORT).show();
+
                 showSnackBar(R.string.shareLocationOffText);
             }
 
@@ -599,27 +584,8 @@ public class MenuTabbedView extends AppCompatActivity implements NavigationView.
 
 
         } else if (id == R.id.nav_manage) {
-//            FirebaseMessaging.getInstance().subscribeToTopic("news");
-//            Toast.makeText(this, "Notifications ON", Toast.LENGTH_SHORT).show();
-//            if (false)
-//            {
-//                FirebaseMessaging.getInstance().unsubscribeFromTopic("news");
-//                Toast.makeText(this, "Notifications OFF", Toast.LENGTH_SHORT).show();
-//
-//            }
-
 
         } else if (id == R.id.nav_share) {
-//            MyFirebaseMessagingService myFirebaseMessagingService = new MyFirebaseMessagingService();
-//            FirebaseMessaging fm = FirebaseMessaging.getInstance();
-//            String SENDER_ID = "21598535641";
-//            AtomicInteger msgId = new AtomicInteger();
-//            msgId.incrementAndGet();
-//            fm.send(new RemoteMessage.Builder(SENDER_ID + "@gcm.googleapis.com")
-//                    .setMessageId(msgId.toString())
-//                    .addData("my_message", "Hello World")
-//                    .addData("my_action","SAY_HELLO")
-//                    .build());
 
         } else if (id == R.id.nav_send) {
 
@@ -659,47 +625,13 @@ public class MenuTabbedView extends AppCompatActivity implements NavigationView.
         GoogleApiAvailability api = GoogleApiAvailability.getInstance();
         int code = api.isGooglePlayServicesAvailable(this);
         if (code == ConnectionResult.SUCCESS) {
-            // Do Your Stuff Here
+            // We are good to go
         } else {
             AlertDialog alertDialog =
                     new AlertDialog.Builder(this, R.style.Theme_AppCompat_Dialog_Alert).setMessage(
                             "You need to download Google Play Services in order to use this part of the application")
                             .create();
             alertDialog.show();
-        }
-    }
-
-    //Async task to set user Profileimage from url in drawer menu
-    private static class DownloadImageTask extends AsyncTask<String, Void, Bitmap> {
-
-        //private ImageView bmImage;
-        private WeakReference<ImageView> imageViewReference;
-
-        private DownloadImageTask(ImageView bmImage) {
-            imageViewReference = new WeakReference<>(bmImage);
-        }
-
-        protected Bitmap doInBackground(String... urls) {
-            String urldisplay = urls[0];
-            Bitmap bitmap = null;
-            try {
-                InputStream in = new java.net.URL(urldisplay).openStream();
-                bitmap = BitmapFactory.decodeStream(in);
-            } catch (Exception e) {
-                Log.e("Error", e.getMessage());
-                e.printStackTrace();
-            }
-            return bitmap;
-        }
-
-        protected void onPostExecute(Bitmap result) {
-
-            ImageView imageView = imageViewReference.get();
-            if(imageView == null){return;}
-
-            RoundedBitmapDrawable drawable = RoundedBitmapDrawableFactory.create( imageView.getResources(),result);
-            drawable.setCircular(true);
-            imageView.setImageDrawable(drawable);
         }
     }
 
@@ -719,7 +651,7 @@ public class MenuTabbedView extends AppCompatActivity implements NavigationView.
         }
     }
 
-    /**     AsyncTAsk for Image Bitmap  */
+    /**     AsyncTask to set user Profileimage from url in drawer menu  */
     private class GetBitmapFromURLAsync extends AsyncTask<String, Void, Bitmap> {
         @Override
         protected Bitmap doInBackground(String... params) {
@@ -728,8 +660,6 @@ public class MenuTabbedView extends AppCompatActivity implements NavigationView.
 
         @Override
         protected void onPostExecute(Bitmap bitmap) {
-
-//            if(imageView == null){return;}
 
             RoundedBitmapDrawable drawable = RoundedBitmapDrawableFactory.create(getResources(),bitmap);
             drawable.setCircular(true);
