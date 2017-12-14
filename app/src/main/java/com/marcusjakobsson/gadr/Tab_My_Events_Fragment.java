@@ -107,9 +107,6 @@ public class Tab_My_Events_Fragment extends Fragment {
         else {
             loadDefault();
         }
-
-
-        Toast.makeText(getContext(), "my event reload list", Toast.LENGTH_SHORT).show();
     }
 
     private void loadDefault() {
