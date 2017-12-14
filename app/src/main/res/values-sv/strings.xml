@@ -42,4 +42,7 @@
     <string name="AddEvent_LocationNickname">Plats-smeknamn</string>
     <string name="Refresh">Uppdaterar..</string>
     <string name="edit_eventLabel">Redigera event</string>
+    <string name="noEventTitle">Inga event</string>
+    <string name="play_services_message">Du behöver ladda ner Google play services, för att kunna använda denna del av applicationen.</string>
+    <string name="add_widget">Lägg till widget</string>
 </resources>

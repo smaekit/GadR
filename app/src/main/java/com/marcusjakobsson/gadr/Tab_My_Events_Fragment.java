@@ -45,7 +45,7 @@ public class Tab_My_Events_Fragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_tab_my_events,container,false);
 
-        listView = (ListView) view.findViewById(R.id.ListView_MyEvents);
+        listView =  view.findViewById(R.id.ListView_MyEvents);
         loadDefault();
 
         reloadListData();
@@ -63,7 +63,7 @@ public class Tab_My_Events_Fragment extends Fragment {
             }
         });
 
-        swipeContainer = (SwipeRefreshLayout) view.findViewById(R.id.mySwipeContainer);
+        swipeContainer = view.findViewById(R.id.mySwipeContainer);
         // Setup refresh listener which triggers new data loading
         swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
@@ -110,7 +110,7 @@ public class Tab_My_Events_Fragment extends Fragment {
     }
 
     private void loadDefault() {
-        CustomListViewItem[] mListData = {new CustomListViewItem("Inga event", "", "",0) };
+        CustomListViewItem[] mListData = {new CustomListViewItem(getString(R.string.noEventTitle), "", "",0) };
         listViewAdapter = new CustomListViewAdapter(getActivity(), mListData);
         listView.setAdapter(listViewAdapter);
 

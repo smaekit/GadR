@@ -85,7 +85,7 @@ public class Tab_Map_Fragment extends Fragment {
         View rootView = inflater.inflate(R.layout.fragment_tab_map, container, false);
 
 
-        mMapView = (MapView) rootView.findViewById(R.id.mapView);
+        mMapView = rootView.findViewById(R.id.mapView);
         mMapView.onCreate(savedInstanceState);
 
         mMapView.onResume(); // needed to get the map to display immediately
@@ -150,7 +150,7 @@ public class Tab_Map_Fragment extends Fragment {
             // add the fragment
             mData = new RetainedMapFragment();
             fm.beginTransaction().add(mData, TAG_RETAINED_MAP_FRAGMENT).commit();
-            // load data from a data source or perform any calculation
+            // load data from a data source
             cameFromEarlierView = true;
             requestLocationUpdates();
         }else {
@@ -188,12 +188,8 @@ public class Tab_Map_Fragment extends Fragment {
                 {
                     reloadMapMarkers();
                     googleMap.moveCamera(mData.cameraUpdate);
-
-
                 }
 
-                // the data is available in mRetainedFragment.getData() even after
-                // subsequent configuration change restarts.
             }
         });
     }
@@ -219,7 +215,7 @@ public class Tab_Map_Fragment extends Fragment {
                 ActivityCompat.requestPermissions(getActivity(), new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION}, 1);
             }else
             {
-                //If user already granted us permisson
+                //If user already granted us permission
                 if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
                     locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, locationListener);
                 }
@@ -236,7 +232,6 @@ public class Tab_Map_Fragment extends Fragment {
     {
         if(isFragmentUp){
             if (ContextCompat.checkSelfPermission(getActivity(), android.Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-                //User location updates from here?
                 locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, locationListener);
                 locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, locationListener);
             }
@@ -255,7 +250,7 @@ public class Tab_Map_Fragment extends Fragment {
                 mData.myEventData = ((ThisApp) getActivity().getApplication()).getMyEvents();
             }catch (NullPointerException e)
             {
-                Toast.makeText(getContext(), "could not retrive data", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), R.string.noneDataRetrievdMsg, Toast.LENGTH_SHORT).show();
                 e.printStackTrace();
             }
 
@@ -302,7 +297,6 @@ public class Tab_Map_Fragment extends Fragment {
     private void placeUserMarkes()
     {
         if (mData.userData != null) {
-            //for (UserData user : userData) {
             for (int i = 0; i < mData.userData.size(); i++) {
                 if (mData.userData.get(i).getShareLocation()) {
 
@@ -415,7 +409,6 @@ public class Tab_Map_Fragment extends Fragment {
             Bitmap myBitmap = BitmapFactory.decodeStream(input);
             return myBitmap;
         } catch (IOException e) {
-            // Log exception
             return null;
         }
     }

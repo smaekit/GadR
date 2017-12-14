@@ -57,7 +57,7 @@ public class CreateStatus extends AppCompatActivity {
     {
         //Start Code for widget
         SharedPreferences sharedPreferences = this.getSharedPreferences(getPackageName(), Context.MODE_PRIVATE);
-        sharedPreferences.edit().putString("userStatus", userStatus).apply(); //Sparar permanent i variablen userStatus
+        sharedPreferences.edit().putString(IntentExtra_UserStatus, userStatus).apply();
 
         Intent intent2 = new Intent(this, GadRWidget.class);
         intent2.setAction(AppWidgetManager.ACTION_APPWIDGET_UPDATE);

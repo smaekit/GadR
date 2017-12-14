@@ -47,7 +47,7 @@ public class Tab_All_Events_Fragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_tab_all_events,container,false);
 
-        listView = (ListView) view.findViewById(R.id.ListView_AllEvents);
+        listView = view.findViewById(R.id.ListView_AllEvents);
         loadDefault();
 
         reloadListData();
@@ -65,7 +65,7 @@ public class Tab_All_Events_Fragment extends Fragment {
         });
 
 
-        swipeContainer = (SwipeRefreshLayout) view.findViewById(R.id.swipeContainer);
+        swipeContainer = view.findViewById(R.id.swipeContainer);
         // Setup refresh listener which triggers new data loading
         swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
@@ -115,30 +115,11 @@ public class Tab_All_Events_Fragment extends Fragment {
     }
 
     private void loadDefault() {
-        CustomListViewItem[] mListData = {new CustomListViewItem("Inga event", "", "",0) };
+        CustomListViewItem[] mListData = {new CustomListViewItem(getString(R.string.noEventTitle), "", "",0) };
         listViewAdapter = new CustomListViewAdapter(getActivity(), mListData);
         listView.setAdapter(listViewAdapter);
 
         listHasData = false;
-    }
-
-    public void showSnackBar(Integer stringID)
-    {
-        // make snackbar
-        Snackbar mSnackbar = Snackbar.make(getActivity().getCurrentFocus(), stringID, Snackbar.LENGTH_LONG);
-        // get snackbar view
-        View mView = mSnackbar.getView();
-        // get textview inside snackbar view
-        TextView mTextView = (TextView) mView.findViewById(android.support.design.R.id.snackbar_text);
-        mTextView.setTextColor(getResources().getColor(R.color.colorAccent,getActivity().getTheme()));
-        mTextView.setTextSize(24);
-        // set text to center
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1)
-            mTextView.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
-        else
-            mTextView.setGravity(Gravity.CENTER_HORIZONTAL);
-        // show the snackbar
-        mSnackbar.show();
     }
 
 }
