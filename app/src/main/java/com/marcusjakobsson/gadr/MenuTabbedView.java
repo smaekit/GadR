@@ -1,23 +1,19 @@
 package com.marcusjakobsson.gadr;
 
-import android.annotation.SuppressLint;
-import android.app.NotificationChannel;
-import android.app.NotificationManager;
+
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
-import android.content.res.Resources;
+
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.location.Location;
-import android.location.LocationListener;
-import android.location.LocationManager;
+
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Handler;
-import android.os.Looper;
+
 import android.os.Message;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -31,9 +27,9 @@ import android.support.v4.content.ContextCompat;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
 import android.support.v4.view.GravityCompat;
-import android.support.v4.view.PagerAdapter;
+
 import android.support.v4.widget.DrawerLayout;
-import android.support.v4.widget.SwipeRefreshLayout;
+
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -43,54 +39,36 @@ import android.support.v4.view.ViewPager;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Gravity;
-import android.view.KeyEvent;
+
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.inputmethod.EditorInfo;
-import android.widget.EditText;
-import android.widget.ImageView;
-import android.widget.ListView;
-import android.widget.TextView;
-import android.widget.Toast;
 
-import com.facebook.AccessToken;
-import com.facebook.GraphRequest;
-import com.facebook.GraphResponse;
-import com.facebook.HttpMethod;
+import android.widget.ImageView;
+
+import android.widget.TextView;
+
 import com.facebook.Profile;
 import com.facebook.login.LoginManager;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
-import com.google.android.gms.maps.CameraUpdateFactory;
-import com.google.android.gms.maps.model.CameraPosition;
-import com.google.android.gms.maps.model.LatLng;
+
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
-import com.google.firebase.messaging.FirebaseMessaging;
-import com.google.firebase.messaging.RemoteMessage;
 
-import org.json.JSONObject;
+
+
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.lang.ref.WeakReference;
+
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.text.DateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.concurrent.atomic.AtomicInteger;
 
-import static android.R.attr.name;
-import static android.R.attr.theme;
-import static android.support.v4.view.PagerAdapter.POSITION_NONE;
+import java.util.ArrayList;
+
+import java.util.List;
+
 
 public class MenuTabbedView extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
@@ -107,6 +85,7 @@ public class MenuTabbedView extends AppCompatActivity implements NavigationView.
     private RetainedMenuTabbedFragmet mData;
 
     TextView userStatus_TextView;
+
 
     //Fragments
     Tab_Map_Fragment tabMapFragment;
@@ -257,7 +236,7 @@ public class MenuTabbedView extends AppCompatActivity implements NavigationView.
         @Override
         public void onReceive(Context context, Intent intent) {
             Bundle bundle = intent.getBundleExtra(MESSAGE_TAG);
-            showSnackBar(bundle.getString(MESSAGE_BODY_TAG));
+            MySnackbarProvider.showSnackBar(getCurrentFocus(),bundle.getString(MESSAGE_BODY_TAG));
         }
     };
 
@@ -426,9 +405,6 @@ public class MenuTabbedView extends AppCompatActivity implements NavigationView.
 
 
 
-
-
-
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
@@ -481,7 +457,7 @@ public class MenuTabbedView extends AppCompatActivity implements NavigationView.
 
         if (id == R.id.refresh_button) {
 
-            showSnackBar(R.string.Refresh);
+            MySnackbarProvider.showSnackBar(getCurrentFocus(),R.string.Refresh);
 
 
             if (viewPager.getCurrentItem() == 0) {
@@ -507,43 +483,6 @@ public class MenuTabbedView extends AppCompatActivity implements NavigationView.
         return super.onOptionsItemSelected(item);
     }
 
-    public void showSnackBar(Integer stringID)
-    {
-        // make snackbar
-        Snackbar mSnackbar = Snackbar.make(getCurrentFocus(), stringID, Snackbar.LENGTH_LONG);
-        // get snackbar view
-        View mView = mSnackbar.getView();
-        // get textview inside snackbar view
-        TextView mTextView = (TextView) mView.findViewById(android.support.design.R.id.snackbar_text);
-        mTextView.setTextColor(getResources().getColor(R.color.colorAccent,getTheme()));
-        mTextView.setTextSize(24);
-        // set text to center
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1)
-            mTextView.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
-        else
-            mTextView.setGravity(Gravity.CENTER_HORIZONTAL);
-        // show the snackbar
-        mSnackbar.show();
-    }
-
-    public void showSnackBar(String message)
-    {
-        // make snackbar
-        Snackbar mSnackbar = Snackbar.make(getCurrentFocus(), message, Snackbar.LENGTH_LONG);
-        // get snackbar view
-        View mView = mSnackbar.getView();
-        // get textview inside snackbar view
-        TextView mTextView = (TextView) mView.findViewById(android.support.design.R.id.snackbar_text);
-        mTextView.setTextColor(getResources().getColor(R.color.colorAccent,getTheme()));
-        mTextView.setTextSize(24);
-        // set text to center
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1)
-            mTextView.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
-        else
-            mTextView.setGravity(Gravity.CENTER_HORIZONTAL);
-        // show the snackbar
-        mSnackbar.show();
-    }
 
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
@@ -563,8 +502,7 @@ public class MenuTabbedView extends AppCompatActivity implements NavigationView.
                 item.setIcon(R.drawable.ic_location_on);
                 item.setTitle(R.string.shareLocationOnTitle);
 
-                showSnackBar(R.string.shareLocationOnText);
-
+                MySnackbarProvider.showSnackBar(getCurrentFocus(),R.string.shareLocationOnText);
             }
             else
             {
@@ -574,7 +512,7 @@ public class MenuTabbedView extends AppCompatActivity implements NavigationView.
                 item.setIcon(R.drawable.ic_action_name);
                 item.setTitle(R.string.shareLocationOffTitle);
 
-                showSnackBar(R.string.shareLocationOffText);
+                MySnackbarProvider.showSnackBar(getCurrentFocus(),R.string.shareLocationOffText);
             }
 
 
