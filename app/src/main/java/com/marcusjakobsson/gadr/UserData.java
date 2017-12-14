@@ -12,7 +12,6 @@ public class UserData {
 
     private String fbID;
     private String name;
-    private int points;
     private String imgURLLarge;
     private String imgURLSmall;
     private String status = "";
@@ -22,10 +21,9 @@ public class UserData {
 
     public UserData() {}
 
-    public UserData(String fbID, String name, int points, String imgURLLarge, String imgURLSmall, String status, double latitude, double longitude, boolean shareLocation){
+    public UserData(String fbID, String name, String imgURLLarge, String imgURLSmall, String status, double latitude, double longitude, boolean shareLocation){
         this.fbID = fbID;
         this.name = name;
-        this.points = points;
         this.imgURLLarge = imgURLLarge;
         this.imgURLSmall = imgURLSmall;
         this.status = status;
@@ -39,11 +37,9 @@ public class UserData {
         this.latitude = latitude;
     }
 
-
     public void setLongitude(double longitude) {
         this.longitude = longitude;
     }
-
 
     public void setStatus(String status) {
         this.status = status;
@@ -58,10 +54,6 @@ public class UserData {
         this.name = name;
     }
 
-    public void setPoints(int points) {
-        this.points = points;
-    }
-
     public void setImgURLLarge(String imgURLLarge) {
         this.imgURLLarge = imgURLLarge;
     }
@@ -72,7 +64,6 @@ public class UserData {
 
     public void setShareLocation(Boolean shareLocation) {this.shareLocation = shareLocation; }
 
-
     //  Getters
     public String getFbID() {
         return fbID;
@@ -80,10 +71,6 @@ public class UserData {
 
     public String getName() {
         return name;
-    }
-
-    public int getPoints() {
-        return points;
     }
 
     public String getStatus() {
@@ -113,7 +100,6 @@ public class UserData {
         return "UserData{" +
                 "fbID='" + fbID + '\'' +
                 ", name='" + name + '\'' +
-                ", points=" + points +
                 ", imgURLLarge='" + imgURLLarge + '\'' +
                 ", imgURLSmall='" + imgURLSmall + '\'' +
                 ", status='" + status + '\'' +

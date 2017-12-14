@@ -1,12 +1,12 @@
 package com.marcusjakobsson.gadr;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
-import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.location.LocationListener;
@@ -14,7 +14,9 @@ import android.location.LocationManager;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.Looper;
+import android.os.Message;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
@@ -23,7 +25,6 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -38,6 +39,7 @@ import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.io.IOException;
@@ -49,6 +51,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import static android.app.Activity.RESULT_OK;
+
 
 /**
  * Created by carlbratt on 2017-10-30.
@@ -58,14 +62,12 @@ public class Tab_Map_Fragment extends Fragment {
 
     MapView mMapView;
     private GoogleMap googleMap;
-    FirebaseConnection fc;
 
-
-
+    List<EventMarker> allEventMarkers = new ArrayList<>();
+    List<EventMarker> myEventMarkers = new ArrayList<>();
 
     LocationManager locationManager;
     LocationListener locationListener;
-
 
     private static final String TAG_RETAINED_MAP_FRAGMENT = "RetainedMapFragment";
 
@@ -161,23 +163,39 @@ public class Tab_Map_Fragment extends Fragment {
             @Override
             public void onMapReady(GoogleMap mMap) {
                 googleMap = mMap;
-                //reloadUserData();
+
+                googleMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
+                    @Override
+                    public void onInfoWindowClick(Marker marker) {
+                        int index = EventMarker.ContainsMarker(allEventMarkers, marker);
+                        if(index != -1){
+                            Intent intent = new Intent(getContext(), DetailEventActivity.class);
+                            intent.putExtra(DetailEventActivity.EXTRA_EVENT_INDEX, allEventMarkers.get(index).getIndex());
+                            startActivity(intent);
+                        }
+                        index = EventMarker.ContainsMarker(myEventMarkers, marker);
+                        if(index != -1){
+                            Intent intent = new Intent(getContext(), AddEventActivity.class);
+                            intent.putExtra(AddEventActivity.EXTRA_EVENT_INDEX, myEventMarkers.get(index).getIndex());
+                            intent.putExtra(AddEventActivity.IntentExtra_willEditEvent, true);
+                            startActivityForResult(intent, AddEventActivity.REQUEST_CODE_DidEditEvent);
+                        }
+                    }
+                });
+
                 // find the retained fragment on activity restarts
                 if(!cameFromEarlierView)
                 {
                     reloadMapMarkers();
                     googleMap.moveCamera(mData.cameraUpdate);
+
+
                 }
 
                 // the data is available in mRetainedFragment.getData() even after
                 // subsequent configuration change restarts.
             }
         });
-
-
-
-
-
     }
 
     public void updateCameraPosition(){
@@ -225,7 +243,6 @@ public class Tab_Map_Fragment extends Fragment {
         }
     }
 
-
     public void reloadMapMarkers() {
 
         if (googleMap != null) {
@@ -242,26 +259,26 @@ public class Tab_Map_Fragment extends Fragment {
                 e.printStackTrace();
             }
 
-
             placeAllEventMarkers(today);
 
             placeMyEventMarkers(today);
 
             placeUserMarkes();
-            //updateCameraPosition();
         }
     }
 
     private void placeAllEventMarkers(String today)
     {
         if (mData.allEventData != null) {
+            allEventMarkers.clear();
             for (int i = 0; i < mData.allEventData.length; i++) {
                 if (mData.allEventData[i].getDate().equals(today))
-                    googleMap.addMarker(new MarkerOptions()
+                    allEventMarkers.add(new EventMarker(googleMap.addMarker(new MarkerOptions()
                             .position(new LatLng(mData.allEventData[i].getCustomLocation().getLatitude(), mData.allEventData[i].getCustomLocation().getLongitude()))
                             .title(mData.allEventData[i].getTitle())
                             .snippet(mData.allEventData[i].getStartTime() + " - " + mData.allEventData[i].getEndTime())
-                            .icon(BitmapDescriptorFactory.fromResource(Category.categoryIconIndex[mData.allEventData[i].getCategoryIndex()])));
+                            .icon(BitmapDescriptorFactory.fromResource(Category.categoryIconIndex[mData.allEventData[i].getCategoryIndex()]))),
+                            i));
             }
         }
     }
@@ -269,13 +286,15 @@ public class Tab_Map_Fragment extends Fragment {
     private void placeMyEventMarkers(String today)
     {
         if (mData.myEventData != null) {
+            myEventMarkers.clear();
             for (int i = 0; i < mData.myEventData.length; i++) {
                 if (mData.myEventData[i].getDate().equals(today))
-                    googleMap.addMarker(new MarkerOptions()
+                    myEventMarkers.add(new EventMarker(googleMap.addMarker(new MarkerOptions()
                             .position(new LatLng(mData.myEventData[i].getCustomLocation().getLatitude(), mData.myEventData[i].getCustomLocation().getLongitude()))
                             .title(mData.myEventData[i].getTitle())
                             .snippet(mData.myEventData[i].getStartTime() + " - " + mData.myEventData[i].getEndTime())
-                            .icon(BitmapDescriptorFactory.fromResource(Category.categoryIconIndex[mData.myEventData[i].getCategoryIndex()])));
+                            .icon(BitmapDescriptorFactory.fromResource(Category.categoryIconIndex[mData.myEventData[i].getCategoryIndex()]))),
+                            i));
             }
         }
     }
@@ -420,6 +439,24 @@ public class Tab_Map_Fragment extends Fragment {
 
                 }
 
+        }
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (resultCode == RESULT_OK) {
+            if (requestCode == AddEventActivity.REQUEST_CODE_DidEditEvent) {
+                if(data.getBooleanExtra(AddEventActivity.IntentExtra_DidEditEvent, false)){
+                    MenuTabbedView.reloadEventData((ThisApp) getActivity().getApplication(), new Handler(Looper.getMainLooper()) {
+                        @Override
+                        public void handleMessage(Message msg) {
+                            reloadMapMarkers();
+                        }
+                    });
+                }
+            }
         }
     }
 }

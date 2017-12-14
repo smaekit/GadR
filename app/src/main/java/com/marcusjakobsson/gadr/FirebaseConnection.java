@@ -28,7 +28,6 @@ public class FirebaseConnection {
     //Users
     public static String users_parent = "Users";
     public static String users_name = "name";
-    public static String users_points = "points";
     public static String users_imgURLLarge = "imgurlLarge";
     public static String users_imgURLSmall = "imgurlLarge";
     public static String users_status = "status";
@@ -39,12 +38,6 @@ public class FirebaseConnection {
 
     //Event                             //TODO: change back to Events
     public static String event_parent = "Events2";
-
-
-    //Status
-    public static String status_parent = "Status";
-
-
 
     public interface UsersCallback{
         void onSuccess(List<UserData> result);
@@ -57,11 +50,6 @@ public class FirebaseConnection {
     public interface EventsCallback{
         void onSuccess(List<EventData> result,List<String> keys);
     }
-
-    public interface StatusCallback{
-        void onSuccess(List<StatusData> result);
-    }
-
 
     private FirebaseDatabase mDatabase;
     private DatabaseReference mRef;
@@ -96,7 +84,6 @@ public class FirebaseConnection {
                 }
                 callback.onSuccess(false);
 
-
             }
 
             @Override
@@ -109,18 +96,6 @@ public class FirebaseConnection {
 
 //Users callback func
     public void getUsers(final UsersCallback callback) {
-
-        //Call with:
-        /*
-        FirebaseConnection fc = new FirebaseConnection();
-
-        fc.getUsers(new FirebaseConnection.UsersCallback(){
-            @Override
-            public void onSuccess(String result){
-                //Do somthing with result
-            }
-        });
-         */
 
         DatabaseReference ref = mRef.child(users_parent);
 
@@ -166,30 +141,6 @@ public class FirebaseConnection {
         };
         ref.addListenerForSingleValueEvent(valueEventListener);
     }
-
-
-// Status callback func
-    public void getStatus(final StatusCallback callback) {
-        DatabaseReference ref = mRef.child(status_parent);
-
-        final List<StatusData> statusData = new ArrayList<>();
-
-        ValueEventListener valueEventListener = new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                for (DataSnapshot ds: dataSnapshot.getChildren()) {
-                    statusData.add(ds.getValue(StatusData.class));
-                }
-                callback.onSuccess(statusData);
-            }
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-                //TODO: Handle error
-            }
-        };
-        ref.addListenerForSingleValueEvent(valueEventListener);
-    }
-
 
 
     public void EditEvent(EventData eventData, String key) {
