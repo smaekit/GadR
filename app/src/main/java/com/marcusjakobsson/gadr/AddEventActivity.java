@@ -275,7 +275,7 @@ public class AddEventActivity extends AppCompatActivity {
         finish();
     }
 
-    //TODO: change to listener
+
     public void addEvent(View v) {
         if (fieldsAreValid()) {
             // Create Event-data and send to Firebase.
