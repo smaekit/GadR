@@ -53,6 +53,8 @@
     <string name="errorLocation">Error while getting location</string>
     <string name="authFailed">Authentication failed</string>
     <string name="connectionError">Connection error</string>
+    <string name="couldNotUpdate">Could not update</string>
+    <string name="Content_Description_CategoryImg">Category picture</string>
 
 
 </resources>

@@ -83,7 +83,6 @@ class FirebaseConnection {
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
-                //TODO: Handle error
             }
         };
         ref.addListenerForSingleValueEvent(valueEventListener);
@@ -107,7 +106,6 @@ class FirebaseConnection {
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
-                //TODO: Handle error
             }
         };
         ref.addListenerForSingleValueEvent(valueEventListener);
@@ -131,7 +129,6 @@ class FirebaseConnection {
             }
             @Override
             public void onCancelled(DatabaseError databaseError) {
-                //TODO: Handle error
             }
         };
         ref.addListenerForSingleValueEvent(valueEventListener);
@@ -158,25 +155,38 @@ class FirebaseConnection {
 
     public void AddStatus(String status) {
         FirebaseUser currentUser = mAuth.getCurrentUser();
-        DatabaseReference ref = mRef.child(users_parent).child(currentUser.getUid()).child(users_status);
-        ref.setValue(status);
+        if(currentUser != null)
+        {
+            String userID = currentUser.getUid();
+            DatabaseReference ref = mRef.child(users_parent).child(userID).child(users_status);
+            ref.setValue(status);
+        }
     }
 
 
     public void UpdateUserLocation(double latitude, double longitude)
     {
         FirebaseUser currentUser = mAuth.getCurrentUser();
-        DatabaseReference ref = mRef.child(users_parent).child(currentUser.getUid()).child(users_latitude);
-        ref.setValue(latitude);
-        ref = mRef.child(users_parent).child(currentUser.getUid()).child(users_longitude);
-        ref.setValue(longitude);
+        if(currentUser != null)
+        {
+            String userID = currentUser.getUid();
+            DatabaseReference ref = mRef.child(users_parent).child(userID).child(users_latitude);
+            ref.setValue(latitude);
+            ref = mRef.child(users_parent).child(userID).child(users_longitude);
+            ref.setValue(longitude);
+        }
+
     }
 
     public void UpdateUserShareLocation(Boolean isSharingLocation)
     {
         FirebaseUser currentUser = mAuth.getCurrentUser();
-        DatabaseReference ref = mRef.child(users_parent).child(currentUser.getUid()).child(users_shareLocation);
-        ref.setValue(isSharingLocation);
+        if(currentUser != null)
+        {
+            DatabaseReference ref = mRef.child(users_parent).child(currentUser.getUid()).child(users_shareLocation);
+            ref.setValue(isSharingLocation);
+        }
+
     }
 
 }

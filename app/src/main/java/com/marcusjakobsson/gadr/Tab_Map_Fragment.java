@@ -256,7 +256,7 @@ public class Tab_Map_Fragment extends Fragment {
                 mData.myEventData = ((ThisApp) getActivity().getApplication()).getMyEvents();
             }catch (NullPointerException e)
             {
-                Toast.makeText(getContext(), R.string.noneDataRetrievdMsg, Toast.LENGTH_SHORT).show();
+                //Toast.makeText(getContext(), R.string.noneDataRetrievdMsg, Toast.LENGTH_SHORT).show();
                 e.printStackTrace();
             }
 

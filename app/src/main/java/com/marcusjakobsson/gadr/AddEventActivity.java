@@ -28,7 +28,6 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Locale;
 
-import com.google.android.gms.common.api.Status;
 import com.google.android.gms.location.places.*;
 import com.google.android.gms.location.places.ui.PlaceAutocomplete;
 
@@ -435,7 +434,6 @@ public class AddEventActivity extends AppCompatActivity {
 
             } else if (resultCode == PlaceAutocomplete.RESULT_ERROR) {
                 MySnackbarProvider.showSnackBar(getCurrentFocus(),getString(R.string.errorLocation));
-
             }
         }
     }

@@ -419,6 +419,7 @@ public class MenuTabbedView extends AppCompatActivity implements NavigationView.
                 viewPager.getAdapter().notifyDataSetChanged();
             }catch (NullPointerException e)
             {
+                MySnackbarProvider.showSnackBar(getCurrentFocus(),getString(R.string.couldNotUpdate));
                 e.printStackTrace();
             }
 
