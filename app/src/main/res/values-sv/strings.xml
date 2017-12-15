@@ -1,9 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">GadR</string>
-    <string name="hello_carl">Hej Carl!</string>
-    <string name="section_format">Hej världen från sektion: %1$d</string>
-    <string name="action_settings">Inställningar</string>
     <string name="Tabbed_Menu_Map">Karta</string>
     <string name="Tabbed_Menu_All">Alla event</string>
     <string name="Tabbed_Menu_My">Mina event</string>
@@ -17,14 +14,11 @@
     <string name="AddEvent_Location">Plats</string>
     <string name="name_of_user">Namn på användare</string>
     <string name="create_eventLabel">Skapa event</string>
-    <string name="createLabel">Skapa</string>
-    <string name="eventlabel">Event</string>
     <string name="statusLabel">Status</string>
     <string name="shareLocationOnText">Du delar nu din position</string>
     <string name="shareLocationOffText">Du delar nu inte längre din position</string>
     <string name="shareLocationOffTitle">Dela position AV</string>
     <string name="shareLocationOnTitle">Dela position PÅ</string>
-    <string name="share_location_off">Dela position AV</string>
     <string name="status_Tip">"Med en status kan du dela vad du gör med andra. Den syns i 24 timmar. Närsomhelst kan du uppdatera din status och den gamla kommer att försvinna "</string>
     <string name="cancelText">Avbryt</string>
     <string name="publishText">Publicera</string>
@@ -44,5 +38,4 @@
     <string name="edit_eventLabel">Redigera event</string>
     <string name="noEventTitle">Inga event</string>
     <string name="play_services_message">Du behöver ladda ner Google play services, för att kunna använda denna del av applicationen.</string>
-    <string name="add_widget">Lägg till widget</string>
 </resources>

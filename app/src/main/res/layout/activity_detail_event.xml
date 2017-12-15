@@ -6,8 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="com.marcusjakobsson.gadr.DetailEventActivity"
-    android:orientation="vertical"
-    android:background="@color/colorPrimary">
+    android:orientation="vertical">
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -25,7 +24,8 @@
             android:backgroundTint="@android:color/black"
             android:foregroundTint="@android:color/black"
             android:foregroundTintMode="src_over"
-            android:src="@drawable/coffee" />
+            android:src="@drawable/coffee"
+            android:contentDescription="@string/category_image"/>
 
         <TextView
             android:id="@+id/title_TextView"
@@ -83,11 +83,8 @@
         android:orientation="vertical">
 
         <TextView
-            android:id="@+id/descriptionTitle_TextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
-            android:layout_centerVertical="true"
             android:text="@string/AddEvent_Description"
             android:textAllCaps="false"
             android:textColor="@color/colorAccent"
@@ -99,8 +96,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="TextView"
-            android:layout_centerVertical="true"
-            android:layout_centerHorizontal="true"
             android:layout_gravity="center"/>
     </LinearLayout>
     <RelativeLayout
@@ -117,14 +112,13 @@
         android:background="@color/colorPrimary">
 
         <Button
-            android:id="@+id/back_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
             android:layout_centerVertical="true"
             android:background="@color/colorAccent"
             android:onClick="back_button"
-            android:text="Back" />
+            android:text="@string/back_button" />
     </RelativeLayout>
 
 

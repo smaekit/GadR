@@ -1,17 +1,12 @@
 <resources>
     <string name="app_name">GadR</string>
-    <string name="hello_carl">Hello Carl!</string>
 
     <string name="facebook_app_id" translatable="false">523008791393450</string>
     <string name="fb_login_protocol_scheme" translatable="false">fb523008791393450</string>
     <string name="title_activity_tabbed_view"></string>
-    <string name="action_settings">Settings</string>
-    <string name="section_format">Hello World from section: %1$d</string>
     <string name="Tabbed_Menu_Map">Map</string>
     <string name="Tabbed_Menu_All">All events</string>
     <string name="Tabbed_Menu_My">My events</string>
-    <string name="title_activity_maps">Map</string>
-    <string name="title_activity_drawer">drawerActivity</string>
 
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
@@ -25,20 +20,16 @@
     <string name="StatusHint">What are you up to?..</string>
     <string name="userprofilepicture">userProfilePicture</string>
     <string name="name_of_user">Name of user</string>
-    <string name="createLabel">Create</string>
-    <string name="eventlabel">Event</string>
     <string name="statusLabel">Status</string>
     <string name="shareLocationOnText">You are now sharing your location</string>
     <string name="shareLocationOffText">You are no longer sharing your location</string>
     <string name="shareLocationOffTitle">Share Location OFF</string>
     <string name="shareLocationOnTitle">Share Location ON</string>
-    <string name="share_location_off">Share Location OFF</string>
     <string name="status_Tip">With a status you can share what you are doing. It is visible for 24 hours. Whenever you want you can update the status and the old will disappear</string>
     <string name="cancelText">Cancel</string>
     <string name="publishText">Publish</string>
     <string name="create_eventLabel">Create Event</string>
     <string name="appwidget_text">EXAMPLE</string>
-    <string name="add_widget">Add widget</string>
     <string name="change_your_status">Change your Status</string>
     <string name="Cat1">Coffee</string>
     <string name="Cat2">Cinema</string>
@@ -49,11 +40,12 @@
     <string name="AddEvent_LocationNickname">Location nickname</string>
     <string name="Refresh">Refreshing..</string>
     <string name="default_notification_channel_id" translatable="false">1337</string>
-    <string name="default_notification_channel_name" translatable="false">newEvents</string>
     <string name="play_services_message">You need to download Google Play Services in order to use this part of the application</string>
     <string name="edit_eventLabel">Edit event</string>
     <string name="noEventTitle">No events</string>
     <string name="noneDataRetrievdMsg">Could not retrieve data</string>
+    <string name="category_image">Category image</string>
+    <string name="back_button">Back</string>
 
 
 </resources>

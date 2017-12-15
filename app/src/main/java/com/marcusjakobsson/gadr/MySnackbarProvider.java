@@ -29,10 +29,7 @@ public class MySnackbarProvider {
         }
         mTextView.setTextSize(24);
         // set text to center
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1)
-            mTextView.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
-        else
-            mTextView.setGravity(Gravity.CENTER_HORIZONTAL);
+        mTextView.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
         // show the snackbar
         mSnackbar.show();
     }
@@ -52,10 +49,7 @@ public class MySnackbarProvider {
         }
         mTextView.setTextSize(24);
         // set text to center
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1)
-            mTextView.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
-        else
-            mTextView.setGravity(Gravity.CENTER_HORIZONTAL);
+        mTextView.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
         // show the snackbar
         mSnackbar.show();
     }
