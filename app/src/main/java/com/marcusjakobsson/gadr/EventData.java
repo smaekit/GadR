@@ -6,6 +6,7 @@ import java.util.Date;
 
 /**
  * Created by carlbratt on 2017-11-13.
+ * Contains data for Events.
  */
 
 public class EventData {

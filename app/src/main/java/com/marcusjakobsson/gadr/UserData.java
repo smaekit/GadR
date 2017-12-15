@@ -4,6 +4,7 @@ package com.marcusjakobsson.gadr;
 
 /**
  * Created by carlbratt on 2017-11-13.
+ * Holds data of users.
  */
 
 class UserData {

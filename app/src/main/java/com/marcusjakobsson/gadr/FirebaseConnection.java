@@ -18,6 +18,7 @@ import java.util.List;
 
 /**
  * Created by carlbratt on 2017-10-30.
+ * Contains database functions.
  */
 
 class FirebaseConnection {
@@ -26,18 +27,18 @@ class FirebaseConnection {
     //Constants
 
     //Users
-    public static String users_parent = "Users";
+    public static final String users_parent = "Users";
     public static String users_name = "name";
     public static String users_imgURLLarge = "imgurlLarge";
     public static String users_imgURLSmall = "imgurlLarge";
-    public static String users_status = "status";
-    public static String users_latitude = "latitude";
-    public static String users_longitude = "longitude";
-    public static String users_shareLocation = "shareLocation";
+    public static final String users_status = "status";
+    public static final String users_latitude = "latitude";
+    public static final String users_longitude = "longitude";
+    public static final String users_shareLocation = "shareLocation";
 
 
     //Event                             //TODO: change back to Events
-    public static String event_parent = "Events2";
+    public static final String event_parent = "Events2";
 
     public interface UsersCallback{
         void onSuccess(List<UserData> result);

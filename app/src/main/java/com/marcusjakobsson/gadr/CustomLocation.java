@@ -4,6 +4,9 @@ import com.google.android.gms.maps.model.LatLng;
 
 /**
  * Created by carlbratt on 2017-11-14.
+ * Holds latitude and longitude.
+ *
+ * (Since Firebase demands that the objects has a parameterless constructor and LatLng does not has that we need this class).
  */
 
 public class CustomLocation {

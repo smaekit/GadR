@@ -2,6 +2,7 @@ package com.marcusjakobsson.gadr;
 
 /**
  * Created by carlbratt on 2017-12-12.
+ * Holds references to categories names, images and icons.
  */
 
 class Category {

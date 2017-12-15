@@ -56,6 +56,7 @@ import static android.app.Activity.RESULT_OK;
 
 /**
  * Created by carlbratt on 2017-10-30.
+ * Contains a custom list row of Events that the current user has created.
  */
 
 public class Tab_Map_Fragment extends Fragment {

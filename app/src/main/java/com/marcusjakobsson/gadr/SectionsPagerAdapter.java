@@ -9,6 +9,7 @@ import java.util.List;
 
 /**
  * Created by carlbratt on 2017-10-30.
+ * Pager adapter for the fragments.
  */
 
 class SectionsPagerAdapter extends FragmentPagerAdapter {

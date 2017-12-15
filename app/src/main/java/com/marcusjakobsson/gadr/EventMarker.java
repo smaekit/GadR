@@ -6,6 +6,7 @@ import java.util.List;
 
 /**
  * Created by carlbratt on 2017-12-14.
+ * Markers with and index corresponding to their place in the corresponding arrays/lists.
  */
 
 class EventMarker {

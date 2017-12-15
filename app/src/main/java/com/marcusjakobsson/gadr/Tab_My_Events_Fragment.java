@@ -27,6 +27,7 @@ import static android.app.Activity.RESULT_OK;
 
 /**
  * Created by carlbratt on 2017-10-30.
+ * Contains a map with markers of users and Events.
  */
 
 public class Tab_My_Events_Fragment extends Fragment {

@@ -4,14 +4,7 @@ import android.app.Application;
 
 /**
  * Created by carlbratt on 2017-11-13.
- */
-
-/*
-        // set
-        ((ThisApp) getActivity().getApplication()).setTestString("foo");
-
-        // get
-        String s = ((ThisApp) getActivity().getApplication()).getTestString();
+ * Class for the entire app.
  */
 
 class ThisApp extends Application {

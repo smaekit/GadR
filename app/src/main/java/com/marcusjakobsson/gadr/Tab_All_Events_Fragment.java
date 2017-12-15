@@ -28,6 +28,7 @@ import java.util.List;
 
 /**
  * Created by carlbratt on 2017-10-30.
+ * Contains a custom list row of Events that the current user has NOT created.
  */
 
 public class Tab_All_Events_Fragment extends Fragment {

@@ -2,6 +2,7 @@ package com.marcusjakobsson.gadr;
 
 /**
  * Created by carlbratt on 2017-11-08.
+ * Holds the data for our custom list rows.
  */
 
 class CustomListViewItem {

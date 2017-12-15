@@ -9,6 +9,7 @@ package com.marcusjakobsson.gadr;
 
 /**
  * Created by Mäki on 2017-12-12.
+ *
  */
 
 public class MyFirebaseInstanceIDService extends FirebaseInstanceIdService {
