@@ -1,9 +1,5 @@
 package com.marcusjakobsson.gadr;
 
-import android.location.Location;
-
-import java.util.Date;
-
 /**
  * Created by carlbratt on 2017-11-13.
  */

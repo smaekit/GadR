@@ -1,10 +1,8 @@
 package com.marcusjakobsson.gadr;
 
-import android.content.Context;
 import android.os.Build;
 import android.support.design.widget.Snackbar;
 import android.support.v4.content.ContextCompat;
-import android.view.Gravity;
 import android.view.View;
 import android.widget.TextView;
 
