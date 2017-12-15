@@ -4,7 +4,7 @@ package com.marcusjakobsson.gadr;
  * Created by carlbratt on 2017-12-12.
  */
 
-public class Category {
+class Category {
 
     public static final int[] categoriesIndex = {
             R.string.Cat1,

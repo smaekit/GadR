@@ -6,7 +6,7 @@ package com.marcusjakobsson.gadr;
  * Created by carlbratt on 2017-11-13.
  */
 
-public class UserData {
+class UserData {
 
     private static final String TAG = "UserData";
 

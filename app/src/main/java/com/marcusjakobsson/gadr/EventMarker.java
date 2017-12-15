@@ -8,7 +8,7 @@ import java.util.List;
  * Created by carlbratt on 2017-12-14.
  */
 
-public class EventMarker {
+class EventMarker {
 
     private Marker marker;
     private int index;
@@ -18,7 +18,7 @@ public class EventMarker {
         this.index = index;
     }
 
-    public Marker getMarker() {
+    private Marker getMarker() {
         return marker;
     }
 

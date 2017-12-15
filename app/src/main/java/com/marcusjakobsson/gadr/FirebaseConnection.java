@@ -20,7 +20,7 @@ import java.util.List;
  * Created by carlbratt on 2017-10-30.
  */
 
-public class FirebaseConnection {
+class FirebaseConnection {
     private static final String TAG = "FirebaseConnection";
 
     //Constants
@@ -51,13 +51,12 @@ public class FirebaseConnection {
         void onSuccess(List<EventData> result,List<String> keys);
     }
 
-    private FirebaseDatabase mDatabase;
     private DatabaseReference mRef;
     private FirebaseAuth mAuth;
 
 
     public FirebaseConnection() {
-        mDatabase = FirebaseDatabase.getInstance();
+        FirebaseDatabase mDatabase = FirebaseDatabase.getInstance();
         mRef = mDatabase.getReference();
         mAuth = FirebaseAuth.getInstance();
     }

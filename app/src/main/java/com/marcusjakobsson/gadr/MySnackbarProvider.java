@@ -12,7 +12,7 @@ import android.widget.TextView;
  * Created by Mäki on 2017-12-14.
  */
 
-public class MySnackbarProvider {
+class MySnackbarProvider {
 
     public static void showSnackBar(View view, Integer stringID)
     {

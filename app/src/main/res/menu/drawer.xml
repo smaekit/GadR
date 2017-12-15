@@ -5,6 +5,6 @@
         android:id="@+id/refresh_button"
         android:icon="@drawable/ic_action_refresh"
         android:orderInCategory="100"
-        android:title="Refresh"
+        android:title="@string/Refresh"
         app:showAsAction="always" />
 </menu>

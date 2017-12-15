@@ -38,12 +38,12 @@ import java.lang.ref.WeakReference;
 
 public class MainActivity extends AppCompatActivity {
 
-    LoginButton loginButton;
-    CallbackManager callbackManager;
+    private LoginButton loginButton;
+    private CallbackManager callbackManager;
     private FirebaseAuth mAuth;
     private static final String TAG = "FacebookLogin";
-    ImageView gadrLogo;
-    FirebaseConnection fc;
+    private ImageView gadrLogo;
+    private FirebaseConnection fc;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -182,7 +182,7 @@ public class MainActivity extends AppCompatActivity {
 
 
     //Start get Facebook user info
-    public void getFacebookInfoFromUser(final MyCallbackListener myCallbackListener)
+    private void getFacebookInfoFromUser(final MyCallbackListener myCallbackListener)
     {
         final UserData user = new UserData();
         Bundle params = new Bundle();

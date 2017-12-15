@@ -35,6 +35,7 @@
         app:layout_constraintHorizontal_bias="0.501"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/logowithtext" />
+        app:srcCompat="@drawable/logowithtext"
+        android:contentDescription="@string/Content_Description_Logo"/>
 
 </android.support.constraint.ConstraintLayout>

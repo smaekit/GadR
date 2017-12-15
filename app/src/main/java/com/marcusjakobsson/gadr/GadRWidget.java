@@ -20,8 +20,8 @@ import android.widget.Toast;
 public class GadRWidget extends AppWidgetProvider {
 
 
-    static void updateAppWidget(Context context, AppWidgetManager appWidgetManager,
-                                int appWidgetId) {
+    private static void updateAppWidget(Context context, AppWidgetManager appWidgetManager,
+                                        int appWidgetId) {
 
         SharedPreferences sharedPreferences;
 

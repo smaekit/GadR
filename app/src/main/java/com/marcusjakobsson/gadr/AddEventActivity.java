@@ -49,27 +49,27 @@ public class AddEventActivity extends AppCompatActivity {
 
     public static final int PLACE_AUTOCOMPLETE_REQUEST_CODE = 5;
 
-    TextView view_title_EditText;
+    private TextView view_title_EditText;
 
-    EditText title_EditText;
-    EditText description_EditText;
-    EditText date_EditText;
-    EditText startTime_EditText;
-    EditText endTime_EditText;
-    EditText location_EditText;
-    EditText locationNickname_EditText;
-    Spinner category_Spinner;
+    private EditText title_EditText;
+    private EditText description_EditText;
+    private EditText date_EditText;
+    private EditText startTime_EditText;
+    private EditText endTime_EditText;
+    private EditText location_EditText;
+    private EditText locationNickname_EditText;
+    private Spinner category_Spinner;
 
-    Calendar calendar;
-    Calendar endCalendar;
-    DatePickerDialog.OnDateSetListener dateListener;
-    TimePickerDialog.OnTimeSetListener startTimeListener;
-    TimePickerDialog.OnTimeSetListener endTimeListener;
+    private Calendar calendar;
+    private Calendar endCalendar;
+    private DatePickerDialog.OnDateSetListener dateListener;
+    private TimePickerDialog.OnTimeSetListener startTimeListener;
+    private TimePickerDialog.OnTimeSetListener endTimeListener;
 
-    CustomLocation customLocation = new CustomLocation();
+    private CustomLocation customLocation = new CustomLocation();
 
-    boolean isEditing = false;
-    String currentKey;
+    private boolean isEditing = false;
+    private String currentKey;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -239,6 +239,7 @@ public class AddEventActivity extends AppCompatActivity {
             //TODO: Handle error
         }
     }
+
 
 
     private void setOnTouchListener(final EditText editText) {

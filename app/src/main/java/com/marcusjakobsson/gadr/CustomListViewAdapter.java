@@ -13,7 +13,7 @@ import android.widget.TextView;
  * Created by carlbratt on 2017-11-07.
  */
 
-public class CustomListViewAdapter extends ArrayAdapter<CustomListViewItem>{
+class CustomListViewAdapter extends ArrayAdapter<CustomListViewItem>{
 
     public CustomListViewAdapter(Context context, CustomListViewItem[] listArr) {
         super(context, R.layout.custom_list_row, listArr);

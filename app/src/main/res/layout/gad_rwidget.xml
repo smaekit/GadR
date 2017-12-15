@@ -30,7 +30,6 @@
         android:alpha="0.9"
         android:background="@color/cardview_dark_background"
         android:elevation="10dp"
-        android:onClick="goToStatus_button"
         android:paddingEnd="8dp"
         android:paddingStart="8dp"
         android:text="@string/change_your_status"

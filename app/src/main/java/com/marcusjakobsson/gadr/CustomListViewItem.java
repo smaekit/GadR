@@ -4,7 +4,7 @@ package com.marcusjakobsson.gadr;
  * Created by carlbratt on 2017-11-08.
  */
 
-public class CustomListViewItem {
+class CustomListViewItem {
 
     private String title;
     private String time;
