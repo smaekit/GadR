@@ -1,10 +1,8 @@
 package com.marcusjakobsson.gadr;
 
-import android.content.Context;
 import android.os.Build;
 import android.support.design.widget.Snackbar;
 import android.support.v4.content.ContextCompat;
-import android.view.Gravity;
 import android.view.View;
 import android.widget.TextView;
 
@@ -29,10 +27,7 @@ class MySnackbarProvider {
         }
         mTextView.setTextSize(24);
         // set text to center
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1)
-            mTextView.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
-        else
-            mTextView.setGravity(Gravity.CENTER_HORIZONTAL);
+        mTextView.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
         // show the snackbar
         mSnackbar.show();
     }
@@ -52,10 +47,7 @@ class MySnackbarProvider {
         }
         mTextView.setTextSize(24);
         // set text to center
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1)
-            mTextView.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
-        else
-            mTextView.setGravity(Gravity.CENTER_HORIZONTAL);
+        mTextView.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
         // show the snackbar
         mSnackbar.show();
     }

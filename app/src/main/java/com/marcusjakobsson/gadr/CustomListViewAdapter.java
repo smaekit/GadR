@@ -23,14 +23,17 @@ class CustomListViewAdapter extends ArrayAdapter<CustomListViewItem>{
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
 
-        LayoutInflater layoutInflater = LayoutInflater.from(getContext());
-        View view = layoutInflater.inflate(R.layout.custom_list_row, parent, false);
+        if(convertView == null){
+            LayoutInflater layoutInflater = LayoutInflater.from(getContext());
+            convertView = layoutInflater.inflate(R.layout.custom_list_row, parent, false);
+        }
+
 
         CustomListViewItem singleItem = getItem(position);
-        TextView title = (TextView) view.findViewById(R.id.textView_title);
-        TextView time = (TextView) view.findViewById(R.id.textView_time);
-        TextView place = (TextView) view.findViewById(R.id.textView_place);
-        ImageView imageView = (ImageView) view.findViewById(R.id.category_ImageView);
+        TextView title = (TextView) convertView.findViewById(R.id.textView_title);
+        TextView time = (TextView) convertView.findViewById(R.id.textView_time);
+        TextView place = (TextView) convertView.findViewById(R.id.textView_place);
+        ImageView imageView = (ImageView) convertView.findViewById(R.id.category_ImageView);
 
 
         title.setText(singleItem.getTitle());
@@ -38,7 +41,7 @@ class CustomListViewAdapter extends ArrayAdapter<CustomListViewItem>{
         place.setText(singleItem.getPlace());
         imageView.setImageDrawable(ContextCompat.getDrawable(getContext(), Category.categoryImageIndex[singleItem.getCategoryIndex()]));
 
-        return view;
+        return convertView;
     }
 
 

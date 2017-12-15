@@ -197,7 +197,7 @@ public class AddEventActivity extends AppCompatActivity {
             items[i] = getString(Category.categoriesIndex[i]);
         }
 
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item, items);
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, items);
         category_Spinner.setAdapter(adapter);
 
         Intent intent = getIntent();
@@ -231,10 +231,7 @@ public class AddEventActivity extends AppCompatActivity {
                     new PlaceAutocomplete.IntentBuilder(PlaceAutocomplete.MODE_OVERLAY)
                             .build(this);
             startActivityForResult(intent, PLACE_AUTOCOMPLETE_REQUEST_CODE);
-        } catch (GooglePlayServicesRepairableException e) {
-            e.printStackTrace();
-            //TODO: Handle error
-        } catch (GooglePlayServicesNotAvailableException e) {
+        } catch (GooglePlayServicesRepairableException | GooglePlayServicesNotAvailableException e) {
             e.printStackTrace();
             //TODO: Handle error
         }
