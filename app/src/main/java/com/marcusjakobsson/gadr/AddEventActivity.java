@@ -76,16 +76,16 @@ public class AddEventActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_event);
 
-        view_title_EditText = (TextView) findViewById(R.id.EditText_Title_For_View);
+        view_title_EditText = findViewById(R.id.EditText_Title_For_View);
 
-        title_EditText = (EditText) findViewById(R.id.EditText_Title);
-        description_EditText = (EditText) findViewById(R.id.EditText_Description);
-        date_EditText = (EditText) findViewById(R.id.EditText_Date);
-        startTime_EditText = (EditText) findViewById(R.id.EditText_StartTime);
-        endTime_EditText = (EditText) findViewById(R.id.EditText_EndTime);
-        location_EditText = (EditText) findViewById(R.id.EditText_Location);
-        locationNickname_EditText = (EditText) findViewById(R.id.EditText_LocationNickname);
-        category_Spinner = (Spinner) findViewById(R.id.Spinner_Category);
+        title_EditText = findViewById(R.id.EditText_Title);
+        description_EditText = findViewById(R.id.EditText_Description);
+        date_EditText = findViewById(R.id.EditText_Date);
+        startTime_EditText = findViewById(R.id.EditText_StartTime);
+        endTime_EditText = findViewById(R.id.EditText_EndTime);
+        location_EditText = findViewById(R.id.EditText_Location);
+        locationNickname_EditText = findViewById(R.id.EditText_LocationNickname);
+        category_Spinner = findViewById(R.id.Spinner_Category);
 
         resetView();
 
@@ -336,7 +336,7 @@ public class AddEventActivity extends AppCompatActivity {
 
         if (fieldIsEmpty(locationNickname_EditText)) { fieldsOK = false; }
 
-        // Starttime must be earlier than endtime.
+        // Start time must be earlier than end time.
         if (timesAreInvalid(startTime_EditText.getText().toString(), endTime_EditText.getText().toString())) {
             highlightInvalidEditText(startTime_EditText);
             highlightInvalidEditText(endTime_EditText);
@@ -344,7 +344,7 @@ public class AddEventActivity extends AppCompatActivity {
             fieldsOK = false;
         }
 
-        // If event is today the starttime must be later than current time.
+        // If event is today the start time must be later than current time.
         if (dateConflictsWithTime(startTime_EditText, calendar)) {
             highlightInvalidEditText(date_EditText);
             highlightInvalidEditText(startTime_EditText);

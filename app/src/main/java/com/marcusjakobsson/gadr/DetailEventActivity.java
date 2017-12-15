@@ -12,24 +12,17 @@ public class DetailEventActivity extends AppCompatActivity {
 
     static final String EXTRA_EVENT_INDEX = "event_index";
 
-    private ImageView imageView;
-    private TextView title_textView;
-    private TextView place_textView;
-    private TextView time_textView;
-    private TextView date_textView;
-    private TextView description_textView;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail_event);
 
-        imageView = (ImageView) findViewById(R.id.category_ImageView);
-        title_textView = (TextView) findViewById(R.id.title_TextView);
-        place_textView = (TextView) findViewById(R.id.place_TextView);
-        time_textView = (TextView) findViewById(R.id.time_TextView);
-        date_textView = (TextView) findViewById(R.id.date_TextView);
-        description_textView = (TextView) findViewById(R.id.description_TextView);
+        ImageView imageView = findViewById(R.id.category_ImageView);
+        TextView title_textView = findViewById(R.id.title_TextView);
+        TextView place_textView = findViewById(R.id.place_TextView);
+        TextView time_textView = findViewById(R.id.time_TextView);
+        TextView date_textView = findViewById(R.id.date_TextView);
+        TextView description_textView = findViewById(R.id.description_TextView);
 
 
         EventData eventData = ((ThisApp) getApplication()).getAllEventByIndex(getIntent().getIntExtra(EXTRA_EVENT_INDEX, 0) );

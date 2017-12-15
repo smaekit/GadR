@@ -21,7 +21,7 @@
             android:foregroundTint="@android:color/black"
             android:foregroundTintMode="src_over"
             android:src="@drawable/coffee"
-            android:contentDescription="@string/Content_Description_CategoryImg"/>
+            android:contentDescription="@string/category_image"/>
 
         <TextView
             android:id="@+id/textView_title"
