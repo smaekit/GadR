@@ -20,8 +20,6 @@
     <string name="StatusHint">What are you up to?..</string>
     <string name="userprofilepicture">userProfilePicture</string>
     <string name="name_of_user">Name of user</string>
-    <string name="createLabel">Create</string>
-    <string name="eventlabel">Event</string>
     <string name="statusLabel">Status</string>
     <string name="shareLocationOnText">You are now sharing your location</string>
     <string name="shareLocationOffText">You are no longer sharing your location</string>
@@ -32,7 +30,6 @@
     <string name="publishText">Publish</string>
     <string name="create_eventLabel">Create Event</string>
     <string name="appwidget_text">EXAMPLE</string>
-    <string name="add_widget">Add widget</string>
     <string name="change_your_status">Change your Status</string>
     <string name="Cat1">Coffee</string>
     <string name="Cat2">Cinema</string>
@@ -52,6 +49,10 @@
     <string name="Time">Time</string>
     <string name="Back">Back</string>
     <string name="TimeConnection" translatable="false">-</string>
+    <string name="cancelled">Cancelled</string>
+    <string name="errorLocation">Error while getting location</string>
+    <string name="authFailed">Authentication failed</string>
+    <string name="connectionError">Connection error</string>
 
 
 </resources>

@@ -6,7 +6,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.Toast;
 
 import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
@@ -66,15 +65,14 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onCancel() {
                 // App code
-                Toast.makeText(MainActivity.this, "Cancel", Toast.LENGTH_SHORT).show();
+                MySnackbarProvider.showSnackBar(getWindow().getDecorView().getRootView(),getString(R.string.cancelled));
                 updateUI(null);
 
             }
 
             @Override
             public void onError(FacebookException exception) {
-                // App code
-                Toast.makeText(MainActivity.this, "Error", Toast.LENGTH_SHORT).show();
+                MySnackbarProvider.showSnackBar(getWindow().getDecorView().getRootView(),getString(R.string.connectionError));
                 updateUI(null);
 
             }
@@ -144,8 +142,7 @@ public class MainActivity extends AppCompatActivity {
 
                         } else {
                             // If sign in fails, display a message to the user.
-                            Toast.makeText(MainActivity.this, "Authentication failed",
-                                    Toast.LENGTH_SHORT).show();
+                            MySnackbarProvider.showSnackBar(getWindow().getDecorView().getRootView(),getString(R.string.authFailed));
                             updateUI(null);
                         }
 

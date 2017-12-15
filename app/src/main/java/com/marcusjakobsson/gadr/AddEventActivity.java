@@ -434,11 +434,8 @@ public class AddEventActivity extends AppCompatActivity {
                 customLocation.setValues(place.getLatLng().latitude, place.getLatLng().longitude);
 
             } else if (resultCode == PlaceAutocomplete.RESULT_ERROR) {
-                Status status = PlaceAutocomplete.getStatus(this, data);
-                // TODO: Handle the error.
+                MySnackbarProvider.showSnackBar(getCurrentFocus(),getString(R.string.errorLocation));
 
-            } else if (resultCode == RESULT_CANCELED) {
-                // The user canceled the operation.
             }
         }
     }

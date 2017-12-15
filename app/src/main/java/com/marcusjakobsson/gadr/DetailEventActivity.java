@@ -32,7 +32,6 @@ public class DetailEventActivity extends AppCompatActivity {
         description_textView = (TextView) findViewById(R.id.description_TextView);
 
 
-        Intent intent = getIntent();
         EventData eventData = ((ThisApp) getApplication()).getAllEventByIndex(getIntent().getIntExtra(EXTRA_EVENT_INDEX, 0) );
 
 
