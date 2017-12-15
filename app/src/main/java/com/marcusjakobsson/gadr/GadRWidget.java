@@ -23,7 +23,7 @@ public class GadRWidget extends AppWidgetProvider {
         RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.gad_rwidget);
 
         sharedPreferences = context.getSharedPreferences(context.getPackageName(), Context.MODE_PRIVATE);
-        String status = sharedPreferences.getString("userStatus", ""); //finns inget värde att hämta blir det default värde ""
+        String status = sharedPreferences.getString("userStatus", ""); //if no value exists the default value is set to ""
 
         views.setTextViewText(R.id.appwidgetStatus_text, status);
 

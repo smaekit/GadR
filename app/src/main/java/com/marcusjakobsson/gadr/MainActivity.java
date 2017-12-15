@@ -43,13 +43,13 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        gadrLogo = (ImageView)findViewById(R.id.userProfilePicture);
+        gadrLogo = findViewById(R.id.userProfilePicture);
 
         // Initialize Firebase Auth
         mAuth = FirebaseAuth.getInstance();
         fc = new FirebaseConnection();
 
-        loginButton = (LoginButton) findViewById(R.id.login_button);
+        loginButton = findViewById(R.id.login_button);
         loginButton.setReadPermissions("email", "public_profile", "user_friends");
         callbackManager = CallbackManager.Factory.create();
 

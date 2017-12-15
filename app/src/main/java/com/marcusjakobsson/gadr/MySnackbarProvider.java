@@ -19,7 +19,7 @@ class MySnackbarProvider {
         // get snackbar view
         View mView = mSnackbar.getView();
         // get textview inside snackbar view
-        TextView mTextView = (TextView) mView.findViewById(android.support.design.R.id.snackbar_text);
+        TextView mTextView = mView.findViewById(android.support.design.R.id.snackbar_text);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             mTextView.setTextColor(view.getResources().getColor(R.color.colorAccent,view.getContext().getTheme()));
         }else {
@@ -39,7 +39,7 @@ class MySnackbarProvider {
         // get snackbar view
         View mView = mSnackbar.getView();
         // get textview inside snackbar view
-        TextView mTextView = (TextView) mView.findViewById(android.support.design.R.id.snackbar_text);
+        TextView mTextView = mView.findViewById(android.support.design.R.id.snackbar_text);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             mTextView.setTextColor(view.getResources().getColor(R.color.colorAccent,view.getContext().getTheme()));
         }else {

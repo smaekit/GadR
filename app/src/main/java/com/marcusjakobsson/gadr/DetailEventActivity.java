@@ -24,12 +24,12 @@ public class DetailEventActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail_event);
 
-        imageView = (ImageView) findViewById(R.id.category_ImageView);
-        title_textView = (TextView) findViewById(R.id.title_TextView);
-        place_textView = (TextView) findViewById(R.id.place_TextView);
-        time_textView = (TextView) findViewById(R.id.time_TextView);
-        date_textView = (TextView) findViewById(R.id.date_TextView);
-        description_textView = (TextView) findViewById(R.id.description_TextView);
+        imageView = findViewById(R.id.category_ImageView);
+        title_textView = findViewById(R.id.title_TextView);
+        place_textView = findViewById(R.id.place_TextView);
+        time_textView = findViewById(R.id.time_TextView);
+        date_textView = findViewById(R.id.date_TextView);
+        description_textView = findViewById(R.id.description_TextView);
 
 
         Intent intent = getIntent();

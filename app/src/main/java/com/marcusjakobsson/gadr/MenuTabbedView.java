@@ -125,9 +125,9 @@ public class MenuTabbedView extends AppCompatActivity implements NavigationView.
             tabMyEventsFragment = new Tab_My_Events_Fragment();
         }
 
-        viewPager = (ViewPager) findViewById(R.id.container);
+        viewPager = findViewById(R.id.container);
         viewPager.setOffscreenPageLimit(3);  //How many screens before reload
-        tabLayout = (TabLayout) findViewById(R.id.tabs);
+        tabLayout = findViewById(R.id.tabs);
         setupViewPager(viewPager);
         tabLayout.setupWithViewPager(viewPager);
 
@@ -153,10 +153,10 @@ public class MenuTabbedView extends AppCompatActivity implements NavigationView.
 
 
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.top_drawer_toolbar);
+        Toolbar toolbar = findViewById(R.id.top_drawer_toolbar);
         setSupportActionBar(toolbar);
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -168,13 +168,13 @@ public class MenuTabbedView extends AppCompatActivity implements NavigationView.
 
 
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
         toggle.syncState();
 
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        NavigationView navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
 
@@ -208,11 +208,11 @@ public class MenuTabbedView extends AppCompatActivity implements NavigationView.
 
             //intitiate drawer menu with saved rounded image and name and maybe status...
             View hView =  navigationView.getHeaderView(0);
-            TextView nav_user = (TextView)hView.findViewById(R.id.userNameTextView);
+            TextView nav_user = hView.findViewById(R.id.userNameTextView);
             nav_user.setText(mData.drawerUserName);
-            ImageView imageView = (ImageView)hView.findViewById(R.id.userProfilePicture);
+            ImageView imageView = hView.findViewById(R.id.userProfilePicture);
             imageView.setImageDrawable(mData.drawable);
-            TextView nav_userStatus = (TextView)hView.findViewById(R.id.userStatus_TextView);
+            TextView nav_userStatus = hView.findViewById(R.id.userStatus_TextView);
             nav_userStatus.setText(mData.userStatus);
 
         }
@@ -293,8 +293,8 @@ public class MenuTabbedView extends AppCompatActivity implements NavigationView.
                     }
                 }
 
-                thisApp.setAllEvents((EventData[]) allEventData.toArray(new EventData[allEventData.size()]));
-                thisApp.setMyEvents((EventData[]) myEventData.toArray(new EventData[myEventData.size()]));
+                thisApp.setAllEvents(allEventData.toArray(new EventData[allEventData.size()]));
+                thisApp.setMyEvents(myEventData.toArray(new EventData[myEventData.size()]));
                 thisApp.setAllEventsKeys(allEventDataKeys.toArray(new String[allEventDataKeys.size()]));
                 thisApp.setMyEventsKeys(myEventDataKeys.toArray(new String[myEventDataKeys.size()]));
 
@@ -315,7 +315,7 @@ public class MenuTabbedView extends AppCompatActivity implements NavigationView.
 
     private void setUserStatus()
     {
-        userStatus_TextView = (TextView)findViewById(R.id.userStatus_TextView);
+        userStatus_TextView = findViewById(R.id.userStatus_TextView);
         userStatus_TextView.setText(mData.userStatus);
     }
 
@@ -332,7 +332,7 @@ public class MenuTabbedView extends AppCompatActivity implements NavigationView.
 
     private void checkShareLocation(Boolean isShareLocation)
     {
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        NavigationView navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
         Menu menu = navigationView.getMenu();
         MenuItem nav_shareLocation = menu.findItem(R.id.nav_shareLocation);
@@ -367,7 +367,7 @@ public class MenuTabbedView extends AppCompatActivity implements NavigationView.
 
                     getBitmapFromURLAsync = new GetBitmapFromURLAsync();
                     getBitmapFromURLAsync.execute(profilePicUrl);
-                    TextView textView = (TextView)findViewById(R.id.userNameTextView);
+                    TextView textView = findViewById(R.id.userNameTextView);
                     textView.setText(name);
                     mData.drawerUserName = name;
                 }
@@ -437,7 +437,7 @@ public class MenuTabbedView extends AppCompatActivity implements NavigationView.
 
     @Override
     public void onBackPressed() {
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
@@ -530,7 +530,7 @@ public class MenuTabbedView extends AppCompatActivity implements NavigationView.
             signOutUser();
         }
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
@@ -586,7 +586,7 @@ public class MenuTabbedView extends AppCompatActivity implements NavigationView.
         }
     }
 
-    /**     AsyncTask to set user Profileimage from url in drawer menu  */
+    /**     AsyncTask to set user Profile image from url in drawer menu  */
     private class GetBitmapFromURLAsync extends AsyncTask<String, Void, Bitmap> {
         @Override
         protected Bitmap doInBackground(String... params) {
@@ -600,7 +600,7 @@ public class MenuTabbedView extends AppCompatActivity implements NavigationView.
             drawable.setCircular(true);
 
             mData.drawable = drawable;
-            ImageView imageView = (ImageView)findViewById(R.id.userProfilePicture);
+            ImageView imageView = findViewById(R.id.userProfilePicture);
             imageView.setImageDrawable(drawable);
         }
     }

@@ -25,8 +25,8 @@ public class CreateStatus extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_status);
 
-        status_editText = (EditText)findViewById(R.id.status_EditText);
-        publishStatusBtn = (Button)findViewById(R.id.publish_button);
+        status_editText = findViewById(R.id.status_EditText);
+        publishStatusBtn = findViewById(R.id.publish_button);
     }
 
     public void cancel_button(View view)

@@ -30,10 +30,10 @@ class CustomListViewAdapter extends ArrayAdapter<CustomListViewItem>{
 
 
         CustomListViewItem singleItem = getItem(position);
-        TextView title = (TextView) convertView.findViewById(R.id.textView_title);
-        TextView time = (TextView) convertView.findViewById(R.id.textView_time);
-        TextView place = (TextView) convertView.findViewById(R.id.textView_place);
-        ImageView imageView = (ImageView) convertView.findViewById(R.id.category_ImageView);
+        TextView title = convertView.findViewById(R.id.textView_title);
+        TextView time = convertView.findViewById(R.id.textView_time);
+        TextView place = convertView.findViewById(R.id.textView_place);
+        ImageView imageView = convertView.findViewById(R.id.category_ImageView);
 
 
         title.setText(singleItem.getTitle());
