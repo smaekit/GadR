@@ -3,6 +3,7 @@ package com.marcusjakobsson.gadr;
 import android.content.Context;
 import android.os.Build;
 import android.support.design.widget.Snackbar;
+import android.support.v4.content.ContextCompat;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.TextView;
@@ -21,7 +22,11 @@ public class MySnackbarProvider {
         View mView = mSnackbar.getView();
         // get textview inside snackbar view
         TextView mTextView = (TextView) mView.findViewById(android.support.design.R.id.snackbar_text);
-        mTextView.setTextColor(view.getResources().getColor(R.color.colorAccent,view.getContext().getTheme()));
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            mTextView.setTextColor(view.getResources().getColor(R.color.colorAccent,view.getContext().getTheme()));
+        }else {
+            mTextView.setTextColor(ContextCompat.getColor(view.getContext(), R.color.colorAccent));
+        }
         mTextView.setTextSize(24);
         // set text to center
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1)
@@ -40,7 +45,11 @@ public class MySnackbarProvider {
         View mView = mSnackbar.getView();
         // get textview inside snackbar view
         TextView mTextView = (TextView) mView.findViewById(android.support.design.R.id.snackbar_text);
-        mTextView.setTextColor(view.getResources().getColor(R.color.colorAccent,view.getContext().getTheme()));
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            mTextView.setTextColor(view.getResources().getColor(R.color.colorAccent,view.getContext().getTheme()));
+        }else {
+            mTextView.setTextColor(ContextCompat.getColor(view.getContext(), R.color.colorAccent));
+        }
         mTextView.setTextSize(24);
         // set text to center
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1)
