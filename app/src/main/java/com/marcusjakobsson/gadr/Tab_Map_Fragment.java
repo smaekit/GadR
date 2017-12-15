@@ -256,7 +256,6 @@ public class Tab_Map_Fragment extends Fragment {
                 mData.myEventData = ((ThisApp) getActivity().getApplication()).getMyEvents();
             }catch (NullPointerException e)
             {
-                //Toast.makeText(getContext(), R.string.noneDataRetrievdMsg, Toast.LENGTH_SHORT).show();
                 e.printStackTrace();
             }
 
@@ -382,7 +381,10 @@ public class Tab_Map_Fragment extends Fragment {
             getBitmapFromURLAsync.cancel(true);
         }
 
-        mData.cameraUpdate = CameraUpdateFactory.newLatLngZoom(googleMap.getCameraPosition().target,googleMap.getCameraPosition().zoom);
+        if(googleMap != null && isFragmentUp){
+            mData.cameraUpdate = CameraUpdateFactory.newLatLngZoom(googleMap.getCameraPosition().target,googleMap.getCameraPosition().zoom);
+        }
+
         super.onPause();
         mMapView.onPause();
     }
@@ -449,12 +451,16 @@ public class Tab_Map_Fragment extends Fragment {
         if (resultCode == RESULT_OK) {
             if (requestCode == AddEventActivity.REQUEST_CODE_DidEditEvent) {
                 if(data.getBooleanExtra(AddEventActivity.IntentExtra_DidEditEvent, false)){
-                    MenuTabbedView.reloadEventData((ThisApp) getActivity().getApplication(), new Handler(Looper.getMainLooper()) {
-                        @Override
-                        public void handleMessage(Message msg) {
-                            reloadMapMarkers();
-                        }
-                    });
+                    if(getActivity().getApplication() != null)
+                    {
+                        MenuTabbedView.reloadEventData((ThisApp) getActivity().getApplication(), new Handler(Looper.getMainLooper()) {
+                            @Override
+                            public void handleMessage(Message msg) {
+                                reloadMapMarkers();
+                            }
+                        });
+                    }
+
                 }
             }
         }

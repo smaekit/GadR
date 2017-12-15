@@ -55,6 +55,7 @@
     <string name="connectionError">Connection error</string>
     <string name="couldNotUpdate">Could not update</string>
     <string name="Content_Description_CategoryImg">Category picture</string>
+    <string name="settingsTitle">Settings</string>
 
 
 </resources>

@@ -7,35 +7,21 @@
         <item
             android:id="@+id/nav_changeStatus"
             android:icon="@drawable/ic_create_black_24dp"
-            android:title="@string/statusLabel" />
+            android:title="@string/statusLabel"
+            android:checkable="false"/>
         <item
             android:id="@+id/nav_shareLocation"
             android:icon="@drawable/ic_location_on"
-            android:title="@string/shareLocationOnTitle" />
+            android:title="@string/shareLocationOnTitle"
+            android:checkable="false"/>
 
-        <item
-            android:id="@+id/nav_slideshow"
-            android:icon="@drawable/ic_menu_slideshow"
-            android:title="Slideshow" />
-        <item
-            android:id="@+id/nav_manage"
-            android:icon="@drawable/ic_menu_manage"
-            android:title="Tools" />
     </group>
 
-    <item android:title="Communicate">
+    <item android:title="@string/settingsTitle">
         <menu>
             <item
-                android:id="@+id/nav_share"
-                android:icon="@drawable/ic_menu_share"
-                android:title="Share" />
-            <item
-                android:id="@+id/nav_send"
-                android:icon="@drawable/ic_menu_send"
-                android:title="Send" />
-            <item
                 android:title="@string/logout"
-               android:id="@+id/nav_signOutButton"
+                android:id="@+id/nav_signOutButton"
                 android:icon="@drawable/com_facebook_button_login_logo"/>
         </menu>
     </item>

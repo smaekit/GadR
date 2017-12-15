@@ -83,24 +83,28 @@ public class Tab_All_Events_Fragment extends Fragment {
     }
 
     public void reloadListData() {
-        EventData[] newAllEventData = ((ThisApp) getActivity().getApplication()).getAllEvents();
+        if(getActivity().getApplication() != null)
+        {
+            EventData[] newAllEventData = ((ThisApp) getActivity().getApplication()).getAllEvents();
 
-        if (newAllEventData != null && newAllEventData.length > 0) {
-            listData = new CustomListViewItem[newAllEventData.length];
-            allEventData = newAllEventData;
+            if (newAllEventData != null && newAllEventData.length > 0) {
+                listData = new CustomListViewItem[newAllEventData.length];
+                allEventData = newAllEventData;
 
-            for (int i = 0; i < listData.length; i++) {
-                listData[i] = new CustomListViewItem(allEventData[i].getTitle(), allEventData[i].getStartTime() + " - " + allEventData[i].getEndTime(), allEventData[i].getLocationNickname(), allEventData[i].getCategoryIndex());
+                for (int i = 0; i < listData.length; i++) {
+                    listData[i] = new CustomListViewItem(allEventData[i].getTitle(), allEventData[i].getStartTime() + " - " + allEventData[i].getEndTime(), allEventData[i].getLocationNickname(), allEventData[i].getCategoryIndex());
+                }
+
+                listViewAdapter = new CustomListViewAdapter(getActivity(), listData);
+                listView.setAdapter(listViewAdapter);
+
+                listHasData = true;
             }
-
-            listViewAdapter = new CustomListViewAdapter(getActivity(), listData);
-            listView.setAdapter(listViewAdapter);
-
-            listHasData = true;
+            else {
+                loadDefault();
+            }
         }
-        else {
-            loadDefault();
-        }
+
 
     }
 

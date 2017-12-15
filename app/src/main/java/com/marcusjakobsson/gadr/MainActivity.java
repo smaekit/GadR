@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.DisplayMetrics;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.Toast;
@@ -31,12 +32,22 @@ import org.json.JSONObject;
 
 public class MainActivity extends AppCompatActivity {
 
+    private static final String FB_INFO_DPI_SMALL = "name,picture.type(normal)";
+    private static final String FB_INFO_DPI_240 = "name,picture.width(125).height(125)";
+    private static final String FB_INFO_DPI_320 = "name,picture.width(150).height(150)";
+    private static final String FB_INFO_DPI_480 = "name,picture.width(225).height(225)";
+    private static final String FB_INFO_DPI_LARGE = "name,picture.width(300).height(300)";
+    private static final String FB_ICON_DPI_NORMAL = "picture.type(normal)";
+    private static final String FB_REQUEST_FIELDS = "fields";
+
+
     private LoginButton loginButton;
     private CallbackManager callbackManager;
     private FirebaseAuth mAuth;
     private static final String TAG = "FacebookLogin";
     private ImageView gadrLogo;
     private FirebaseConnection fc;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -85,9 +96,12 @@ public class MainActivity extends AppCompatActivity {
     public void onStart() {
         super.onStart();
         // Check if user is signed in (non-null) and update UI accordingly.
-        FirebaseUser currentUser = mAuth.getCurrentUser();
-        updateUI(currentUser);
-        loginButton.setVisibility(View.VISIBLE);
+        if(mAuth.getCurrentUser() != null){
+            FirebaseUser currentUser = mAuth.getCurrentUser();
+            updateUI(currentUser);
+            loginButton.setVisibility(View.VISIBLE);
+        }
+
     }
 
 
@@ -168,12 +182,33 @@ public class MainActivity extends AppCompatActivity {
 
     //Here we send the user to next activity
     private void updateUI(FirebaseUser user) {
-        //hideProgressDialog();
+
         if (user != null) {
 
             Intent intent = new Intent(this, MenuTabbedView.class);
             startActivity(intent);
         }
+    }
+
+
+    //Get picture bundle depending on DPI of device
+    private Bundle getPictureBundleDPI(Bundle params)
+    {
+        DisplayMetrics metrics = getResources().getDisplayMetrics();
+        Integer dpi = metrics.densityDpi;
+        if (dpi < 240){
+            params.putString(FB_REQUEST_FIELDS, FB_INFO_DPI_SMALL);
+        }else if(dpi == 240){
+            params.putString(FB_REQUEST_FIELDS, FB_INFO_DPI_240);
+        } else if(dpi == 320){
+            params.putString(FB_REQUEST_FIELDS, FB_INFO_DPI_320);
+        } else if(dpi == 480){
+            params.putString(FB_REQUEST_FIELDS, FB_INFO_DPI_480);
+        }else {
+            params.putString(FB_REQUEST_FIELDS, FB_INFO_DPI_LARGE);
+        }
+
+        return params;
     }
 
 
@@ -183,8 +218,9 @@ public class MainActivity extends AppCompatActivity {
         final UserData user = new UserData();
         Bundle params = new Bundle();
         Bundle params2 = new Bundle();
-        params.putString("fields", "name,picture.type(large)");    //Params what you want to get from the FB-user
-        params2.putString("fields", "picture.type(normal)");                      //Graph request for the small profilepicture
+
+        params = getPictureBundleDPI(params);   //Params what you want to get from the FB-user depending on DPI of device
+        params2.putString(FB_REQUEST_FIELDS, FB_ICON_DPI_NORMAL);
 
         //Start GraphRequestBatch
         GraphRequestBatch batch = new GraphRequestBatch(

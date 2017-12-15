@@ -36,7 +36,6 @@ import android.support.v7.widget.Toolbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.os.Bundle;
-import android.util.Log;
 
 import android.view.Menu;
 import android.view.MenuItem;
@@ -271,7 +270,7 @@ public class MenuTabbedView extends AppCompatActivity implements NavigationView.
                         }
                     });
                 }
-                else { Log.i(TAG, "False"); }
+
             }
 
         }
@@ -287,7 +286,6 @@ public class MenuTabbedView extends AppCompatActivity implements NavigationView.
                 List<String> myEventDataKeys = new ArrayList<>();
 
                 for (int i = 0; i < result.size(); i++) {
-                    Log.i(TAG, "ID:          " + result.get(i).getCreatorID().equals(Profile.getCurrentProfile().getId()));
 
                     if(result.get(i).getCreatorID().equals(Profile.getCurrentProfile().getId())) {
                         myEventData.add(result.get(i));
@@ -332,12 +330,9 @@ public class MenuTabbedView extends AppCompatActivity implements NavigationView.
 
     private void reloadFragmentData() {
 
-        //Todo reload current fragmet?
         setUserStatus();
         tabAllEventsFragment.reloadListData();
         tabMyEventsFragment.reloadListData();
-        //tabMapFragment.reloadUserData();
-        //tabMapFragment.reloadMapMarkers();
     }
 
 
@@ -365,14 +360,11 @@ public class MenuTabbedView extends AppCompatActivity implements NavigationView.
         if (user != null)
         {
             for (int i = 0; i < result.size(); i++) {
-                Log.i(TAG,"searching");
-                Log.i(TAG,result.get(i).getFbID());
-                Log.i(TAG,user.getUid());
+
                 if (result.get(i).getFbID().equals(user.getUid()) )
                 {
                     checkShareLocation(result.get(i).getShareLocation());
 
-                    Log.i(TAG,"found the right user lets get his picture");
                     String profilePicUrl = result.get(i).getImgURLLarge();
                     String name = result.get(i).getName();
 
@@ -425,26 +417,10 @@ public class MenuTabbedView extends AppCompatActivity implements NavigationView.
                 return;
             }
             //We have permisson
-            try {
-                //refresh fragments
-                viewPager.getAdapter().notifyDataSetChanged();
-            }catch (NullPointerException e)
-            {
-                MySnackbarProvider.showSnackBar(getCurrentFocus(),getString(R.string.couldNotUpdate));
-                e.printStackTrace();
-            }
-
-
+            tabMapFragment.refreshUserLocationData();
         }
     }
 
-    //Todo what is this?
-    public static class PlaceholderFragment extends Fragment {
-
-        public PlaceholderFragment() {
-        }
-
-    }
 
 
     @Override
@@ -493,6 +469,23 @@ public class MenuTabbedView extends AppCompatActivity implements NavigationView.
         return super.onOptionsItemSelected(item);
     }
 
+    private void setShareLocationON(MenuItem item){
+        FirebaseConnection firebaseConnection2 = new FirebaseConnection();
+        firebaseConnection2.UpdateUserShareLocation(true);
+        item.setIcon(R.drawable.ic_location_on);
+        item.setTitle(R.string.shareLocationOnTitle);
+
+        MySnackbarProvider.showSnackBar(getCurrentFocus(),R.string.shareLocationOnText);
+    }
+
+    private void setShareLocationOFF(MenuItem item) {
+        FirebaseConnection firebaseConnection2 = new FirebaseConnection();
+        firebaseConnection2.UpdateUserShareLocation(false);
+        item.setIcon(R.drawable.ic_action_name);
+        item.setTitle(R.string.shareLocationOffTitle);
+
+        MySnackbarProvider.showSnackBar(getCurrentFocus(),R.string.shareLocationOffText);
+    }
 
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
@@ -507,35 +500,14 @@ public class MenuTabbedView extends AppCompatActivity implements NavigationView.
             if(item.getTitle() == getString(R.string.shareLocationOffTitle))
             {
                 //When user wants to share its location
-                FirebaseConnection firebaseConnection2 = new FirebaseConnection();
-                firebaseConnection2.UpdateUserShareLocation(true);
-                item.setIcon(R.drawable.ic_location_on);
-                item.setTitle(R.string.shareLocationOnTitle);
-
-                MySnackbarProvider.showSnackBar(getCurrentFocus(),R.string.shareLocationOnText);
+                setShareLocationON(item);
             }
             else
             {
                 //When user Don´t wants to share its location
-                FirebaseConnection firebaseConnection2 = new FirebaseConnection();
-                firebaseConnection2.UpdateUserShareLocation(false);
-                item.setIcon(R.drawable.ic_action_name);
-                item.setTitle(R.string.shareLocationOffTitle);
-
-                MySnackbarProvider.showSnackBar(getCurrentFocus(),R.string.shareLocationOffText);
+                setShareLocationOFF(item);
             }
 
-
-        } else if (id == R.id.nav_slideshow) {
-            Intent intent = new Intent(getApplicationContext(), DetailEventActivity.class);
-            startActivity(intent);
-
-
-        } else if (id == R.id.nav_manage) {
-
-        } else if (id == R.id.nav_share) {
-
-        } else if (id == R.id.nav_send) {
 
         } else if (id == R.id.nav_signOutButton) {
 
@@ -547,7 +519,6 @@ public class MenuTabbedView extends AppCompatActivity implements NavigationView.
         return true;
     }
 
-    //Todo destroy asyncTasks and objects when view is getting onDestroy
     @Override
     protected void onDestroy() {
         if(getBitmapFromURLAsync != null){
@@ -577,7 +548,7 @@ public class MenuTabbedView extends AppCompatActivity implements NavigationView.
         } else {
             AlertDialog alertDialog =
                     new AlertDialog.Builder(this, R.style.Theme_AppCompat_Dialog_Alert).setMessage(
-                            "You need to download Google Play Services in order to use this part of the application")
+                            R.string.play_services_message)
                             .create();
             alertDialog.show();
         }
@@ -593,7 +564,6 @@ public class MenuTabbedView extends AppCompatActivity implements NavigationView.
             InputStream input = connection.getInputStream();
             return BitmapFactory.decodeStream(input);
         } catch (IOException e) {
-            // Log exception
             return null;
         }
     }

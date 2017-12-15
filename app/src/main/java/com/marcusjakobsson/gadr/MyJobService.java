@@ -13,7 +13,6 @@ public class MyJobService extends JobService {
 
     @Override
     public boolean onStartJob(JobParameters jobParameters) {
-        // TODO(developer): add long running task here.
         return false;
     }
 
