@@ -54,6 +54,11 @@
     <string name="edit_eventLabel">Edit event</string>
     <string name="noEventTitle">No events</string>
     <string name="noneDataRetrievdMsg">Could not retrieve data</string>
+    <string name="Content_Description_CategoryImg">Category Image</string>
+    <string name="Content_Description_Logo">GadR Logo</string>
+    <string name="Time">Time</string>
+    <string name="Back">Back</string>
+    <string name="TimeConnection" translatable="false">-</string>
 
 
 </resources>

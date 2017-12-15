@@ -60,22 +60,22 @@ import static android.app.Activity.RESULT_OK;
 
 public class Tab_Map_Fragment extends Fragment {
 
-    MapView mMapView;
+    private MapView mMapView;
     private GoogleMap googleMap;
 
-    List<EventMarker> allEventMarkers = new ArrayList<>();
-    List<EventMarker> myEventMarkers = new ArrayList<>();
+    private List<EventMarker> allEventMarkers = new ArrayList<>();
+    private List<EventMarker> myEventMarkers = new ArrayList<>();
 
-    LocationManager locationManager;
-    LocationListener locationListener;
+    private LocationManager locationManager;
+    private LocationListener locationListener;
 
     private static final String TAG_RETAINED_MAP_FRAGMENT = "RetainedMapFragment";
 
     private RetainedMapFragment mData;
 
-    GetBitmapFromURLAsync getBitmapFromURLAsync;
-    Boolean isFragmentUp = false;
-    Boolean cameFromEarlierView = false;
+    private GetBitmapFromURLAsync getBitmapFromURLAsync;
+    private Boolean isFragmentUp = false;
+    private Boolean cameFromEarlierView = false;
 
 
 
@@ -194,14 +194,14 @@ public class Tab_Map_Fragment extends Fragment {
         });
     }
 
-    public void updateCameraPosition(){
+    private void updateCameraPosition(){
         if (googleMap != null && mData.loc != null) {
             CameraPosition cameraPosition = new CameraPosition.Builder().target(mData.loc).zoom(17).build();
             googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
         }
     }
 
-    public void requestLocationUpdates()
+    private void requestLocationUpdates()
     {
         // If device is running SDK < 23
         if (Build.VERSION.SDK_INT < 23)
@@ -319,13 +319,10 @@ public class Tab_Map_Fragment extends Fragment {
 
     private Drawable convertToRoundDrawable(Bitmap bitmap)
     {
-
             RoundedBitmapDrawable drawable = RoundedBitmapDrawableFactory.create(getResources(), bitmap);
             drawable.setCircular(true);
             mData.roundIcon.add(drawable);
-            Drawable circleDrawable = drawable;
-            return circleDrawable;
-
+            return drawable;
     }
 
     private BitmapDescriptor getMarkerIconFromDrawable(Drawable drawable) {
@@ -404,15 +401,14 @@ public class Tab_Map_Fragment extends Fragment {
 
 
 
-    public static Bitmap getBitmapFromURL(String imgUrl) {
+    private static Bitmap getBitmapFromURL(String imgUrl) {
         try {
             URL url = new URL(imgUrl);
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
             connection.setDoInput(true);
             connection.connect();
             InputStream input = connection.getInputStream();
-            Bitmap myBitmap = BitmapFactory.decodeStream(input);
-            return myBitmap;
+            return BitmapFactory.decodeStream(input);
         } catch (IOException e) {
             return null;
         }

@@ -31,14 +31,14 @@ import static android.app.Activity.RESULT_OK;
 
 public class Tab_My_Events_Fragment extends Fragment {
 
-    ListView listView;
-    ListAdapter listViewAdapter;
+    private ListView listView;
+    private ListAdapter listViewAdapter;
 
-    EventData[] myEventData;
-    CustomListViewItem[] listData;
-    public SwipeRefreshLayout swipeContainer;
+    private EventData[] myEventData;
+    private CustomListViewItem[] listData;
+    private SwipeRefreshLayout swipeContainer;
 
-    boolean listHasData = false;
+    private boolean listHasData = false;
 
     @Nullable
     @Override

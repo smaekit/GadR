@@ -80,17 +80,17 @@ public class MenuTabbedView extends AppCompatActivity implements NavigationView.
     private ViewPager viewPager;
     private TabLayout tabLayout;
 
-    GetBitmapFromURLAsync getBitmapFromURLAsync;
+    private GetBitmapFromURLAsync getBitmapFromURLAsync;
     private static final String TAG_RETAINED_MENU_FRAGMENT = "RetainedMenuTabbedFragment";
     private RetainedMenuTabbedFragmet mData;
 
-    TextView userStatus_TextView;
+    private TextView userStatus_TextView;
 
 
     //Fragments
-    Tab_Map_Fragment tabMapFragment;
-    Tab_All_Events_Fragment tabAllEventsFragment;
-    Tab_My_Events_Fragment tabMyEventsFragment;
+    private Tab_Map_Fragment tabMapFragment;
+    private Tab_All_Events_Fragment tabAllEventsFragment;
+    private Tab_My_Events_Fragment tabMyEventsFragment;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -332,7 +332,7 @@ public class MenuTabbedView extends AppCompatActivity implements NavigationView.
     }
 
 
-    public void checkShareLocation(Boolean isShareLocation)
+    private void checkShareLocation(Boolean isShareLocation)
     {
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
@@ -378,7 +378,7 @@ public class MenuTabbedView extends AppCompatActivity implements NavigationView.
 
     }
 
-    void signOutUser(){
+    private void signOutUser(){
         FirebaseAuth.getInstance().signOut();
         LoginManager.getInstance().logOut();
         Intent intent = new Intent(this, MainActivity.class);
@@ -574,15 +574,14 @@ public class MenuTabbedView extends AppCompatActivity implements NavigationView.
     }
 
 
-    public static Bitmap getBitmapFromURL(String imgUrl) {
+    private static Bitmap getBitmapFromURL(String imgUrl) {
         try {
             URL url = new URL(imgUrl);
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
             connection.setDoInput(true);
             connection.connect();
             InputStream input = connection.getInputStream();
-            Bitmap myBitmap = BitmapFactory.decodeStream(input);
-            return myBitmap;
+            return BitmapFactory.decodeStream(input);
         } catch (IOException e) {
             // Log exception
             return null;

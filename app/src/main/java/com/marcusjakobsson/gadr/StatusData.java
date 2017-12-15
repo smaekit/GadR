@@ -6,7 +6,7 @@ import java.util.Date;
  * Created by carlbratt on 2017-11-13.
  */
 
-public class StatusData {
+class StatusData {
 
     private static final String TAG = "StatusData";
 

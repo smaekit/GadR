@@ -32,14 +32,14 @@ import java.util.List;
 
 public class Tab_All_Events_Fragment extends Fragment {
 
-    ListView listView;
-    ListAdapter listViewAdapter;
+    private ListView listView;
+    private ListAdapter listViewAdapter;
 
-    EventData[] allEventData;
-    CustomListViewItem[] listData;
+    private EventData[] allEventData;
+    private CustomListViewItem[] listData;
     private SwipeRefreshLayout swipeContainer;
 
-    boolean listHasData = false;
+    private boolean listHasData = false;
 
 
     @Nullable

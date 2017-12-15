@@ -17,8 +17,8 @@ public class CreateStatus extends AppCompatActivity {
     public static final String IntentExtra_DidAddStatus = "didAddStatus";
     public static final String IntentExtra_UserStatus = "userStatus";
 
-    EditText status_editText;
-    Button publishStatusBtn;
+    private EditText status_editText;
+    private Button publishStatusBtn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,7 +53,7 @@ public class CreateStatus extends AppCompatActivity {
         finish();
     }
 
-    public void updateWidget(String userStatus)
+    private void updateWidget(String userStatus)
     {
         //Start Code for widget
         SharedPreferences sharedPreferences = this.getSharedPreferences(getPackageName(), Context.MODE_PRIVATE);

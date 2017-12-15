@@ -14,7 +14,7 @@ import android.app.Application;
         String s = ((ThisApp) getActivity().getApplication()).getTestString();
  */
 
-public class ThisApp extends Application {
+class ThisApp extends Application {
 
     private static final String TAG = "ThisApp";
 

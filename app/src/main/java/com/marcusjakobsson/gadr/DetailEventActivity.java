@@ -15,12 +15,12 @@ public class DetailEventActivity extends AppCompatActivity {
 
     static final String EXTRA_EVENT_INDEX = "event_index";
 
-    ImageView imageView;
-    TextView title_textView;
-    TextView place_textView;
-    TextView time_textView;
-    TextView date_textView;
-    TextView description_textView;
+    private ImageView imageView;
+    private TextView title_textView;
+    private TextView place_textView;
+    private TextView time_textView;
+    private TextView date_textView;
+    private TextView description_textView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,7 +42,7 @@ public class DetailEventActivity extends AppCompatActivity {
         imageView.setImageDrawable(ContextCompat.getDrawable(getApplicationContext(), Category.categoryImageIndex[eventData.getCategoryIndex()]));
         title_textView.setText(eventData.getTitle());
         place_textView.setText(eventData.getLocationNickname());
-        time_textView.setText(eventData.getStartTime() + " - " + eventData.getEndTime());
+        time_textView.setText(eventData.getStartTime() + R.string.TimeConnection + eventData.getEndTime());
         date_textView.setText(eventData.getDate());
         description_textView.setText(eventData.getDescription());
     }
