@@ -68,12 +68,11 @@ public class Tab_My_Events_Fragment extends Fragment {
         swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-
+                MySnackbarProvider.showSnackBar(getView(),R.string.Refresh);
                 MenuTabbedView.reloadEventData((ThisApp)getActivity().getApplication(), new Handler(Looper.getMainLooper()) {
                     @Override
                     public void handleMessage(Message msg) {
                         reloadListData();
-
                         swipeContainer.setRefreshing(false);
                     }
                 });
