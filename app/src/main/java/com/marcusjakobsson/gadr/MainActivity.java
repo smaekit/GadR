@@ -198,8 +198,8 @@ public class MainActivity extends AppCompatActivity {
 
                             JSONObject data = response.getJSONObject();
 
-                            String profilePicUrl = "";
-                            String name = "";
+                            String profilePicUrl;
+                            String name;
 
                             profilePicUrl = data.getJSONObject("picture").getJSONObject("data").getString("url");
                             user.setImgURLLarge(profilePicUrl);
