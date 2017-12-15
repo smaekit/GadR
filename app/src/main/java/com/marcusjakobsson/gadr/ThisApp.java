@@ -7,7 +7,7 @@ import android.app.Application;
  * Class for the entire app.
  */
 
-class ThisApp extends Application {
+public class ThisApp extends Application {
 
     private static final String TAG = "ThisApp";
 

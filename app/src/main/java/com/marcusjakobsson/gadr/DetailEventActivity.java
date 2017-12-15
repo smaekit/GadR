@@ -39,7 +39,7 @@ public class DetailEventActivity extends AppCompatActivity {
         imageView.setImageDrawable(ContextCompat.getDrawable(getApplicationContext(), Category.categoryImageIndex[eventData.getCategoryIndex()]));
         title_textView.setText(eventData.getTitle());
         place_textView.setText(eventData.getLocationNickname());
-        time_textView.setText(eventData.getStartTime() + R.string.TimeConnection + eventData.getEndTime());
+        time_textView.setText(eventData.getStartTime() + getString(R.string.TimeConnection) + eventData.getEndTime());
         date_textView.setText(eventData.getDate());
         description_textView.setText(eventData.getDescription());
     }
