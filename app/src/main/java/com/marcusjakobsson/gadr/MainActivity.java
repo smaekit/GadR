@@ -6,6 +6,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
@@ -133,6 +134,11 @@ public class MainActivity extends AppCompatActivity {
                                             });
                                             updateUI(user);
                                         }
+                                    }
+
+                                    @Override
+                                    public void onFail(String error) {
+                                        Toast.makeText(getApplicationContext(), error, Toast.LENGTH_SHORT).show();
                                     }
                                 });
                             }

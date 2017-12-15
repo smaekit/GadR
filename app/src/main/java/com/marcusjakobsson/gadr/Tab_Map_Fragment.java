@@ -359,6 +359,11 @@ public class Tab_Map_Fragment extends Fragment {
                 }
 
             }
+
+            @Override
+            public void onFail(String error) {
+                Toast.makeText(getContext(), error, Toast.LENGTH_SHORT).show();
+            }
         };
         firebaseConnection.getUsers(usersCallback);
     }

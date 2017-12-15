@@ -32,19 +32,22 @@ class FirebaseConnection {
     public static final String users_shareLocation = "shareLocation";
 
 
-    //Event                             //TODO: change back to Events
+    //Event
     public static final String event_parent = "Events2";
 
     public interface UsersCallback{
         void onSuccess(List<UserData> result);
+        void onFail(String string);
     }
 
     public interface CurrentUserCallback{
         void onSuccess(Boolean result);
+        void onFail(String string);
     }
 
     public interface EventsCallback{
         void onSuccess(List<EventData> result,List<String> keys);
+        void onFail(String string);
     }
 
     private DatabaseReference mRef;
@@ -83,6 +86,7 @@ class FirebaseConnection {
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
+                callback.onFail(databaseError.getMessage());
             }
         };
         ref.addListenerForSingleValueEvent(valueEventListener);
@@ -106,6 +110,7 @@ class FirebaseConnection {
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
+                callback.onFail(databaseError.getMessage());
             }
         };
         ref.addListenerForSingleValueEvent(valueEventListener);
@@ -129,6 +134,7 @@ class FirebaseConnection {
             }
             @Override
             public void onCancelled(DatabaseError databaseError) {
+                callback.onFail(databaseError.getMessage());
             }
         };
         ref.addListenerForSingleValueEvent(valueEventListener);

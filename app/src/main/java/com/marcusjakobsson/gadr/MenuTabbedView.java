@@ -45,6 +45,7 @@ import android.view.View;
 import android.widget.ImageView;
 
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.facebook.Profile;
 import com.facebook.login.LoginManager;
@@ -196,6 +197,11 @@ public class MenuTabbedView extends AppCompatActivity implements NavigationView.
                     setupCurrentUser(result);
 
                 }
+
+                @Override
+                public void onFail(String error) {
+                    Toast.makeText(getApplicationContext(), error, Toast.LENGTH_SHORT).show();
+                }
             });
 
             reloadEventData((ThisApp)getApplication(), new Handler(getMainLooper()) {
@@ -301,6 +307,11 @@ public class MenuTabbedView extends AppCompatActivity implements NavigationView.
 
 
                 handler.dispatchMessage(new Message());
+            }
+
+            @Override
+            public void onFail(String error) {
+                Toast.makeText(thisApp, error, Toast.LENGTH_SHORT).show();
             }
         });
     }
