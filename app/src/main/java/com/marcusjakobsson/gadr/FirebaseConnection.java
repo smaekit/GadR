@@ -1,5 +1,11 @@
 package com.marcusjakobsson.gadr;
 
+import android.support.annotation.NonNull;
+import android.util.Log;
+
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -47,7 +53,12 @@ class FirebaseConnection {
 
     public interface EventsCallback{
         void onSuccess(List<EventData> result,List<String> keys);
-        void onFail(String string);
+        void onFail(String error);
+    }
+
+    public interface StatusCallback{
+        void onSuccess();
+        void onFail(String error);
     }
 
     private DatabaseReference mRef;
@@ -138,6 +149,31 @@ class FirebaseConnection {
             }
         };
         ref.addListenerForSingleValueEvent(valueEventListener);
+    }
+
+    public void UpdateStatus(final String status, final StatusCallback callback) {
+        FirebaseUser currentUser = mAuth.getCurrentUser();
+        if(currentUser != null)
+        {
+            String userID = currentUser.getUid();
+            DatabaseReference ref = mRef.child(users_parent).child(userID).child(users_status);
+
+            Task setValueTask = ref.setValue(status);
+
+            setValueTask.addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    callback.onFail(e.getMessage());
+                }
+            });
+
+            setValueTask.addOnCompleteListener(new OnCompleteListener() {
+                @Override
+                public void onComplete(@NonNull Task task) {
+                    callback.onSuccess();
+                }
+            });
+        }
     }
 
 

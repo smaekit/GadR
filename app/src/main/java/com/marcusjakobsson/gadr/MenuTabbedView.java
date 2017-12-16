@@ -84,7 +84,6 @@ public class MenuTabbedView extends AppCompatActivity implements NavigationView.
 
     private TextView userStatus_TextView;
 
-
     //Fragments
     private Tab_Map_Fragment tabMapFragment;
     private Tab_All_Events_Fragment tabAllEventsFragment;
@@ -131,10 +130,6 @@ public class MenuTabbedView extends AppCompatActivity implements NavigationView.
         setupViewPager(viewPager);
         tabLayout.setupWithViewPager(viewPager);
 
-
-
-
-
         // If device is running SDK < 23
         if (Build.VERSION.SDK_INT < 23)
         {
@@ -151,8 +146,6 @@ public class MenuTabbedView extends AppCompatActivity implements NavigationView.
             }
         }
 
-
-
         Toolbar toolbar = findViewById(R.id.top_drawer_toolbar);
         setSupportActionBar(toolbar);
 
@@ -166,8 +159,6 @@ public class MenuTabbedView extends AppCompatActivity implements NavigationView.
             }
         });
 
-
-
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
@@ -176,9 +167,6 @@ public class MenuTabbedView extends AppCompatActivity implements NavigationView.
 
         NavigationView navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
-
-
-
 
         FragmentManager fm = getSupportFragmentManager();
         mData = (RetainedMenuTabbedFragmet) fm.findFragmentByTag(TAG_RETAINED_MENU_FRAGMENT);
@@ -210,7 +198,6 @@ public class MenuTabbedView extends AppCompatActivity implements NavigationView.
                 }
             });
         }else {
-
             //intitiate drawer menu with saved rounded image and name and maybe status...
             View hView =  navigationView.getHeaderView(0);
             TextView nav_user = hView.findViewById(R.id.userNameTextView);
@@ -219,19 +206,12 @@ public class MenuTabbedView extends AppCompatActivity implements NavigationView.
             imageView.setImageDrawable(mData.drawable);
             TextView nav_userStatus = hView.findViewById(R.id.userStatus_TextView);
             nav_userStatus.setText(mData.userStatus);
-
         }
-
-
-
 
         if (activityReceiver != null) {
             IntentFilter intentFilter = new  IntentFilter("ACTION_STRING_ACTIVITY");
             registerReceiver(activityReceiver, intentFilter);
         }
-
-
-
     }
 
     //To receive messages from notification services
@@ -302,8 +282,6 @@ public class MenuTabbedView extends AppCompatActivity implements NavigationView.
                 thisApp.setAllEventsKeys(allEventDataKeys.toArray(new String[allEventDataKeys.size()]));
                 thisApp.setMyEventsKeys(myEventDataKeys.toArray(new String[myEventDataKeys.size()]));
 
-
-
                 handler.dispatchMessage(new Message());
             }
 
@@ -334,7 +312,6 @@ public class MenuTabbedView extends AppCompatActivity implements NavigationView.
         tabAllEventsFragment.reloadListData();
         tabMyEventsFragment.reloadListData();
     }
-
 
     private void checkShareLocation(Boolean isShareLocation)
     {
@@ -432,9 +409,6 @@ public class MenuTabbedView extends AppCompatActivity implements NavigationView.
             super.onBackPressed();
         }
     }
-
-
-
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
