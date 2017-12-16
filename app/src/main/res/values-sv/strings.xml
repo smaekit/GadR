@@ -19,7 +19,7 @@
     <string name="shareLocationOffText">Du delar nu inte längre din position</string>
     <string name="shareLocationOffTitle">Dela position AV</string>
     <string name="shareLocationOnTitle">Dela position PÅ</string>
-    <string name="status_Tip">"Med en status kan du dela vad du gör med andra. Den syns i 24 timmar. Närsomhelst kan du uppdatera din status och den gamla kommer att försvinna "</string>
+    <string name="status_Tip">"Med en status kan du dela vad du gör med andra. Närsomhelst kan du uppdatera din status och den gamla kommer att försvinna "</string>
     <string name="cancelText">Avbryt</string>
     <string name="publishText">Publicera</string>
     <string name="navigation_drawer_close">Stäng hamburgermenyn</string>
