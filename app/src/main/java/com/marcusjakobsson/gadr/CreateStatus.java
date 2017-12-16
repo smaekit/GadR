@@ -40,14 +40,13 @@ public class CreateStatus extends AppCompatActivity {
 
     public void publish_button(View view)
     {
-        final Intent intent = new Intent();
-
         final String userStatus = status_editText.getText().toString();
-        (new FirebaseConnection()).UpdateStatus(userStatus, new FirebaseConnection.StatusCallback() {
+        (new FirebaseConnection()).UpdateStatus(userStatus, new FirebaseConnection.GetStatusCallback() {
             @Override
             public void onSuccess() {
                 updateWidget(userStatus);
 
+                Intent intent = new Intent();
                 intent.putExtra(IntentExtra_DidAddStatus, true);
                 intent.putExtra(IntentExtra_UserStatus, userStatus);
                 setResult(RESULT_OK, intent);
@@ -58,6 +57,7 @@ public class CreateStatus extends AppCompatActivity {
             public void onFail(String error) {
                 Toast.makeText(getApplicationContext(), error, Toast.LENGTH_LONG).show();
 
+                Intent intent = new Intent();
                 intent.putExtra(IntentExtra_DidAddStatus, false);
                 intent.putExtra(IntentExtra_UserStatus, userStatus);
                 setResult(RESULT_OK, intent);

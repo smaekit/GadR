@@ -38,7 +38,6 @@
     <string name="edit_eventLabel">Redigera event</string>
     <string name="noEventTitle">Inga event</string>
     <string name="play_services_message">Du behöver ladda ner Google play services, för att kunna använda denna del av applicationen.</string>
-    <string name="Content_Description_CategoryImg">Kategori bild</string>
     <string name="Content_Description_Logo">GadR Logga</string>
     <string name="appwidget_text">EXEMPEL</string>
     <string name="noneDataRetrievdMsg">Could not retrieve data</string>
@@ -47,8 +46,10 @@
     <string name="authFailed">Autentisering misslyckades</string>
     <string name="cancelled">Avbruten</string>
     <string name="category_image">Kategori bild</string>
-    <string name="connectionError">Anslutnings fel</string>
-    <string name="errorLocation">Kunde inte hämta plats</string>
+    <string name="connectionError">Anslutningsfel</string>
+    <string name="errorLocation">Kunde inte hitta plats</string>
     <string name="couldNotUpdate">Kunde inte uppdatera</string>
     <string name="settingsTitle">Inställningar</string>
+    <string name="Error_NoUser">Hittade ingen användare</string>
+    <string name="Content_Description_CategoryImg">Kategoribild</string>
 </resources>

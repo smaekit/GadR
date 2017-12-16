@@ -1,10 +1,12 @@
 package com.marcusjakobsson.gadr;
 
+import android.content.res.Resources;
 import android.support.annotation.NonNull;
-import android.util.Log;
+import android.widget.RemoteViews;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -37,11 +39,11 @@ class FirebaseConnection {
     public static final String users_longitude = "longitude";
     public static final String users_shareLocation = "shareLocation";
 
-
     //Event
     public static final String event_parent = "Events2";
 
-    public interface UsersCallback{
+    //Interfaces
+    public interface GetUsersCallback {
         void onSuccess(List<UserData> result);
         void onFail(String string);
     }
@@ -51,16 +53,43 @@ class FirebaseConnection {
         void onFail(String string);
     }
 
-    public interface EventsCallback{
+    public interface GetEventsCallback {
         void onSuccess(List<EventData> result,List<String> keys);
         void onFail(String error);
     }
 
-    public interface StatusCallback{
+    public interface GetStatusCallback {
         void onSuccess();
         void onFail(String error);
     }
 
+    public interface EditEventCallback {
+        void onSuccess();
+        void onFail(String error);
+    }
+
+    public interface AddEventCallback {
+        void onSuccess();
+        void onFail(String error);
+    }
+
+    public interface AddUserCallback {
+        void onSuccess();
+        void onFail(String error);
+    }
+
+    public interface UpdateUserLocationCallback {
+        void onSuccess();
+        void onFail(String error);
+    }
+
+    public interface UpdateUserShareLocationCallback {
+        void onSuccess();
+        void onFail(String error);
+    }
+
+
+    //Variables
     private DatabaseReference mRef;
     private FirebaseAuth mAuth;
 
@@ -92,7 +121,6 @@ class FirebaseConnection {
                     }
                 }
                 callback.onSuccess(false);
-
             }
 
             @Override
@@ -103,8 +131,7 @@ class FirebaseConnection {
         ref.addListenerForSingleValueEvent(valueEventListener);
     }
 
-//Users callback func
-    public void getUsers(final UsersCallback callback) {
+    public void getUsers(final GetUsersCallback callback) {
 
         DatabaseReference ref = mRef.child(users_parent);
 
@@ -127,8 +154,7 @@ class FirebaseConnection {
         ref.addListenerForSingleValueEvent(valueEventListener);
     }
 
-//Event callback func
-    public void getEvents(final EventsCallback callback) {
+    public void getEvents(final GetEventsCallback callback) {
         DatabaseReference ref = mRef.child(event_parent);
 
         final List<EventData> eventData = new ArrayList<>();
@@ -151,7 +177,7 @@ class FirebaseConnection {
         ref.addListenerForSingleValueEvent(valueEventListener);
     }
 
-    public void UpdateStatus(final String status, final StatusCallback callback) {
+    public void UpdateStatus(final String status, final GetStatusCallback callback) {
         FirebaseUser currentUser = mAuth.getCurrentUser();
         if(currentUser != null)
         {
@@ -174,63 +200,140 @@ class FirebaseConnection {
                 }
             });
         }
+        else {
+            callback.onFail(Resources.getSystem().getString(R.string.Error_NoUser));
+        }
     }
 
 
-    public void EditEvent(EventData eventData, String key) {
+    public void EditEvent(EventData eventData, String key, final EditEventCallback callback) {
         DatabaseReference ref = mRef.child(event_parent).child(key);
 
-        ref.setValue(eventData);
+        Task setValueTask = ref.setValue(eventData);
+
+        setValueTask.addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                callback.onFail(e.getMessage());
+            }
+        });
+
+        setValueTask.addOnSuccessListener(new OnSuccessListener() {
+            @Override
+            public void onSuccess(Object o) {
+                callback.onSuccess();
+            }
+        });
     }
 
-    public void AddEvent(EventData eventData) {
+    public void AddEvent(EventData eventData, final AddEventCallback callback) {
         DatabaseReference ref = mRef.child(event_parent).push();
 
-        ref.setValue(eventData);
+        Task setValueTask = ref.setValue(eventData);
+
+        setValueTask.addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                callback.onFail(e.getMessage());
+            }
+        });
+
+        setValueTask.addOnSuccessListener(new OnSuccessListener() {
+            @Override
+            public void onSuccess(Object o) {
+                callback.onSuccess();
+            }
+        });
     }
 
-    public void AddUser(UserData userData) {
+    public void AddUser(UserData userData, final AddUserCallback callback) {
         DatabaseReference ref = mRef.child(users_parent).child(userData.getFbID());
-        ref.setValue(userData);
+        Task setValueTask = ref.setValue(userData);
+
+        setValueTask.addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                callback.onFail(e.getMessage());
+            }
+        });
+
+        setValueTask.addOnSuccessListener(new OnSuccessListener() {
+            @Override
+            public void onSuccess(Object o) {
+                callback.onSuccess();
+            }
+        });
     }
 
-
-    public void AddStatus(String status) {
+    public void UpdateUserLocation(double latitude, final double longitude, final UpdateUserLocationCallback callback) {
         FirebaseUser currentUser = mAuth.getCurrentUser();
         if(currentUser != null)
         {
-            String userID = currentUser.getUid();
-            DatabaseReference ref = mRef.child(users_parent).child(userID).child(users_status);
-            ref.setValue(status);
+            final String userID = currentUser.getUid();
+            DatabaseReference latRef = mRef.child(users_parent).child(userID).child(users_latitude);
+
+
+            final Task setLat = latRef.setValue(latitude);
+
+            setLat.addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    callback.onFail(e.getMessage());
+                }
+            });
+
+            setLat.addOnSuccessListener(new OnSuccessListener() {
+                @Override
+                public void onSuccess(Object o) {
+                    DatabaseReference lngRef = mRef.child(users_parent).child(userID).child(users_longitude);
+                    Task setLng = lngRef.setValue(longitude);
+
+                    setLng.addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            callback.onFail(e.getMessage());
+                        }
+                    });
+
+                    setLng.addOnSuccessListener(new OnSuccessListener() {
+                        @Override
+                        public void onSuccess(Object o) {
+                            callback.onSuccess();
+                        }
+                    });
+                }
+            });
+        }
+        else {
+            callback.onFail(Resources.getSystem().getString(R.string.Error_NoUser));
         }
     }
 
-
-    public void UpdateUserLocation(double latitude, double longitude)
-    {
-        FirebaseUser currentUser = mAuth.getCurrentUser();
-        if(currentUser != null)
-        {
-            String userID = currentUser.getUid();
-            DatabaseReference ref = mRef.child(users_parent).child(userID).child(users_latitude);
-            ref.setValue(latitude);
-            ref = mRef.child(users_parent).child(userID).child(users_longitude);
-            ref.setValue(longitude);
-        }
-
-    }
-
-    public void UpdateUserShareLocation(Boolean isSharingLocation)
-    {
+    public void UpdateUserShareLocation(Boolean isSharingLocation, final UpdateUserShareLocationCallback callback) {
         FirebaseUser currentUser = mAuth.getCurrentUser();
         if(currentUser != null)
         {
             DatabaseReference ref = mRef.child(users_parent).child(currentUser.getUid()).child(users_shareLocation);
-            ref.setValue(isSharingLocation);
+            Task setValueTask = ref.setValue(isSharingLocation);
+
+            setValueTask.addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    callback.onFail(e.getMessage());
+                }
+            });
+
+            setValueTask.addOnSuccessListener(new OnSuccessListener() {
+                @Override
+                public void onSuccess(Object o) {
+                    callback.onSuccess();
+                }
+            });
         }
-
+        else {
+            callback.onFail(Resources.getSystem().getString(R.string.Error_NoUser));
+        }
     }
-
 }
 
 

@@ -143,7 +143,19 @@ public class MainActivity extends AppCompatActivity {
                                                 public void callback(UserData userData) {
 
                                                     userData.setFbID(user.getUid());
-                                                    fc.AddUser(userData);   //Adding a user to the Firebase Database
+
+                                                    // Adding a user to the Firebase Database
+                                                    fc.AddUser(userData, new FirebaseConnection.AddUserCallback() {
+                                                        @Override
+                                                        public void onSuccess() {
+
+                                                        }
+
+                                                        @Override
+                                                        public void onFail(String error) {
+                                                            Toast.makeText(getApplicationContext(),error, Toast.LENGTH_LONG).show();
+                                                        }
+                                                    });
                                                 }
                                             });
                                             updateUI(user);
@@ -165,8 +177,6 @@ public class MainActivity extends AppCompatActivity {
                             MySnackbarProvider.showSnackBar(getWindow().getDecorView().getRootView(),getString(R.string.authFailed));
                             updateUI(null);
                         }
-
-                        // ...
                     }
                 });
     }

@@ -117,13 +117,21 @@ public class Tab_Map_Fragment extends Fragment {
                 mData.loc = new LatLng(location.getLatitude(), location.getLongitude());
 
                         locationManager.removeUpdates(locationListener);
-
+/*
                         FirebaseConnection firebaseConnection = new FirebaseConnection();
                         firebaseConnection.UpdateUserLocation(location.getLatitude(),location.getLongitude());
+*/
+                        (new FirebaseConnection()).UpdateUserLocation(location.getLatitude(), location.getLongitude(), new FirebaseConnection.UpdateUserLocationCallback() {
+                            @Override
+                            public void onSuccess() {
+                                reloadUserData();
+                            }
 
-                        reloadUserData();
-
-
+                            @Override
+                            public void onFail(String error) {
+                                Toast.makeText(getContext(), error, Toast.LENGTH_LONG).show();
+                            }
+                        });
             }
 
             @Override
@@ -338,7 +346,7 @@ public class Tab_Map_Fragment extends Fragment {
         FirebaseConnection firebaseConnection = new FirebaseConnection();
 
 
-        FirebaseConnection.UsersCallback usersCallback = new FirebaseConnection.UsersCallback() {
+        FirebaseConnection.GetUsersCallback getUsersCallback = new FirebaseConnection.GetUsersCallback() {
             @Override
             public void onSuccess(List<UserData> result) {
                 mData.userData = result;
@@ -364,7 +372,7 @@ public class Tab_Map_Fragment extends Fragment {
                 Toast.makeText(getContext(), error, Toast.LENGTH_SHORT).show();
             }
         };
-        firebaseConnection.getUsers(usersCallback);
+        firebaseConnection.getUsers(getUsersCallback);
     }
 
 

@@ -177,7 +177,7 @@ public class MenuTabbedView extends AppCompatActivity implements NavigationView.
             mData = new RetainedMenuTabbedFragmet();
             fm.beginTransaction().add(mData, TAG_RETAINED_MENU_FRAGMENT).commit();
             // load data from a data source or perform any calculation
-            (new FirebaseConnection()).getUsers(new FirebaseConnection.UsersCallback() {
+            (new FirebaseConnection()).getUsers(new FirebaseConnection.GetUsersCallback() {
                 @Override
                 public void onSuccess(List<UserData> result) {
 
@@ -257,7 +257,7 @@ public class MenuTabbedView extends AppCompatActivity implements NavigationView.
     }
 
     public static void reloadEventData(final ThisApp thisApp, final Handler handler) {
-        (new FirebaseConnection()).getEvents(new FirebaseConnection.EventsCallback(){
+        (new FirebaseConnection()).getEvents(new FirebaseConnection.GetEventsCallback(){
             @Override
             public void onSuccess(List<EventData> result,List<String> keys){
                 List<EventData> allEventData = new ArrayList<>();
@@ -443,22 +443,40 @@ public class MenuTabbedView extends AppCompatActivity implements NavigationView.
         return super.onOptionsItemSelected(item);
     }
 
-    private void setShareLocationON(MenuItem item){
-        FirebaseConnection firebaseConnection2 = new FirebaseConnection();
-        firebaseConnection2.UpdateUserShareLocation(true);
-        item.setIcon(R.drawable.ic_location_on);
-        item.setTitle(R.string.shareLocationOnTitle);
+    private void setShareLocationON(final MenuItem item){
+        (new FirebaseConnection()).UpdateUserShareLocation(true, new FirebaseConnection.UpdateUserShareLocationCallback() {
+            @Override
+            public void onSuccess() {
+                item.setIcon(R.drawable.ic_location_on);
+                item.setTitle(R.string.shareLocationOnTitle);
 
-        MySnackbarProvider.showSnackBar(getCurrentFocus(),R.string.shareLocationOnText);
+                MySnackbarProvider.showSnackBar(getCurrentFocus(),R.string.shareLocationOnText);
+            }
+
+            @Override
+            public void onFail(String error) {
+                Toast.makeText(getApplicationContext(), error, Toast.LENGTH_LONG).show();
+            }
+        });
+
+
     }
 
-    private void setShareLocationOFF(MenuItem item) {
-        FirebaseConnection firebaseConnection2 = new FirebaseConnection();
-        firebaseConnection2.UpdateUserShareLocation(false);
-        item.setIcon(R.drawable.ic_action_name);
-        item.setTitle(R.string.shareLocationOffTitle);
+    private void setShareLocationOFF(final MenuItem item) {
+        (new FirebaseConnection()).UpdateUserShareLocation(false, new FirebaseConnection.UpdateUserShareLocationCallback() {
+            @Override
+            public void onSuccess() {
+                item.setIcon(R.drawable.ic_action_name);
+                item.setTitle(R.string.shareLocationOffTitle);
 
-        MySnackbarProvider.showSnackBar(getCurrentFocus(),R.string.shareLocationOffText);
+                MySnackbarProvider.showSnackBar(getCurrentFocus(),R.string.shareLocationOffText);
+            }
+
+            @Override
+            public void onFail(String error) {
+                Toast.makeText(getApplicationContext(), error, Toast.LENGTH_LONG).show();
+            }
+        });
     }
 
     @SuppressWarnings("StatementWithEmptyBody")
