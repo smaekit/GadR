@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 public class CreateStatus extends AppCompatActivity {
 
@@ -39,18 +40,33 @@ public class CreateStatus extends AppCompatActivity {
 
     public void publish_button(View view)
     {
-        FirebaseConnection firebaseConnection = new FirebaseConnection();
-        String userStatus = status_editText.getText().toString();
-        firebaseConnection.AddStatus(userStatus);
+        final String userStatus = status_editText.getText().toString();
+        (new FirebaseConnection()).UpdateStatus(userStatus, new FirebaseConnection.GetStatusCallback() {
+            @Override
+            public void onSuccess() {
+                updateWidget(userStatus);
 
-        updateWidget(userStatus);
+                Intent intent = new Intent();
+                intent.putExtra(IntentExtra_DidAddStatus, true);
+                intent.putExtra(IntentExtra_UserStatus, userStatus);
+                setResult(RESULT_OK, intent);
+                finish();
+            }
 
-        //Code for the app
-        Intent intent = new Intent();
-        intent.putExtra(IntentExtra_DidAddStatus, true);
-        intent.putExtra(IntentExtra_UserStatus, userStatus);
-        setResult(RESULT_OK, intent);
-        finish();
+            @Override
+            public void onFail(String error) {
+                Toast.makeText(getApplicationContext(), error, Toast.LENGTH_LONG).show();
+
+                Intent intent = new Intent();
+                intent.putExtra(IntentExtra_DidAddStatus, false);
+                intent.putExtra(IntentExtra_UserStatus, userStatus);
+                setResult(RESULT_OK, intent);
+                finish();
+            }
+        });
+
+
+
     }
 
     private void updateWidget(String userStatus)

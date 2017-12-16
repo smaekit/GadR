@@ -19,6 +19,7 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.TimePicker;
+import android.widget.Toast;
 
 import com.facebook.Profile;
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
@@ -293,18 +294,47 @@ public class AddEventActivity extends AppCompatActivity {
 
             FirebaseConnection firebaseConnection = new FirebaseConnection();
             if (!isEditing) {
-                firebaseConnection.AddEvent(eventData);
-                Intent intent = new Intent();
-                intent.putExtra(IntentExtra_DidAddEvent, true);
-                setResult(RESULT_OK, intent);
+                firebaseConnection.AddEvent(eventData, new FirebaseConnection.AddEventCallback() {
+                    @Override
+                    public void onSuccess() {
+                        Intent intent = new Intent();
+                        intent.putExtra(IntentExtra_DidAddEvent, true);
+                        setResult(RESULT_OK, intent);
+                        finish();
+                    }
+
+                    @Override
+                    public void onFail(String error) {
+                        Toast.makeText(getApplicationContext(), error, Toast.LENGTH_LONG).show();
+
+                        Intent intent = new Intent();
+                        intent.putExtra(IntentExtra_DidAddEvent, false);
+                        setResult(RESULT_OK, intent);
+                        finish();
+                    }
+                });
             }
             else {
-                firebaseConnection.EditEvent(eventData,currentKey);
-                Intent intent = new Intent();
-                intent.putExtra(IntentExtra_DidEditEvent, true);
-                setResult(RESULT_OK, intent);
+                firebaseConnection.EditEvent(eventData, currentKey, new FirebaseConnection.EditEventCallback() {
+                    @Override
+                    public void onSuccess() {
+                        Intent intent = new Intent();
+                        intent.putExtra(IntentExtra_DidEditEvent, true);
+                        setResult(RESULT_OK, intent);
+                        finish();
+                    }
+
+                    @Override
+                    public void onFail(String error) {
+                        Toast.makeText(getApplicationContext(), error, Toast.LENGTH_LONG).show();
+
+                        Intent intent = new Intent();
+                        intent.putExtra(IntentExtra_DidEditEvent, false);
+                        setResult(RESULT_OK, intent);
+                        finish();
+                    }
+                });
             }
-            finish();
         }
     }
 

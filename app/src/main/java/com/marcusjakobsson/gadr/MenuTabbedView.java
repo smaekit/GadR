@@ -84,7 +84,6 @@ public class MenuTabbedView extends AppCompatActivity implements NavigationView.
 
     private TextView userStatus_TextView;
 
-
     //Fragments
     private Tab_Map_Fragment tabMapFragment;
     private Tab_All_Events_Fragment tabAllEventsFragment;
@@ -131,10 +130,6 @@ public class MenuTabbedView extends AppCompatActivity implements NavigationView.
         setupViewPager(viewPager);
         tabLayout.setupWithViewPager(viewPager);
 
-
-
-
-
         // If device is running SDK < 23
         if (Build.VERSION.SDK_INT < 23)
         {
@@ -151,8 +146,6 @@ public class MenuTabbedView extends AppCompatActivity implements NavigationView.
             }
         }
 
-
-
         Toolbar toolbar = findViewById(R.id.top_drawer_toolbar);
         setSupportActionBar(toolbar);
 
@@ -166,8 +159,6 @@ public class MenuTabbedView extends AppCompatActivity implements NavigationView.
             }
         });
 
-
-
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
@@ -176,9 +167,6 @@ public class MenuTabbedView extends AppCompatActivity implements NavigationView.
 
         NavigationView navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
-
-
-
 
         FragmentManager fm = getSupportFragmentManager();
         mData = (RetainedMenuTabbedFragmet) fm.findFragmentByTag(TAG_RETAINED_MENU_FRAGMENT);
@@ -189,7 +177,7 @@ public class MenuTabbedView extends AppCompatActivity implements NavigationView.
             mData = new RetainedMenuTabbedFragmet();
             fm.beginTransaction().add(mData, TAG_RETAINED_MENU_FRAGMENT).commit();
             // load data from a data source or perform any calculation
-            (new FirebaseConnection()).getUsers(new FirebaseConnection.UsersCallback() {
+            (new FirebaseConnection()).getUsers(new FirebaseConnection.GetUsersCallback() {
                 @Override
                 public void onSuccess(List<UserData> result) {
 
@@ -210,7 +198,6 @@ public class MenuTabbedView extends AppCompatActivity implements NavigationView.
                 }
             });
         }else {
-
             //intitiate drawer menu with saved rounded image and name and maybe status...
             View hView =  navigationView.getHeaderView(0);
             TextView nav_user = hView.findViewById(R.id.userNameTextView);
@@ -219,19 +206,12 @@ public class MenuTabbedView extends AppCompatActivity implements NavigationView.
             imageView.setImageDrawable(mData.drawable);
             TextView nav_userStatus = hView.findViewById(R.id.userStatus_TextView);
             nav_userStatus.setText(mData.userStatus);
-
         }
-
-
-
 
         if (activityReceiver != null) {
             IntentFilter intentFilter = new  IntentFilter("ACTION_STRING_ACTIVITY");
             registerReceiver(activityReceiver, intentFilter);
         }
-
-
-
     }
 
     //To receive messages from notification services
@@ -277,7 +257,7 @@ public class MenuTabbedView extends AppCompatActivity implements NavigationView.
     }
 
     public static void reloadEventData(final ThisApp thisApp, final Handler handler) {
-        (new FirebaseConnection()).getEvents(new FirebaseConnection.EventsCallback(){
+        (new FirebaseConnection()).getEvents(new FirebaseConnection.GetEventsCallback(){
             @Override
             public void onSuccess(List<EventData> result,List<String> keys){
                 List<EventData> allEventData = new ArrayList<>();
@@ -301,8 +281,6 @@ public class MenuTabbedView extends AppCompatActivity implements NavigationView.
                 thisApp.setMyEvents(myEventData.toArray(new EventData[myEventData.size()]));
                 thisApp.setAllEventsKeys(allEventDataKeys.toArray(new String[allEventDataKeys.size()]));
                 thisApp.setMyEventsKeys(myEventDataKeys.toArray(new String[myEventDataKeys.size()]));
-
-
 
                 handler.dispatchMessage(new Message());
             }
@@ -334,7 +312,6 @@ public class MenuTabbedView extends AppCompatActivity implements NavigationView.
         tabAllEventsFragment.reloadListData();
         tabMyEventsFragment.reloadListData();
     }
-
 
     private void checkShareLocation(Boolean isShareLocation)
     {
@@ -433,9 +410,6 @@ public class MenuTabbedView extends AppCompatActivity implements NavigationView.
         }
     }
 
-
-
-
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
 
@@ -469,22 +443,40 @@ public class MenuTabbedView extends AppCompatActivity implements NavigationView.
         return super.onOptionsItemSelected(item);
     }
 
-    private void setShareLocationON(MenuItem item){
-        FirebaseConnection firebaseConnection2 = new FirebaseConnection();
-        firebaseConnection2.UpdateUserShareLocation(true);
-        item.setIcon(R.drawable.ic_location_on);
-        item.setTitle(R.string.shareLocationOnTitle);
+    private void setShareLocationON(final MenuItem item){
+        (new FirebaseConnection()).UpdateUserShareLocation(true, new FirebaseConnection.UpdateUserShareLocationCallback() {
+            @Override
+            public void onSuccess() {
+                item.setIcon(R.drawable.ic_location_on);
+                item.setTitle(R.string.shareLocationOnTitle);
 
-        MySnackbarProvider.showSnackBar(getCurrentFocus(),R.string.shareLocationOnText);
+                MySnackbarProvider.showSnackBar(getCurrentFocus(),R.string.shareLocationOnText);
+            }
+
+            @Override
+            public void onFail(String error) {
+                Toast.makeText(getApplicationContext(), error, Toast.LENGTH_LONG).show();
+            }
+        });
+
+
     }
 
-    private void setShareLocationOFF(MenuItem item) {
-        FirebaseConnection firebaseConnection2 = new FirebaseConnection();
-        firebaseConnection2.UpdateUserShareLocation(false);
-        item.setIcon(R.drawable.ic_action_name);
-        item.setTitle(R.string.shareLocationOffTitle);
+    private void setShareLocationOFF(final MenuItem item) {
+        (new FirebaseConnection()).UpdateUserShareLocation(false, new FirebaseConnection.UpdateUserShareLocationCallback() {
+            @Override
+            public void onSuccess() {
+                item.setIcon(R.drawable.ic_action_name);
+                item.setTitle(R.string.shareLocationOffTitle);
 
-        MySnackbarProvider.showSnackBar(getCurrentFocus(),R.string.shareLocationOffText);
+                MySnackbarProvider.showSnackBar(getCurrentFocus(),R.string.shareLocationOffText);
+            }
+
+            @Override
+            public void onFail(String error) {
+                Toast.makeText(getApplicationContext(), error, Toast.LENGTH_LONG).show();
+            }
+        });
     }
 
     @SuppressWarnings("StatementWithEmptyBody")
