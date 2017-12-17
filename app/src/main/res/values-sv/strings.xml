@@ -4,7 +4,7 @@
     <string name="Tabbed_Menu_Map">Karta</string>
     <string name="Tabbed_Menu_All">Alla event</string>
     <string name="Tabbed_Menu_My">Mina event</string>
-    <string name="title_activity_tabbed_view"></string>
+    <string name="title_activity_tabbed_view">GadR</string>
     <string name="logout">Logga ut</string>
     <string name="AddEvent_title">Titel</string>
     <string name="AddEvent_Description">Beskrivning</string>
@@ -52,4 +52,6 @@
     <string name="settingsTitle">Inställningar</string>
     <string name="Error_NoUser">Hittade ingen användare</string>
     <string name="Content_Description_CategoryImg">Kategoribild</string>
+    <string name="createLabel">Skapa</string>
+    <string name="eventlabel">Event</string>
 </resources>

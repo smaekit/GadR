@@ -3,7 +3,7 @@
 
     <string name="facebook_app_id" translatable="false">523008791393450</string>
     <string name="fb_login_protocol_scheme" translatable="false">fb523008791393450</string>
-    <string name="title_activity_tabbed_view" translatable="false"></string>
+    <string name="title_activity_tabbed_view">GadR</string>
     <string name="Tabbed_Menu_Map">Map</string>
     <string name="Tabbed_Menu_All">All events</string>
     <string name="Tabbed_Menu_My">My events</string>
