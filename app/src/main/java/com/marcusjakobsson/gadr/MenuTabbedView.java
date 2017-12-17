@@ -444,7 +444,7 @@ public class MenuTabbedView extends AppCompatActivity implements NavigationView.
     }
 
     private void setShareLocationON(final MenuItem item){
-        (new FirebaseConnection()).UpdateUserShareLocation(true, new FirebaseConnection.UpdateUserShareLocationCallback() {
+        (new FirebaseConnection()).UpdateUserShareLocation(true, new FirebaseConnection.GetDataCallback() {
             @Override
             public void onSuccess() {
                 item.setIcon(R.drawable.ic_location_on);
@@ -463,7 +463,7 @@ public class MenuTabbedView extends AppCompatActivity implements NavigationView.
     }
 
     private void setShareLocationOFF(final MenuItem item) {
-        (new FirebaseConnection()).UpdateUserShareLocation(false, new FirebaseConnection.UpdateUserShareLocationCallback() {
+        (new FirebaseConnection()).UpdateUserShareLocation(false, new FirebaseConnection.GetDataCallback() {
             @Override
             public void onSuccess() {
                 item.setIcon(R.drawable.ic_action_name);

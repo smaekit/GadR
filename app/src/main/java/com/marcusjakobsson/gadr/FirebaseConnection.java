@@ -2,7 +2,6 @@ package com.marcusjakobsson.gadr;
 
 import android.content.res.Resources;
 import android.support.annotation.NonNull;
-import android.widget.RemoteViews;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -58,36 +57,10 @@ class FirebaseConnection {
         void onFail(String error);
     }
 
-    public interface GetStatusCallback {
+    public interface GetDataCallback {
         void onSuccess();
         void onFail(String error);
     }
-
-    public interface EditEventCallback {
-        void onSuccess();
-        void onFail(String error);
-    }
-
-    public interface AddEventCallback {
-        void onSuccess();
-        void onFail(String error);
-    }
-
-    public interface AddUserCallback {
-        void onSuccess();
-        void onFail(String error);
-    }
-
-    public interface UpdateUserLocationCallback {
-        void onSuccess();
-        void onFail(String error);
-    }
-
-    public interface UpdateUserShareLocationCallback {
-        void onSuccess();
-        void onFail(String error);
-    }
-
 
     //Variables
     private DatabaseReference mRef;
@@ -177,7 +150,7 @@ class FirebaseConnection {
         ref.addListenerForSingleValueEvent(valueEventListener);
     }
 
-    public void UpdateStatus(final String status, final GetStatusCallback callback) {
+    public void UpdateStatus(final String status, final com.marcusjakobsson.gadr.FirebaseConnection.GetDataCallback callback) {
         FirebaseUser currentUser = mAuth.getCurrentUser();
         if(currentUser != null)
         {
@@ -206,7 +179,7 @@ class FirebaseConnection {
     }
 
 
-    public void EditEvent(EventData eventData, String key, final EditEventCallback callback) {
+    public void EditEvent(EventData eventData, String key, final com.marcusjakobsson.gadr.FirebaseConnection.GetDataCallback callback) {
         DatabaseReference ref = mRef.child(event_parent).child(key);
 
         Task setValueTask = ref.setValue(eventData);
@@ -226,7 +199,7 @@ class FirebaseConnection {
         });
     }
 
-    public void AddEvent(EventData eventData, final AddEventCallback callback) {
+    public void AddEvent(EventData eventData, final com.marcusjakobsson.gadr.FirebaseConnection.GetDataCallback callback) {
         DatabaseReference ref = mRef.child(event_parent).push();
 
         Task setValueTask = ref.setValue(eventData);
@@ -246,7 +219,7 @@ class FirebaseConnection {
         });
     }
 
-    public void AddUser(UserData userData, final AddUserCallback callback) {
+    public void AddUser(UserData userData, final com.marcusjakobsson.gadr.FirebaseConnection.GetDataCallback callback) {
         DatabaseReference ref = mRef.child(users_parent).child(userData.getFbID());
         Task setValueTask = ref.setValue(userData);
 
@@ -265,7 +238,7 @@ class FirebaseConnection {
         });
     }
 
-    public void UpdateUserLocation(double latitude, final double longitude, final UpdateUserLocationCallback callback) {
+    public void UpdateUserLocation(double latitude, final double longitude, final com.marcusjakobsson.gadr.FirebaseConnection.GetDataCallback callback) {
         FirebaseUser currentUser = mAuth.getCurrentUser();
         if(currentUser != null)
         {
@@ -309,7 +282,7 @@ class FirebaseConnection {
         }
     }
 
-    public void UpdateUserShareLocation(Boolean isSharingLocation, final UpdateUserShareLocationCallback callback) {
+    public void UpdateUserShareLocation(Boolean isSharingLocation, final GetDataCallback callback) {
         FirebaseUser currentUser = mAuth.getCurrentUser();
         if(currentUser != null)
         {

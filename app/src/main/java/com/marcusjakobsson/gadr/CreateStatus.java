@@ -41,7 +41,7 @@ public class CreateStatus extends AppCompatActivity {
     public void publish_button(View view)
     {
         final String userStatus = status_editText.getText().toString();
-        (new FirebaseConnection()).UpdateStatus(userStatus, new FirebaseConnection.GetStatusCallback() {
+        (new FirebaseConnection()).UpdateStatus(userStatus, new FirebaseConnection.GetDataCallback() {
             @Override
             public void onSuccess() {
                 updateWidget(userStatus);

@@ -294,7 +294,7 @@ public class AddEventActivity extends AppCompatActivity {
 
             FirebaseConnection firebaseConnection = new FirebaseConnection();
             if (!isEditing) {
-                firebaseConnection.AddEvent(eventData, new FirebaseConnection.AddEventCallback() {
+                firebaseConnection.AddEvent(eventData, new FirebaseConnection.GetDataCallback() {
                     @Override
                     public void onSuccess() {
                         Intent intent = new Intent();
@@ -315,7 +315,7 @@ public class AddEventActivity extends AppCompatActivity {
                 });
             }
             else {
-                firebaseConnection.EditEvent(eventData, currentKey, new FirebaseConnection.EditEventCallback() {
+                firebaseConnection.EditEvent(eventData, currentKey, new FirebaseConnection.GetDataCallback() {
                     @Override
                     public void onSuccess() {
                         Intent intent = new Intent();

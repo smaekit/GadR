@@ -121,7 +121,7 @@ public class Tab_Map_Fragment extends Fragment {
                         FirebaseConnection firebaseConnection = new FirebaseConnection();
                         firebaseConnection.UpdateUserLocation(location.getLatitude(),location.getLongitude());
 */
-                        (new FirebaseConnection()).UpdateUserLocation(location.getLatitude(), location.getLongitude(), new FirebaseConnection.UpdateUserLocationCallback() {
+                        (new FirebaseConnection()).UpdateUserLocation(location.getLatitude(), location.getLongitude(), new FirebaseConnection.GetDataCallback() {
                             @Override
                             public void onSuccess() {
                                 reloadUserData();

@@ -145,7 +145,7 @@ public class MainActivity extends AppCompatActivity {
                                                     userData.setFbID(user.getUid());
 
                                                     // Adding a user to the Firebase Database
-                                                    fc.AddUser(userData, new FirebaseConnection.AddUserCallback() {
+                                                    fc.AddUser(userData, new FirebaseConnection.GetDataCallback() {
                                                         @Override
                                                         public void onSuccess() {
 
