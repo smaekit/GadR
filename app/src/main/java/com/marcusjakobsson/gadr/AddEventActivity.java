@@ -233,7 +233,6 @@ public class AddEventActivity extends AppCompatActivity {
             startActivityForResult(intent, PLACE_AUTOCOMPLETE_REQUEST_CODE);
         } catch (GooglePlayServicesRepairableException | GooglePlayServicesNotAvailableException e) {
             e.printStackTrace();
-            //TODO: Handle error
         }
     }
 
