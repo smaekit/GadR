@@ -1,15 +1,64 @@
 <resources>
     <string name="app_name">GadR</string>
-    <string name="hello_carl">Hello Carl!</string>
 
     <string name="facebook_app_id" translatable="false">523008791393450</string>
     <string name="fb_login_protocol_scheme" translatable="false">fb523008791393450</string>
     <string name="title_activity_tabbed_view">GadR</string>
-    <string name="action_settings">Settings</string>
-    <string name="section_format">Hello World from section: %1$d</string>
     <string name="Tabbed_Menu_Map">Map</string>
     <string name="Tabbed_Menu_All">All events</string>
     <string name="Tabbed_Menu_My">My events</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="logout">Logout</string>
+    <string name="AddEvent_title">Title</string>
+    <string name="AddEvent_Description">Description</string>
+    <string name="AddEvent_Date">Date</string>
+    <string name="AddEvent_StartTime">Start time</string>
+    <string name="AddEvent_EndTime">End Time</string>
+    <string name="AddEvent_Location">Location</string>
+    <string name="StatusHint">What are you up to?..</string>
+    <string name="userprofilepicture">userProfilePicture</string>
+    <string name="name_of_user">Name of user</string>
+    <string name="statusLabel">Status</string>
+    <string name="shareLocationOnText">You are now sharing your location</string>
+    <string name="shareLocationOffText">You are no longer sharing your location</string>
+    <string name="shareLocationOffTitle">Share Location OFF</string>
+    <string name="shareLocationOnTitle">Share Location ON</string>
+    <string name="status_Tip">With a status you can share what you are doing. Whenever you want you can update the status and the old will disappear</string>
+    <string name="cancelText">Cancel</string>
+    <string name="publishText">Publish</string>
+    <string name="create_eventLabel">Create Event</string>
+    <string name="appwidget_text">EXAMPLE</string>
+    <string name="change_your_status">Change your Status</string>
+    <string name="Cat1">Coffee</string>
+    <string name="Cat2">Cinema</string>
+    <string name="Cat3">Food</string>
+    <string name="Cat4">Game</string>
+    <string name="Cat5">Party</string>
+    <string name="Cat6">Pub</string>
+    <string name="AddEvent_LocationNickname">Location nickname</string>
+    <string name="Refresh">Refreshing..</string>
+    <string name="default_notification_channel_id" translatable="false">1337</string>
+    <string name="play_services_message">You need to download Google Play Services in order to use this part of the application</string>
+    <string name="edit_eventLabel">Edit event</string>
+    <string name="noEventTitle">No events</string>
+    <string name="noneDataRetrievdMsg">Could not retrieve data</string>
+    <string name="category_image">Category image</string>
+    <string name="Content_Description_Logo">GadR Logo</string>
+    <string name="Time">Time</string>
+    <string name="Back">Back</string>
+    <string name="TimeConnection" translatable="false">-</string>
+    <string name="cancelled">Cancelled</string>
+    <string name="errorLocation">Error while getting location</string>
+    <string name="authFailed">Authentication failed</string>
+    <string name="connectionError">Connection error</string>
+    <string name="couldNotUpdate">Could not update</string>
+    <string name="Content_Description_CategoryImg">Category picture</string>
+    <string name="settingsTitle">Settings</string>
+    <string name="Error_NoUser">No user found</string>
+    <string name="createLabel">Create</string>
+    <string name="eventlabel">Event</string>
 
 
 </resources>

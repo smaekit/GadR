@@ -1,12 +1,13 @@
+//noinspection GradleCompatible
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 25
-    buildToolsVersion "25.0.3"
+    compileSdkVersion 27
+    buildToolsVersion "26.0.2"
     defaultConfig {
         applicationId "com.marcusjakobsson.gadr"
-        minSdkVersion 23
-        targetSdkVersion 25
+        minSdkVersion 22
+        targetSdkVersion 27
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
@@ -24,14 +25,28 @@ dependencies {
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
-    compile 'com.android.support:appcompat-v7:25.3.1'
+    compile 'com.android.support:appcompat-v7:27.0.1'
+    compile 'com.android.support:support-v4:27.0.1'
+    compile 'com.firebase:firebase-jobdispatcher:0.6.0'
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
-    compile 'com.google.firebase:firebase-auth:11.4.2'
-    compile 'com.google.firebase:firebase-database:11.4.2'
-    compile 'com.facebook.android:facebook-login:[4,5)'
-    compile 'com.android.support:design:25.3.1'
+    compile 'com.facebook.android:facebook-login:4.29.0'
+    compile 'com.android.support:design:27.0.1'
+    compile 'com.google.firebase:firebase-core:11.6.2'
+    compile 'com.google.firebase:firebase-auth:11.6.2'
+    compile 'com.google.firebase:firebase-database:11.6.2'
+    compile 'com.google.firebase:firebase-messaging:11.6.2'
+    compile 'com.google.android.gms:play-services-maps:11.6.2'
+    compile 'com.google.android.gms:play-services-location:11.6.2'
+    compile 'com.google.android.gms:play-services-places:11.6.2'
     testCompile 'junit:junit:4.12'
 }
+apply plugin: 'com.google.gms.google-services'
+
+
+
+
+
+
 
 
 

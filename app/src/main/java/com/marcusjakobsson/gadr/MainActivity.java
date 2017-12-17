@@ -4,15 +4,19 @@ import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
+import android.util.DisplayMetrics;
 import android.view.View;
-import android.widget.TextView;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
+import com.facebook.GraphRequest;
+import com.facebook.GraphRequestBatch;
+import com.facebook.GraphResponse;
+import com.facebook.HttpMethod;
 import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
@@ -23,18 +27,26 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FacebookAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
+
+import org.json.JSONObject;
 
 public class MainActivity extends AppCompatActivity {
 
-    LoginButton loginButton;
-    CallbackManager callbackManager;
+    private static final String FB_INFO_DPI_SMALL = "name,picture.type(normal)";
+    private static final String FB_INFO_DPI_240 = "name,picture.width(125).height(125)";
+    private static final String FB_INFO_DPI_320 = "name,picture.width(150).height(150)";
+    private static final String FB_INFO_DPI_480 = "name,picture.width(225).height(225)";
+    private static final String FB_INFO_DPI_LARGE = "name,picture.width(300).height(300)";
+    private static final String FB_ICON_DPI_NORMAL = "picture.type(normal)";
+    private static final String FB_REQUEST_FIELDS = "fields";
+
+
+    private LoginButton loginButton;
+    private CallbackManager callbackManager;
     private FirebaseAuth mAuth;
     private static final String TAG = "FacebookLogin";
+    private ImageView gadrLogo;
+    private FirebaseConnection fc;
 
 
     @Override
@@ -42,10 +54,13 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        gadrLogo = findViewById(R.id.userProfilePicture);
+
         // Initialize Firebase Auth
         mAuth = FirebaseAuth.getInstance();
+        fc = new FirebaseConnection();
 
-        loginButton = (LoginButton) findViewById(R.id.login_button);
+        loginButton = findViewById(R.id.login_button);
         loginButton.setReadPermissions("email", "public_profile", "user_friends");
         callbackManager = CallbackManager.Factory.create();
 
@@ -54,55 +69,39 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onSuccess(LoginResult loginResult) {
                 // App code
-                Log.i("FB:", "Callback success!");
-                Toast.makeText(MainActivity.this, "Success", Toast.LENGTH_SHORT).show();
-                Log.i("FB", loginResult.getAccessToken().getToken());
                 handleFacebookAccessToken(loginResult.getAccessToken());
+
+                loginButton.setVisibility(View.INVISIBLE);
             }
 
             @Override
             public void onCancel() {
                 // App code
-                Log.i("FB:", "Callback cancel!");
-                Toast.makeText(MainActivity.this, "Cancel", Toast.LENGTH_SHORT).show();
+                MySnackbarProvider.showSnackBar(getWindow().getDecorView().getRootView(),getString(R.string.cancelled));
                 updateUI(null);
 
             }
 
             @Override
             public void onError(FacebookException exception) {
-                // App code
-                Log.i("FB:", "Callback ERROR!" + exception.toString());
-                Toast.makeText(MainActivity.this, "Error", Toast.LENGTH_SHORT).show();
+                MySnackbarProvider.showSnackBar(getWindow().getDecorView().getRootView(),getString(R.string.connectionError));
                 updateUI(null);
 
             }
         });
 
-        /*
-        final FirebaseDatabase database = FirebaseDatabase.getInstance();
-        DatabaseReference databaseRef = database.getReference();
-
-        databaseRef.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                String value = dataSnapshot.getValue(String.class);
-                Log.d(TAG, "Value is: " + value);
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-                Log.w(TAG, "Failed to read value.", databaseError.toException());
-            }
-        });*/
     }
 
     @Override
     public void onStart() {
         super.onStart();
         // Check if user is signed in (non-null) and update UI accordingly.
-        FirebaseUser currentUser = mAuth.getCurrentUser();
-        updateUI(currentUser);
+        if(mAuth.getCurrentUser() != null){
+            FirebaseUser currentUser = mAuth.getCurrentUser();
+            updateUI(currentUser);
+            loginButton.setVisibility(View.VISIBLE);
+        }
+
     }
 
 
@@ -114,28 +113,70 @@ public class MainActivity extends AppCompatActivity {
 
 
     // [START auth_with_facebook]
-    private void handleFacebookAccessToken(AccessToken token) {
-        Log.d(TAG, "handleFacebookAccessToken:" + token);
-
+    private void handleFacebookAccessToken(AccessToken token)
+    {
         AuthCredential credential = FacebookAuthProvider.getCredential(token.getToken());
         mAuth.signInWithCredential(credential)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
-                        if (task.isSuccessful()) {
+                        if (task.isSuccessful())
+                        {
                             // Sign in success, update UI with the signed-in user's information
-                            Log.d(TAG, "signInWithCredential:success");
-                            FirebaseUser user = mAuth.getCurrentUser();
-                            updateUI(user);
+                            final FirebaseUser user = mAuth.getCurrentUser();
+                            if (user != null)
+                            {
+                                //This func checks if user exists in database if it does no update is made
+                                //if not in database gets userInfo from FB and creates a new user
+                                fc.checkIfUserAlreadyExists(user, new FirebaseConnection.CurrentUserCallback() {
+                                    @Override
+                                    public void onSuccess(Boolean result) {
+                                        if(result)
+                                        {
+                                            updateUI(user);
+                                        }
+                                        else
+                                        {
+                                            getFacebookInfoFromUser(new MyCallbackListener()
+                                            {
+                                                @Override
+                                                public void callback(UserData userData) {
+
+                                                    userData.setFbID(user.getUid());
+
+                                                    // Adding a user to the Firebase Database
+                                                    fc.AddUser(userData, new FirebaseConnection.GetDataCallback() {
+                                                        @Override
+                                                        public void onSuccess() {
+
+                                                        }
+
+                                                        @Override
+                                                        public void onFail(String error) {
+                                                            Toast.makeText(getApplicationContext(),error, Toast.LENGTH_LONG).show();
+                                                        }
+                                                    });
+                                                }
+                                            });
+                                            updateUI(user);
+                                        }
+                                    }
+
+                                    @Override
+                                    public void onFail(String error) {
+                                        Toast.makeText(getApplicationContext(), error, Toast.LENGTH_SHORT).show();
+                                    }
+                                });
+                            }
+
+
+
+
                         } else {
                             // If sign in fails, display a message to the user.
-                            Log.w(TAG, "signInWithCredential:failure", task.getException());
-                            Toast.makeText(MainActivity.this, "Authentication failed.",
-                                    Toast.LENGTH_SHORT).show();
+                            MySnackbarProvider.showSnackBar(getWindow().getDecorView().getRootView(),getString(R.string.authFailed));
                             updateUI(null);
                         }
-
-                        // ...
                     }
                 });
     }
@@ -151,17 +192,118 @@ public class MainActivity extends AppCompatActivity {
 
     //Here we send the user to next activity
     private void updateUI(FirebaseUser user) {
-        //hideProgressDialog();
+
         if (user != null) {
+
             Intent intent = new Intent(this, MenuTabbedView.class);
             startActivity(intent);
-            //user.getUid()));
-            //loginButton.setVisibility(View.GONE);
-            //findViewById(R.id.button_facebook_signout).setVisibility(View.VISIBLE);
         }
     }
 
 
+    //Get picture bundle depending on DPI of device
+    private Bundle getPictureBundleDPI(Bundle params)
+    {
+        DisplayMetrics metrics = getResources().getDisplayMetrics();
+        Integer dpi = metrics.densityDpi;
+        if (dpi < 240){
+            params.putString(FB_REQUEST_FIELDS, FB_INFO_DPI_SMALL);
+        }else if(dpi == 240){
+            params.putString(FB_REQUEST_FIELDS, FB_INFO_DPI_240);
+        } else if(dpi == 320){
+            params.putString(FB_REQUEST_FIELDS, FB_INFO_DPI_320);
+        } else if(dpi == 480){
+            params.putString(FB_REQUEST_FIELDS, FB_INFO_DPI_480);
+        }else {
+            params.putString(FB_REQUEST_FIELDS, FB_INFO_DPI_LARGE);
+        }
+
+        return params;
+    }
+
+
+    //Start get Facebook user info
+    private void getFacebookInfoFromUser(final MyCallbackListener myCallbackListener)
+    {
+        final UserData user = new UserData();
+        Bundle params = new Bundle();
+        Bundle params2 = new Bundle();
+
+        params = getPictureBundleDPI(params);   //Params what you want to get from the FB-user depending on DPI of device
+        params2.putString(FB_REQUEST_FIELDS, FB_ICON_DPI_NORMAL);
+
+        //Start GraphRequestBatch
+        GraphRequestBatch batch = new GraphRequestBatch(
+
+                //Start First GraphRequest
+           new GraphRequest(AccessToken.getCurrentAccessToken(), "me", params, HttpMethod.GET, new GraphRequest.Callback()
+           {
+                @Override
+                public void onCompleted(GraphResponse response)
+                {
+                    if (response != null)
+                    {
+                        try {
+
+                            JSONObject data = response.getJSONObject();
+
+                            String profilePicUrl;
+                            String name;
+
+                            profilePicUrl = data.getJSONObject("picture").getJSONObject("data").getString("url");
+                            user.setImgURLLarge(profilePicUrl);
+
+                            name = data.getString("name");
+                            user.setName(name);
+
+
+
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }
+            }), //End First GraphRequest
+            //Start Second GraphRequest
+            new GraphRequest(AccessToken.getCurrentAccessToken(), "me", params2, HttpMethod.GET, new GraphRequest.Callback()
+            {
+                        @Override
+                        public void onCompleted(GraphResponse response)
+                        {
+                            if (response != null)
+                            {
+                                try {
+
+                                    JSONObject data = response.getJSONObject();
+
+                                    String smallProfilePicUrl = data.getJSONObject("picture").getJSONObject("data").getString("url");
+                                    user.setImgURLSmall(smallProfilePicUrl);
+
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                }
+                            }
+                        }
+            }) //End Second GraphRequest
+
+        ); //End GraphRequestBatch
+
+        batch.addCallback(new GraphRequestBatch.Callback()
+        {
+            @Override
+            public void onBatchCompleted(GraphRequestBatch batch) {
+
+                myCallbackListener.callback(user);
+
+            }
+        });
+
+        batch.executeAsync();
+
+    }  //End get Facebook user info
+
 }
+
+
 
 
