@@ -14,6 +14,7 @@ public class RetainedMenuTabbedFragmet extends Fragment {
     public RoundedBitmapDrawable drawable;
     public String drawerUserName;
     public String userStatus;
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

@@ -25,37 +25,6 @@ public class RetainedMapFragment extends Fragment {
     public List<RoundedBitmapDrawable> roundIcon = new ArrayList<>();
     public CameraUpdate cameraUpdate;
 
-    public EventData[] getAllEventData() {
-        return allEventData;
-    }
-
-    public void setAllEventData(EventData[] allEventData) {
-        this.allEventData = allEventData;
-    }
-
-    public EventData[] getMyEventData() {
-        return myEventData;
-    }
-
-    public void setMyEventData(EventData[] myEventData) {
-        this.myEventData = myEventData;
-    }
-
-    public List<UserData> getUserData() {
-        return userData;
-    }
-
-    public void setUserData(List<UserData> userData) {
-        this.userData = userData;
-    }
-
-    public LatLng getLoc() {
-        return loc;
-    }
-
-    public void setLoc(LatLng loc) {
-        this.loc = loc;
-    }
 
     public List<Bitmap> getIcon() {
         return icon;
@@ -65,13 +34,6 @@ public class RetainedMapFragment extends Fragment {
         this.icon = icon;
     }
 
-    public List<RoundedBitmapDrawable> getRoundIcon() {
-        return roundIcon;
-    }
-
-    public void setRoundIcon(List<RoundedBitmapDrawable> roundIcon) {
-        this.roundIcon = roundIcon;
-    }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
