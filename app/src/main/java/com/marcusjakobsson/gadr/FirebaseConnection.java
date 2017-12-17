@@ -150,7 +150,7 @@ class FirebaseConnection {
         ref.addListenerForSingleValueEvent(valueEventListener);
     }
 
-    public void UpdateStatus(final String status, final com.marcusjakobsson.gadr.FirebaseConnection.GetDataCallback callback) {
+    public void UpdateStatus(final String status, final GetDataCallback callback) {
         FirebaseUser currentUser = mAuth.getCurrentUser();
         if(currentUser != null)
         {
@@ -179,7 +179,7 @@ class FirebaseConnection {
     }
 
 
-    public void EditEvent(EventData eventData, String key, final com.marcusjakobsson.gadr.FirebaseConnection.GetDataCallback callback) {
+    public void EditEvent(EventData eventData, String key, final GetDataCallback callback) {
         DatabaseReference ref = mRef.child(event_parent).child(key);
 
         Task setValueTask = ref.setValue(eventData);
@@ -199,7 +199,7 @@ class FirebaseConnection {
         });
     }
 
-    public void AddEvent(EventData eventData, final com.marcusjakobsson.gadr.FirebaseConnection.GetDataCallback callback) {
+    public void AddEvent(EventData eventData, final GetDataCallback callback) {
         DatabaseReference ref = mRef.child(event_parent).push();
 
         Task setValueTask = ref.setValue(eventData);
@@ -219,7 +219,7 @@ class FirebaseConnection {
         });
     }
 
-    public void AddUser(UserData userData, final com.marcusjakobsson.gadr.FirebaseConnection.GetDataCallback callback) {
+    public void AddUser(UserData userData, final GetDataCallback callback) {
         DatabaseReference ref = mRef.child(users_parent).child(userData.getFbID());
         Task setValueTask = ref.setValue(userData);
 
@@ -238,7 +238,7 @@ class FirebaseConnection {
         });
     }
 
-    public void UpdateUserLocation(double latitude, final double longitude, final com.marcusjakobsson.gadr.FirebaseConnection.GetDataCallback callback) {
+    public void UpdateUserLocation(double latitude, final double longitude, final GetDataCallback callback) {
         FirebaseUser currentUser = mAuth.getCurrentUser();
         if(currentUser != null)
         {
